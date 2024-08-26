@@ -2,20 +2,22 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
 const MenuBarContainer = styled.div`
-  width: ${(props) => (props.collapsed ? '0px' : '210px')};
-  height: 650px;
+  width: ${(props) => (props.collapsed ? '0%' : '15%')};
+  
+  height: 100vh;
   background-color: #003250;
   padding: 10px;
-  margin-top: 70px;
+  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, height 0.3s ease;
+  position: relative;
 `;
 
 const InnerContainer = styled.div`
   width: 90%;
-  height: 80%;
+  height: 75%;
   background-color: white;
   border-radius: 5px;
   padding: ${(props) => (props.collapsed ? '10px 0' : '10px')};
@@ -25,16 +27,18 @@ const InnerContainer = styled.div`
 
 const ToggleButton = styled.button`
   position: absolute;
-  top: 70px;
-  left: ${(props) => (props.collapsed ? '10px' : '230px')};
+  top: 0px;
+  right: 10px;
   width: 22px;
   height: 30px;
   background-color: #003250;
   border: none;
   cursor: pointer;
-  transition: left 0.3s ease;
-`;
+  transition: transform 0.3s ease;
 
+  transform: ${(props) =>
+    props.collapsed ? 'translateX(0)' : 'translateX(calc(100% + 10px))'};
+`;
 
 const MenuButton = styled.button`
   width: 100%;
@@ -82,28 +86,26 @@ const MenuBar = () => {
   };
 
   return (
-    <>
+    <MenuBarContainer collapsed={collapsed}>
       <ToggleButton onClick={handleToggle} collapsed={collapsed}>
         {collapsed ? '>' : '<'}
       </ToggleButton>
-      <MenuBarContainer collapsed={collapsed}>
-        <InnerContainer collapsed={collapsed}>
-          <MenuButton>데이터 품질 평가</MenuButton>
-          <MenuButton active={showSubMenu} onClick={() => setShowSubMenu(!showSubMenu)}>
-            데이터 분석 가시화
-          </MenuButton>
-          {showSubMenu && (
-            <SubMenu>
-              <SubMenuButton>All</SubMenuButton>
-              <SubMenuButton>치주질환</SubMenuButton>
-              <SubMenuButton>악골골수염</SubMenuButton>
-              <SubMenuButton>두개안면</SubMenuButton>
-              <SubMenuButton>구강암</SubMenuButton>
-            </SubMenu>
-          )}
-        </InnerContainer>
-      </MenuBarContainer>
-    </>
+      <InnerContainer collapsed={collapsed}>
+        <MenuButton>데이터 품질 평가</MenuButton>
+        <MenuButton active={showSubMenu} onClick={() => setShowSubMenu(!showSubMenu)}>
+          데이터 분석 가시화
+        </MenuButton>
+        {showSubMenu && (
+          <SubMenu>
+            <SubMenuButton>All</SubMenuButton>
+            <SubMenuButton>치주질환</SubMenuButton>
+            <SubMenuButton>악골골수염</SubMenuButton>
+            <SubMenuButton>두개안면</SubMenuButton>
+            <SubMenuButton>구강암</SubMenuButton>
+          </SubMenu>
+        )}
+      </InnerContainer>
+    </MenuBarContainer>
   );
 };
 
