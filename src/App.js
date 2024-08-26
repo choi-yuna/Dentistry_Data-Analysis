@@ -1,5 +1,4 @@
 import React from 'react';
-
 import DataQualityView from './dataQualityView/dataQuality';
 import DataVisualization from './dataVisualizationView/dataVisualization'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -14,7 +13,6 @@ function App() {
         </Routes>
       </div>
   </Router>
-
   );
 }
 
