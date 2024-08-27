@@ -21,7 +21,7 @@ const PieChart = ({ title, data }) => {
         formatter: (value, context) => {
           const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
           const percentage = ((value / total) * 100).toFixed(1);
-          return `${value}명\n(${percentage}%)`;
+          return `${value}\n(${percentage}%)`;
         },
         color: '#000',
         font: {
