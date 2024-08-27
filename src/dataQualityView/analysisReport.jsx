@@ -1,27 +1,47 @@
 import React from 'react';
 import styled from 'styled-components';
-import PieChart from '../components/piechart'; // PieChart 컴포넌트를 가져옵니다
+import PieChart from './piechart'; // PieChart 컴포넌트를 가져옵니다
+import DownloadIcon from '../assets/images/download.svg'; 
+import PrintIcon from '../assets/images/printer.svg'; 
 
 const ReportContainer = styled.div`
-  background-color: #F4F4F4;
+  background-color: #FAF8F8;
   border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);;
   padding: 20px;
   margin: 20px 0;
-  margin-left: 40px;
-  height: 400px; /* 화면 높이의 절반을 차지하도록 설정 */
+  margin-left: 20px;
+  height: 400px;
   width: 90%;
 `;
 
+const ReportHeader = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`;
+
 const ReportTitle = styled.h2`
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 0px;
   margin-top: 0px;
   position: sticky; /* 타이틀을 고정 */
   top: 0; /* 타이틀이 컨테이너의 상단에 고정되도록 설정 */
-  background-color: #F4F4F4; /* 배경색을 컨테이너와 동일하게 설정 */
+  background-color: #FAF8F8; /* 배경색을 컨테이너와 동일하게 설정 */
   z-index: 1; /* 타이틀이 다른 요소들 위에 오도록 설정 */
   padding: 10px 0; /* 타이틀 텍스트에 패딩 추가 */
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-left : 10px;
+`;
+
+const Icon = styled.img`
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `;
 
 const ReportContent = styled.div`
@@ -142,7 +162,13 @@ const DataReport = () => {
 
   return (
     <ReportContainer>
-      <ReportTitle>데이터 분석 리포트</ReportTitle>
+      <ReportHeader>
+        <ReportTitle>데이터 분석 리포트</ReportTitle>
+        <IconContainer>
+          <Icon src={DownloadIcon} alt="Download" />
+          <Icon src={PrintIcon} alt="Print" />
+        </IconContainer>
+      </ReportHeader>
       <ReportContent>
         {chartsData.map((chart, index) => (
           <ReportItem key={index}>

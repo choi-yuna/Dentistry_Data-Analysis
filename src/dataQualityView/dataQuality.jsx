@@ -5,7 +5,7 @@ import MenuBar from '../components/menubar';
 import FormComponent from '../components/FormComponent';
 
 import DataAnalysisResults from './dataAnalysisResults';
-import AnalysisReport from '../components/analysisReport'
+import AnalysisReport from './analysisReport'
 
 
 const AppContainer = styled.div`
