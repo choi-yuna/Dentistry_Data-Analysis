@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import FormComponent from '../components/FormComponent';
-import DataAnalysisResults from './dataAnalysisResults';
 
+import DataAnalysisResults from './dataAnalysisResults';
+import AnalysisReport from '../components/analysisReport'
 
 
 const AppContainer = styled.div`
@@ -28,7 +29,6 @@ const ContentCtn = styled.div`
   padding: 20px; 
 `;
 
-
 const DataQualityView = () => {
   return (
     <AppContainer>
@@ -38,6 +38,7 @@ const DataQualityView = () => {
         <ContentCtn>
           <FormComponent />
           <DataAnalysisResults/>
+          <AnalysisReport/>
         </ContentCtn>
       </MainContent>
     </AppContainer>
