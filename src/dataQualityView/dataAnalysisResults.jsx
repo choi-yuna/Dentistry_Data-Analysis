@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 
 const ResultCtn = styled.div`
-    width: 35%; 
+    width: 36%; 
     height: 45%; 
     margin-left:20px;
    
