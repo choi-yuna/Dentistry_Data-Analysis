@@ -6,7 +6,7 @@ const ResultCtn = styled.div`
     width: 36%; 
     height: 45%; 
     margin-left:20px;
-   
+    margin-top: -30px;
 `;
 
 const FormCtn = styled.div`
