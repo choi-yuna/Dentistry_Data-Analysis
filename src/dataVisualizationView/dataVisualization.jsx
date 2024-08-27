@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
+import TableResult from './TableResult';
 
 
 
@@ -24,6 +25,8 @@ const ContentCtn = styled.div`
   align-items: flex-start;
   flex: 1;
   padding: 20px; 
+  margin-top:50px;
+   margin-left:30px;
 `;
 
 
@@ -34,6 +37,7 @@ const DataVisualization = () => {
       <MainContent>
         <MenuBar />
         <ContentCtn>
+            <TableResult/>
         </ContentCtn>
       </MainContent>
     </AppContainer>
