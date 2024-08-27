@@ -9,7 +9,7 @@ import Surface from '../assets/images/surface.svg';
 import Osteomyelitis from '../assets/images/osteomyelitis.svg';
 import Open from '../assets/images/open.svg';
 import Close from '../assets/images/close.svg';
-
+import {  useNavigate } from 'react-router-dom';
 
 
 const MenuBarContainer = styled.div`
@@ -132,18 +132,29 @@ const ToggleIcon = styled.img`
    margin-right: 2px;
 `;
 
+
+
+
 const MenuBar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [qualityMenuActive, setQualityMenuActive] = useState(false);
 
+  const navigate = useNavigate();
   const handleToggle = () => {
     setCollapsed(!collapsed);
   };
 
  const handleQualityMenuClick = () => {
     setQualityMenuActive(true);
+    navigate('/');
+  };
+
+  const handleVisualizationMenuClick = () => {
+    setQualityMenuActive(true);
+    setShowSubMenu(!showSubMenu);
+    navigate('/dataVisualization');
   };
   
   const handleSubMenuItemClick = (item) => {
@@ -158,9 +169,9 @@ const MenuBar = () => {
       <InnerContainer collapsed={collapsed}>
         <QualityMenuBtn>
           데이터 품질 평가
-          <Icon src={ClosedIcon} alt="Close Icon" />
+          <Icon src={ClosedIcon} alt="Close Icon" onClick={handleQualityMenuClick} />
         </QualityMenuBtn>
-        <VisualizeMenuBtn active={showSubMenu} onClick={() => setShowSubMenu(!showSubMenu)}>
+        <VisualizeMenuBtn active={showSubMenu} onClick={handleVisualizationMenuClick}>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             데이터 분석 가시화
             <Icon 
