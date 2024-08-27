@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
+import DataSelection from './dataSelection';
 
 
 
@@ -34,6 +35,7 @@ const DataVisualization = () => {
       <MainContent>
         <MenuBar />
         <ContentCtn>
+            <DataSelection />
         </ContentCtn>
       </MainContent>
     </AppContainer>
