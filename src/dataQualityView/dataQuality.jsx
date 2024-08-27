@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import FormComponent from '../components/FormComponent';
+import DataAnalysisResults from './dataAnalysisResults';
+
+
 
 const AppContainer = styled.div`
   display: flex;
@@ -25,7 +28,7 @@ const ContentCtn = styled.div`
   padding: 20px; 
 `;
 
-// DataQualityView 컴포넌트 정의
+
 const DataQualityView = () => {
   return (
     <AppContainer>
@@ -34,6 +37,7 @@ const DataQualityView = () => {
         <MenuBar />
         <ContentCtn>
           <FormComponent />
+          <DataAnalysisResults/>
         </ContentCtn>
       </MainContent>
     </AppContainer>
