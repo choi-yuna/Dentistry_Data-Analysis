@@ -16,7 +16,7 @@ const FormCtn = styled.div`
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 89%;
     height: auto;
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);

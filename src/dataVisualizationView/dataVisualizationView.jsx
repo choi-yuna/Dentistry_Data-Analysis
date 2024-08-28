@@ -41,7 +41,6 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto;
   width: 100%;
-  
 `;
 
 const DataVisualizationView = () => {
