@@ -25,10 +25,8 @@ const ReportTitle = styled.h2`
   font-size: 18px;
   margin-bottom: 0px;
   margin-top: 0px;
-  position: sticky; /* 타이틀을 고정 */
-  top: 0; /* 타이틀이 컨테이너의 상단에 고정되도록 설정 */
+  top: 0; 
   background-color: #FAF8F8; /* 배경색을 컨테이너와 동일하게 설정 */
-  z-index: 1; /* 타이틀이 다른 요소들 위에 오도록 설정 */
   padding: 10px 0; /* 타이틀 텍스트에 패딩 추가 */
 `;
 

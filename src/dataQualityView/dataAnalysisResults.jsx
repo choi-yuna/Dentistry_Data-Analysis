@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
+import Modal from './Modal';
 
 const ResultCtn = styled.div`
     width: 36%; 
@@ -49,15 +50,33 @@ const DetailButton = styled.button`
 `;
 
 const DataAnalysisResults = () => {
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [excelData, setExcelData] = useState([
+        ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
+        ["Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", "Data8"],                
+        ["Data9", "Data10", "Data11", "Data12", "Data13", "Data14", "Data15", "Data16"],        
+        ["Data17", "Data18", "Data19", "Data20", "Data21", "Data22", "Data23", "Data24"],       
+        ["Data25", "Data26", "Data27", "Data28", "Data29", "Data30", "Data31", "Data32"],         
+        //임시 데이터
+    ]);
+    const handleDetailButtonClick = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
     return (
         <ResultCtn>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
-                    <DetailButton>품질 이상 항목 세부보기</DetailButton>
+                    <DetailButton onClick={handleDetailButtonClick}>품질 이상 항목 세부보기</DetailButton>
                 </TitleBar>
                 <DataAnalysisTable />
             </FormCtn>
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
         </ResultCtn>
     );
 };
