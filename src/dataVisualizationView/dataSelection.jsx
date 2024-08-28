@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, Button, MenuItem, Select, TextField } from '@mui/material';
+import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandLessIcon from '@mui/icons-material/ExpandMore';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import chartIcon from '../assets/images/chart-botton-black.svg'; // 아이콘 이미지 임포트
 
 // Styled Components
 const Container = styled.div`
   width: 100%;
-  margin-top: 20px; /* 여백을 약간 줄입니다 */
+  margin-top: 20px; 
 `;
 
 const FlexBox = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: center; /* Center align items vertically */
 `;
 
 const StyledTabs = styled(Tabs)`
@@ -38,19 +38,19 @@ const ListContainer = styled.div`
   display: flex;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 8px; /* 패딩을 줄여서 전체 크기를 줄입니다 */
+  padding: 8px; 
   background-color: #fff;
 `;
 
 const StyledList = styled.div`
   width: 20%;
   border-right: 1px solid #ccc;
-  padding-right: 8px; /* 패딩을 줄여서 더 컴팩트하게 만듭니다 */
-  max-height: 180px; /* 높이도 조금 줄였습니다 */
+  padding-right: 8px; 
+  max-height: 180px; 
   overflow-y: auto;
 
   &::-webkit-scrollbar {
-    width: 6px; /* 스크롤바를 더 작게 */
+    width: 6px; 
   }
   
   &::-webkit-scrollbar-thumb {
@@ -66,12 +66,12 @@ const StyledList = styled.div`
 const SubList = styled.div`
   width: 80%;
   display: flex;
-  
-  gap: 8px; /* 요소 사이의 간격을 줄입니다 */
+  flex-wrap: wrap; /* 컨텐츠가 화면을 넘을 경우 줄바꿈을 하도록 설정 */
+  gap: 8px; 
 `;
 
 const StyledListItem = styled.div`
-  padding: 4px; /* 패딩을 줄여서 더 작은 크기로 만듭니다 */
+  padding: 4px;
   background-color: ${({ selected }) => (selected ? '#f0f0f0' : 'inherit')};
   cursor: pointer;
   border-radius: 4px;
@@ -83,33 +83,110 @@ const StyledListItem = styled.div`
 `;
 
 const SubListItem = styled(StyledListItem)`
-  background-color: inherit; /* 배경색 변경을 해제 */
-  color: ${({ selected }) => (selected ? 'blue' : 'black')}; /* 선택된 경우 글자 색상만 변경 */
+  background-color: inherit; 
+  color: ${({ selected }) => (selected ? 'blue' : 'black')}; 
 `;
 
 const SelectWrapper = styled.div`
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 2px; /* 간격을 조금 줄였습니다 */
+  margin-top : 4px;
 `;
 
 const Label = styled.label`
-  min-width: 60px; /* 레이블의 최소 너비를 설정하여 정렬을 개선 */
+  min-width: 40px; 
+  font-size: 16px; /* 폰트 크기를 더 줄였습니다 */
+  margin-left : 10px;
 `;
 
 const SelectField = styled(Select)`
-  min-width: 120px; /* 셀렉트 박스의 최소 너비를 설정하여 더 작게 조정 */
+  min-width: 70px;
+  font-size: 0.8rem;
+
+  .MuiSelect-select {
+    padding: 0px 4px;
+    font-size: 0.8rem;
+    height: 30px;
+    display: flex;
+    align-items: center;
+  }
+
+  .MuiOutlinedInput-input {
+    padding: 4px;
+    font-size: 0.8rem;
+    height: 30px;
+    line-height: 1.2;
+  }
+
+  .MuiInputBase-root {
+    font-size: 0.8rem;
+    height: 30px;
+  }
 `;
 
 const TextFieldStyled = styled(TextField)`
-  min-width: 120px; /* 텍스트 필드의 최소 너비를 설정하여 더 작게 조정 */
+  min-width: 80px;
+  font-size: 0.8rem;
+  height: 30px;
+
+  .MuiInputBase-root {
+    font-size: 0.8rem;
+    height: 30px;
+  }
+
+  .MuiOutlinedInput-input {
+    padding: 4px;
+    font-size: 0.8rem;
+    height: 30px;
+    box-sizing: border-box;
+  }
+
+  .MuiOutlinedInput-root {
+    & fieldset {
+      border-color: rgba(0, 0, 0, 0.23);
+    }
+    &:hover fieldset {
+      border-color: rgba(0, 0, 0, 0.5);
+    }
+    &.Mui-focused fieldset {
+      border-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+`;
+
+const ButtonStyled = styled.button`
+    padding: 8px 16px;
+    background-color: #ffffff;
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    height: 36px;
+    box-sizing: border-box;
+    min-width: 100px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px; /* Adds space between tabs and the button */
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+        margin-left: 5px;
+    }
 `;
 
 const SelectedItemsBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px; /* 패딩을 줄입니다 */
+  padding: 12px; 
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -127,7 +204,11 @@ const DataSelection = () => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedItemsTab1, setSelectedItemsTab1] = useState({
     '기본 정보(info)': [],
-    '환자정보': [],
+    '환자정보': {
+      '흡연': '',
+      '음주': '',
+      '성별': '',
+    },
     '진단정보별 환자 수': [],
     '환자 수': [],
     '환자 수2': [],
@@ -151,10 +232,20 @@ const DataSelection = () => {
 
   const handleDelete = (itemToDelete, category) => {
     if (tabValue === 0) {
-      setSelectedItemsTab1({
-        ...selectedItemsTab1,
-        [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
-      });
+      if (category === '환자정보') {
+        setSelectedItemsTab1({
+          ...selectedItemsTab1,
+          [category]: {
+            ...selectedItemsTab1[category],
+            [itemToDelete.split(': ')[0]]: '',
+          },
+        });
+      } else {
+        setSelectedItemsTab1({
+          ...selectedItemsTab1,
+          [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
+        });
+      }
     } else {
       setSelectedItemsTab2({
         ...selectedItemsTab2,
@@ -171,20 +262,30 @@ const DataSelection = () => {
     setSelectedCategory(category);
   };
 
-  const handleItemClick = (subItem) => {
+  const handleItemClick = (subItem, type = 'general') => {
     const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
     const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
 
-    if (selectedItems[selectedCategory]?.includes(subItem)) {
+    if (type === '환자정보') {
       setSelectedItems({
         ...selectedItems,
-        [selectedCategory]: selectedItems[selectedCategory].filter((item) => item !== subItem),
+        [type]: {
+          ...selectedItems[type],
+          [subItem.label]: subItem.value,
+        },
       });
     } else {
-      setSelectedItems({
-        ...selectedItems,
-        [selectedCategory]: [...selectedItems[selectedCategory], subItem],
-      });
+      if (selectedItems[selectedCategory]?.includes(subItem)) {
+        setSelectedItems({
+          ...selectedItems,
+          [selectedCategory]: selectedItems[selectedCategory].filter((item) => item !== subItem),
+        });
+      } else {
+        setSelectedItems({
+          ...selectedItems,
+          [selectedCategory]: [...selectedItems[selectedCategory], subItem],
+        });
+      }
     }
   };
 
@@ -193,12 +294,16 @@ const DataSelection = () => {
     handleItemClick(event.target.value);
   };
 
+  const handleSelectChange = (category, value) => {
+    handleItemClick({ label: category, value }, '환자정보');
+  };
+
   const getSelectableItems = () => {
     if (tabValue === 0) {
       return {
         categories: {
           '기본 정보(info)': ['기관 선택', '촬영일자', '촬영장비'],
-          '환자정보': ['환자명', '환자번호', '생년월일'],
+          '환자정보': ['흡연', '음주', '성별'],
           '진단정보별 환자 수': ['질환명', '진단코드', '진단일자'],
           '환자 수': ['질환명', '진단코드', '진단일자'],
           '환자 수2': ['질환명', '진단코드', '진단일자'],
@@ -227,7 +332,11 @@ const DataSelection = () => {
   const handleReset = () => {
     if (tabValue === 0) {
       const resetItems = Object.keys(selectedItemsTab1).reduce((acc, key) => {
-        acc[key] = [];
+        if (key === '환자정보') {
+          acc[key] = { '흡연': '', '음주': '', '성별': '' };
+        } else {
+          acc[key] = [];
+        }
         return acc;
       }, {});
       setSelectedItemsTab1(resetItems);
@@ -248,6 +357,10 @@ const DataSelection = () => {
           <StyledTab label="데이터 구성 항목" />
           <StyledTab label="리포트 항목" />
         </StyledTabs>
+        <ButtonStyled type="submit"> {/* AnalyzeButton 삭제 후 직접 스타일링 적용 */}
+          데이터 분석
+          <img src={chartIcon} alt="아이콘" />
+        </ButtonStyled>
         <IconButton onClick={handleToggle} size="small">
           {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
@@ -302,25 +415,71 @@ const DataSelection = () => {
                     <MenuItem value="">
                       <em>장비 선택</em>
                     </MenuItem>
-                    {/* 장비 목록을 여기에 추가할 수 있습니다 */}
                   </SelectField>
                 </SelectWrapper>
               </>
             ) : (
-              subItems.map((subItem) => (
-                <SubListItem
-                  key={subItem}
-                  selected={selectedItems[selectedCategory]?.includes(subItem)}
-                  onClick={() => handleItemClick(subItem)}
-                >
-                  <ListItemText
-                    primary={subItem}
-                    style={{
-                      color: selectedItems[selectedCategory]?.includes(subItem) ? 'blue' : 'black',
-                    }}
-                  />
-                </SubListItem>
-              ))
+              tabValue === 0 && selectedCategory === '환자정보' ? (
+                <>
+                  <SelectWrapper>
+                    <Label>흡연:</Label>
+                    <SelectField
+                      value={selectedItemsTab1['환자정보']['흡연']}
+                      onChange={(e) => handleSelectChange('흡연', e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Yes">Yes</MenuItem>
+                      <MenuItem value="No">No</MenuItem>
+                    </SelectField>
+                  </SelectWrapper>
+                  <SelectWrapper>
+                    <Label>음주:</Label>
+                    <SelectField
+                      value={selectedItemsTab1['환자정보']['음주']}
+                      onChange={(e) => handleSelectChange('음주', e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Yes">Yes</MenuItem>
+                      <MenuItem value="No">No</MenuItem>
+                    </SelectField>
+                  </SelectWrapper>
+                  <SelectWrapper>
+                    <Label>성별:</Label>
+                    <SelectField
+                      value={selectedItemsTab1['환자정보']['성별']}
+                      onChange={(e) => handleSelectChange('성별', e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Male">Male</MenuItem>
+                      <MenuItem value="Female">Female</MenuItem>
+                    </SelectField>
+                  </SelectWrapper>
+                </>
+              ) : (
+                subItems.map((subItem) => (
+                  <SubListItem
+                    key={subItem}
+                    selected={selectedItems[selectedCategory]?.includes(subItem)}
+                    onClick={() => handleItemClick(subItem)}
+                  >
+                    <ListItemText
+                      primary={subItem}
+                      style={{
+                        color: selectedItems[selectedCategory]?.includes(subItem) ? 'blue' : 'black',
+                      }}
+                    />
+                  </SubListItem>
+                ))
+              )
             )}
           </SubList>
         </ListContainer>
@@ -328,25 +487,36 @@ const DataSelection = () => {
 
       <SelectedItemsBox>
         <ChipsContainer>
-          {Object.entries(selectedItems)
-            .flatMap(([category, items]) =>
-              items.map((item) => (
+          {Object.entries(selectedItems).flatMap(([category, items]) => {
+            if (category === '환자정보') {
+              return Object.entries(items)
+                .filter(([key, value]) => value !== '')
+                .map(([key, value]) => (
+                  <Chip
+                    key={`${category}-${key}`}
+                    label={`${key}: ${value}`}
+                    onDelete={() => handleDelete(`${key}: ${value}`, category)}
+                  />
+                ));
+            } else {
+              return items.map((item) => (
                 <Chip
                   key={`${category}-${item}`}
                   label={`${item}`}
                   onDelete={() => handleDelete(item, category)}
                 />
-              ))
-            )}
+              ));
+            }
+          })}
         </ChipsContainer>
-        <Button
+        <ButtonStyled
           variant="outlined"
           size="small"
           startIcon={<RefreshIcon />}
           onClick={handleReset}
         >
           초기화
-        </Button>
+        </ButtonStyled>
       </SelectedItemsBox>
     </Container>
   );
