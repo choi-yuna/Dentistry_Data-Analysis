@@ -9,8 +9,7 @@ const TableContainer = styled.div`
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 90%;
-
+  width: 100%;
 `;
 
 const Th = styled.th`
@@ -34,40 +33,28 @@ const ColSpanTd = styled.td`
   font-weight: bold;
 `;
 
-const VisualizationDataTable = () => {
+const VisualizationDataTable = ({ tableData }) => {
   return (
     <TableContainer>
       <Table>
         <thead>
           <tr>
-            <Th>기관명</Th>
-            <Th>환자수(명)</Th>
+            {tableData.headers.map((header, index) => (
+              <Th key={index}>{header}</Th>
+            ))}
           </tr>
         </thead>
         <tbody>
+          {tableData.rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <Td key={cellIndex}>{cell}</Td>
+              ))}
+            </tr>
+          ))}
           <tr>
-            <Td>고려대병원</Td>
-            <Td></Td>
-          </tr>
-          <tr>
-            <Td>단국대병원</Td>
-            <Td></Td>
-          </tr>
-          <tr>
-            <Td>보라매병원</Td>
-            <Td></Td>
-          </tr>
-          <tr>
-            <Td>서울대병원</Td>
-            <Td></Td>
-          </tr>
-          <tr>
-            <Td>원광대병원</Td>
-            <Td></Td>
-          </tr>
-          <tr>
-            <ColSpanTd>합계</ColSpanTd>
-            <Td>50,0000</Td>
+            <ColSpanTd colSpan={tableData.headers.length - 1}>합계</ColSpanTd>
+            <Td>{tableData.total}</Td>
           </tr>
         </tbody>
       </Table>
