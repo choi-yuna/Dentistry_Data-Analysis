@@ -85,6 +85,9 @@ const StyledListItem = styled.div`
 const SubListItem = styled(StyledListItem)`
   background-color: inherit; 
   color: ${({ selected }) => (selected ? 'blue' : 'black')}; 
+   &:hover {
+    background-color: inherit; /* 호버할 때 배경색이 변경되지 않도록 설정 */
+  }
 `;
 
 const SelectWrapper = styled.div`
@@ -316,7 +319,7 @@ const DataSelection = () => {
     } else {
       return {
         categories: {
-          '리포트 정보 1': ['보고서 유형', '작성자', '생성일자','생성일자2','생성일자3','생성일자','fds'],
+          '리포트 정보 1': ['보고서 유형', '작성자', '생성일자2','생성일자3','생성일자','fds'],
           '리포트 정보 2': ['검토자', '승인자', '발행일자'],
           '리포트 정보 3': ['프로젝트명', '클라이언트명', '프로젝트 기간'],
         },
