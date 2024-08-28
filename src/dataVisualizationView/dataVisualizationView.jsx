@@ -5,6 +5,7 @@ import MenuBar from '../components/menubar';
 import TableResult from './TableResult';
 import DataSelection from './dataSelection';
 import tablesData from './VisualizationDataModel';
+import PieChartResult from './PieChartResult';
 
 const AppContainer = styled.div`
   display: flex;
@@ -35,34 +36,35 @@ const PageTitle = styled.h1`
   font-weight: bold;
 `;
 
-
-const IconContainer = styled.div`
-  display: flex; 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  width: 100%;
+  
 `;
 
-const Icon = styled.img`
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  margin-left: 10px;
-`;
-
-
-
-const DataVisualization = () => {
+const DataVisualizationView = () => {
   return (
     <AppContainer>
       <TopBar />
       <MainContent>
         <MenuBar />
         <ContentCtn>
-          <DataSelection/>
+          <DataSelection />
           <PageTitle>리포트 결과</PageTitle>
-          <TableResult tablesData={tablesData} />
+          <GridContainer>
+            {tablesData.map((table, index) => (
+              <React.Fragment key={index}>
+                <TableResult tablesData={[table]} />
+                <PieChartResult chart={table} />
+              </React.Fragment>
+            ))}
+          </GridContainer>
         </ContentCtn>
       </MainContent>
     </AppContainer>
   );
 };
 
-export default DataVisualization;
+export default DataVisualizationView;

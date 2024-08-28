@@ -4,9 +4,8 @@ import VisualizationDataTable from './VisualizationDataTable';
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
 
-// 스타일 정의
 const ResultCtn = styled.div`
-    width: 40%; 
+    width: 60%; 
     margin-top: 20px;
 `;
 
@@ -47,7 +46,18 @@ const Icon = styled.img`
   margin-left: 10px;
 `;
 
-// 컴포넌트 정의
+//TODO:- 다운로드 기능
+const handleDownload = () => {
+    alert('Downloading report...');
+  };
+  
+//TODO:- 인쇄 기능
+  const handlePrint = () => {
+    alert('Printing report...');
+    
+  };
+  
+
 const TableResult = ({ tablesData }) => {
     return (
         <ResultCtn>
