@@ -142,23 +142,29 @@ const MenuBar = () => {
   const [qualityMenuActive, setQualityMenuActive] = useState(false);
 
   const navigate = useNavigate();
+  
   const handleToggle = () => {
     setCollapsed(!collapsed);
   };
 
  const handleQualityMenuClick = () => {
     setQualityMenuActive(true);
+    setShowSubMenu(false);
     navigate('/');
   };
 
   const handleVisualizationMenuClick = () => {
     setQualityMenuActive(true);
     setShowSubMenu(!showSubMenu);
+    if (!showSubMenu) {
+      setShowSubMenu(true);
+    }
     navigate('/dataVisualization');
   };
   
   const handleSubMenuItemClick = (item) => {
     setActiveSubMenuItem(item);
+     setShowSubMenu(true);
   };
 
   return (
