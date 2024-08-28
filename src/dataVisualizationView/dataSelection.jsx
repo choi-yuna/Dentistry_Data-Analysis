@@ -19,7 +19,8 @@ const FlexBox = styled.div`
 
 const StyledTabs = styled(Tabs)`
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
+
 `;
 
 const StyledTab = styled(Tab)`
@@ -37,7 +38,8 @@ const StyledTab = styled(Tab)`
 const ListContainer = styled.div`
   display: flex;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
+
   padding: 8px; 
   background-color: #fff;
 `;
@@ -66,6 +68,7 @@ const StyledList = styled.div`
 const SubList = styled.div`
   width: 80%;
   display: flex;
+  flex-direction: row; /* 가로로 나열 */
   flex-wrap: wrap; /* 컨텐츠가 화면을 넘을 경우 줄바꿈을 하도록 설정 */
   gap: 8px; 
 `;
@@ -73,9 +76,10 @@ const SubList = styled.div`
 const StyledListItem = styled.div`
   padding: 4px;
   background-color: ${({ selected }) => (selected ? '#f0f0f0' : 'inherit')};
-  cursor: pointer;
   border-radius: 4px;
   margin-bottom: 4px;
+  cursor: ${({ isTextSelected }) => (isTextSelected ? 'copy' : 'pointer')};
+  
 
   &:hover {
     background-color: #e0e0e0;
@@ -84,7 +88,8 @@ const StyledListItem = styled.div`
 
 const SubListItem = styled(StyledListItem)`
   background-color: inherit; 
-  color: ${({ selected }) => (selected ? 'blue' : 'black')}; 
+  color: ${({ selected }) => (selected ? '#DD7610' : 'black')}; 
+  
    &:hover {
     background-color: inherit; /* 호버할 때 배경색이 변경되지 않도록 설정 */
   }
@@ -97,15 +102,23 @@ const SelectWrapper = styled.div`
   margin-top : 4px;
 `;
 
+const LabelRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+`;
+
 const Label = styled.label`
   min-width: 40px; 
   font-size: 16px; /* 폰트 크기를 더 줄였습니다 */
-  margin-left : 10px;
+  border: 1px solid #ccc; /* 테두리 추가 */
+  box-sizing: border-box; /* 테두리가 추가되었으므로 박스 크기를 포함하도록 설정 */
+  text-align: center; /* 텍스트를 중앙 정렬 */
 `;
 
 const SelectField = styled(Select)`
   min-width: 70px;
   font-size: 0.8rem;
+  
 
   .MuiSelect-select {
     padding: 0px 4px;
@@ -219,11 +232,11 @@ const DataSelection = () => {
     '추가 정보2': [],
   });
   const [selectedItemsTab2, setSelectedItemsTab2] = useState({
-    '리포트 정보 1': [],
-    '리포트 정보 2': [],
-    '리포트 정보 3': [],
+    '기본 정보': [],
+    '환자 정보': [],
+    '질병력': [],
   });
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedInstitution, setSelectedInstitution] = useState('');
 
@@ -258,7 +271,7 @@ const DataSelection = () => {
   };
 
   const handleToggle = () => {
-    setOpen(!open);
+    setOpen((prevOpen) => !prevOpen);
   };
 
   const handleCategorySelect = (category) => {
@@ -314,14 +327,15 @@ const DataSelection = () => {
           '추가 정보2': ['정보D', '정보E', '정보F'],
         },
         institutions: ['기관1', '기관2', '기관3'],
+        genders: ['Male', 'Female'],
         selectedItems: selectedItemsTab1,
       };
     } else {
       return {
         categories: {
-          '리포트 정보 1': ['보고서 유형', '작성자', '생성일자2','생성일자3','생성일자','fds'],
-          '리포트 정보 2': ['검토자', '승인자', '발행일자'],
-          '리포트 정보 3': ['프로젝트명', '클라이언트명', '프로젝트 기간'],
+          '기본 정보': ['기관', '촬영일자', '촬영장비'],
+          '환자 정보': ['성별', '나이', '체중','키'],
+          '질병력': ['당뇨','고혈압','골다공증'],
         },
         institutions: [],
         selectedItems: selectedItemsTab2,
@@ -329,7 +343,7 @@ const DataSelection = () => {
     }
   };
 
-  const { categories, institutions, selectedItems } = getSelectableItems();
+  const { categories, institutions, genders, selectedItems } = getSelectableItems();
   const subItems = selectedCategory ? categories[selectedCategory] : [];
 
   const handleReset = () => {
@@ -364,21 +378,21 @@ const DataSelection = () => {
           데이터 분석
           <img src={chartIcon} alt="아이콘" />
         </ButtonStyled>
-        <IconButton onClick={handleToggle} size="small">
-          {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-        </IconButton>
+            <IconButton onClick={handleToggle} size="small">
+            {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
       </FlexBox>
 
       <Collapse in={open}>
+        <LabelRow>
+          <Label style={{ width: '21%' }}>대분류</Label>
+          <Label style={{ width: '79%' }}>중분류</Label>
+        </LabelRow>
         <ListContainer>
           <StyledList>
             {Object.keys(categories).map((category) => (
-              <StyledListItem
-                key={category}
-                selected={category === selectedCategory}
-                onClick={() => handleCategorySelect(category)}
-              >
-                <ListItemText primary={category} />
+              <StyledListItem key={category} selected={category === selectedCategory}>
+                <ListItemText primary={category} onClick={() => handleCategorySelect(category)} />
               </StyledListItem>
             ))}
           </StyledList>
@@ -453,31 +467,35 @@ const DataSelection = () => {
                     </SelectField>
                   </SelectWrapper>
                   <SelectWrapper>
-                    <Label>성별:</Label>
-                    <SelectField
-                      value={selectedItemsTab1['환자정보']['성별']}
-                      onChange={(e) => handleSelectChange('성별', e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="Male">Male</MenuItem>
-                      <MenuItem value="Female">Female</MenuItem>
-                    </SelectField>
-                  </SelectWrapper>
+                        <Label>성별:</Label>
+                        <SelectField
+                            value={selectedItemsTab1['환자정보']['성별']}
+                            onChange={(e) => handleSelectChange('성별', e.target.value)}
+                            displayEmpty
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {genders.map((gender) => (
+                                <MenuItem key={gender} value={gender}>
+                                    {gender}
+                                </MenuItem>
+                            ))}
+                        </SelectField>
+                    </SelectWrapper>
+
                 </>
               ) : (
                 subItems.map((subItem) => (
                   <SubListItem
                     key={subItem}
                     selected={selectedItems[selectedCategory]?.includes(subItem)}
-                    onClick={() => handleItemClick(subItem)}
                   >
                     <ListItemText
                       primary={subItem}
+                      onClick={() => handleItemClick(subItem)}
                       style={{
-                        color: selectedItems[selectedCategory]?.includes(subItem) ? 'blue' : 'black',
+                        color: selectedItems[selectedCategory]?.includes(subItem) ? '#DD7610' : 'black',
                       }}
                     />
                   </SubListItem>
@@ -523,7 +541,6 @@ const DataSelection = () => {
       </SelectedItemsBox>
     </Container>
   );
-  
 };
 
 export default DataSelection;
