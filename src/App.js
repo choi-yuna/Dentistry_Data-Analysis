@@ -1,6 +1,6 @@
 import React from 'react';
 import DataQualityView from './dataQualityView/dataQuality';
-import DataVisualization from './dataVisualizationView/dataVisualization'
+import DataVisualization from './dataVisualizationView/dataVisualizationView'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
