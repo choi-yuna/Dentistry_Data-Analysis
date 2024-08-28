@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import ClosedIcon from '../assets/images/menubarClose.svg';
 import OpenIcon from '../assets/images/menubarOpen.svg';
 import PeriodontalDisease from '../assets/images/periodontalDisease.svg';
@@ -9,8 +10,6 @@ import Surface from '../assets/images/surface.svg';
 import Osteomyelitis from '../assets/images/osteomyelitis.svg';
 import Open from '../assets/images/open.svg';
 import Close from '../assets/images/close.svg';
-import {  useNavigate } from 'react-router-dom';
-
 
 const MenuBarContainer = styled.div`
   width: ${(props) => (props.collapsed ? '1%' : '18%')};
@@ -96,7 +95,6 @@ const SubMenu = styled.div`
   margin-top: 15px;
   border-radius: 5px;
   margin-left:10px;
-  
 `;
 
 const SubMenuItem = styled.div`
@@ -127,19 +125,16 @@ const Icon = styled.img`
 `;
 
 const ToggleIcon = styled.img`
-   width: 13px;
-   height: 15px;
-   margin-right: 2px;
+  width: 13px;
+  height: 15px;
+  margin-right: 2px;
 `;
-
-
-
 
 const MenuBar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
-  const [qualityMenuActive, setQualityMenuActive] = useState(false);
+
 
   const navigate = useNavigate();
   
@@ -147,24 +142,19 @@ const MenuBar = () => {
     setCollapsed(!collapsed);
   };
 
+  //데이터 품질 평가
  const handleQualityMenuClick = () => {
-    setQualityMenuActive(true);
-    setShowSubMenu(false);
     navigate('/');
   };
 
   const handleVisualizationMenuClick = () => {
-    setQualityMenuActive(true);
-    setShowSubMenu(!showSubMenu);
-    if (!showSubMenu) {
-      setShowSubMenu(true);
-    }
+    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
     navigate('/dataVisualization');
   };
   
   const handleSubMenuItemClick = (item) => {
     setActiveSubMenuItem(item);
-     setShowSubMenu(true);
+    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
   };
 
   return (
@@ -177,8 +167,8 @@ const MenuBar = () => {
           데이터 품질 평가
           <Icon src={ClosedIcon} alt="Close Icon" onClick={handleQualityMenuClick} />
         </QualityMenuBtn>
-        <VisualizeMenuBtn active={showSubMenu} onClick={handleVisualizationMenuClick}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+      <VisualizeMenuBtn active={showSubMenu} onClick={handleVisualizationMenuClick}>
+         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             데이터 분석 가시화
             <Icon 
               src={showSubMenu ? OpenIcon : ClosedIcon} 
@@ -191,14 +181,15 @@ const MenuBar = () => {
             />
           </div>
           {showSubMenu && (
-            <SubMenu>
+       <SubMenu>
               <SubMenuItem 
                 active={activeSubMenuItem === 'All'}
                 onClick={() => handleSubMenuItemClick('All')}
               >
-                <SubMenuItemIcon src={AllIcon} alt="All Icon" />
-                All
+                  <SubMenuItemIcon src={AllIcon} alt="All Icon" />
+                  All
               </SubMenuItem>
+              
               <SubMenuItem 
                 active={activeSubMenuItem === '치주질환'}
                 onClick={() => handleSubMenuItemClick('치주질환')}
@@ -227,12 +218,12 @@ const MenuBar = () => {
                 <SubMenuItemIcon src={Cancer} alt="구강암 Icon" />
                 구강암
               </SubMenuItem>
-            </SubMenu>
-          )}
-        </VisualizeMenuBtn>
-      </InnerContainer>
-    </MenuBarContainer>
-  );
+          </SubMenu>
+        )}
+      </VisualizeMenuBtn>
+    </InnerContainer>
+  </MenuBarContainer>
+);
 };
 
 export default MenuBar;

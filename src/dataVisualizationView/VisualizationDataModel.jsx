@@ -1,7 +1,6 @@
 
 const tablesData = [
     {
-      title: "리포트 결과 1",
       subTitle: "● 기관별 환자수/비율",
       data: {
         headers: ["기관명", "환자수(명)"],
@@ -18,7 +17,6 @@ const tablesData = [
       onPrint: () => alert('Print 1'),
     },
     {
-      title: "리포트 결과 2",
       subTitle: "● 성별 환자수/비율",
       data: {
         headers: ["성별", "환자수(명)"],

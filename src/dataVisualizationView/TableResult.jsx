@@ -5,7 +5,7 @@ import DownloadIcon from '../assets/images/download.svg';
 import PrintIcon from '../assets/images/printer.svg'; 
 
 const ResultCtn = styled.div`
-    width: 60%; 
+    width: 80%; 
     margin-top: 20px;
 `;
 

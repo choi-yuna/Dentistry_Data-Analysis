@@ -5,17 +5,16 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+//데이터 유효 검사
 const VisualPieChart = ({ chartData }) => {
-  // chartData가 유효한지 확인
   if (!chartData || !chartData.rows) {
     return <div>유효하지 않은 데이터입니다.</div>;
   }
 
-  // 데이터 변환: labels와 data 추출
   const labels = chartData.rows.map(row => row[0]);
   const dataValues = chartData.rows.map(row => parseInt(row[1], 10));
 
-  // 파이 차트 데이터 설정
+ 
   const data = {
     labels: labels,
     datasets: [
