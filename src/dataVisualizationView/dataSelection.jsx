@@ -520,6 +520,7 @@ const DataSelection = () => {
       </SelectedItemsBox>
     </Container>
   );
+  
 };
 
 export default DataSelection;
