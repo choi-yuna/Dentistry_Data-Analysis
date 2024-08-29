@@ -47,7 +47,8 @@ const ReportContent = styled.div`
   flex-wrap: wrap; /* 차트들을 두 개씩 한 줄에 배치 */
   justify-content: space-between; /* 차트들 사이 공간 균등 배분 */
   overflow-y: auto; /* 차트에 세로 스크롤바 적용 */
-  height: calc(90% - 30px); /* 전체 컨테이너에서 타이틀 높이를 제외한 높이 설정 */
+  height: calc(90% - 20px); /* 전체 컨테이너에서 타이틀 높이를 제외한 높이 설정 */
+  font-size: 14px;
 `;
 
 const ReportItem = styled.div`

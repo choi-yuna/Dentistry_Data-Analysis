@@ -13,14 +13,14 @@ const PieChart = ({ title, data }) => {
         display: true,
         position: 'right', // 범례를 차트의 오른쪽에 배치
         labels: {
-          boxWidth: 20,
-          padding: 15,
+          boxWidth: 5,
+          padding: 5,
         },
       },
       datalabels: {
         formatter: (value, context) => {
           const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-          const percentage = ((value / total) * 100).toFixed(1);
+          const percentage = ((value / total) * 100).toFixed(0);
           return `${value}\n(${percentage}%)`;
         },
         color: '#000',
@@ -49,16 +49,15 @@ const ChartContainer = styled.div`
   justify-content: center;
   height: 250px; /* 고정된 높이 설정 */
   width: 400px;  /* 고정된 너비 설정 */
-  border: 1px solid #ccc;
   padding: 10px;
   background-color: #ffffff;
-  margin: 20px auto; /* 수평 중앙 정렬 */
+  margin: auto; /* 수평 중앙 정렬 */
 `;
 
 
 const ChartWrapper = styled.div`
   position: relative;
-  height: 90%; /* 차트 영역의 고정된 높이 */
+  height: 100%; /* 차트 영역의 고정된 높이 */
   width: 90%; /* 차트 영역의 고정된 너비 */
   display: flex;
   justify-content: center;
