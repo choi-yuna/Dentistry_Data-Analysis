@@ -27,7 +27,6 @@ const StickyDataSelection = styled.div`
   top: 100px;
   background-color: white;
   padding: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 `;
 

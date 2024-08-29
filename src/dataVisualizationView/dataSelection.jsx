@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ExpandLessIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 이미지 임포트
 
@@ -237,11 +237,11 @@ const DataSelection = () => {
     '기본 정보': [],
     '환자 정보': [],
     '질병력': [],
-    '진단정보별 환자 수': ['질환명', '진단코드', '진단일자'],
-          '환자 수': ['질환명', '진단코드', '진단일자'],
-          '환자 수2': ['질환명', '진단코드', '진단일자'],
-          '추가 정보1': ['정보A', '정보B', '정보C'],
-          '추가 정보2': ['정보D', '정보E', '정보F'],
+    '진단정보별 환자 수': [],
+    '환자 수': [],
+    '환자 수2': [],
+    '추가 정보1': [],
+    '추가 정보2': [],
   });
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -278,7 +278,7 @@ const DataSelection = () => {
   };
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen((open) => !open);
   };
 
   const handleCategorySelect = (category) => {
@@ -386,7 +386,7 @@ const DataSelection = () => {
           <img src={chartIcon} alt="아이콘" />
         </ButtonStyled>
             <IconButton onClick={handleToggle} size="small">
-            {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}          
             </IconButton>
       </FlexBox>
 
