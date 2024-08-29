@@ -8,9 +8,8 @@ import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 �
 
 // Styled Components
 const Container = styled.div`
-  width: 100%;
+  width: 95%;
   margin-top: 20px; 
-  position: sticky;
 `;
 
 const FlexBox = styled.div`
@@ -238,6 +237,11 @@ const DataSelection = () => {
     '기본 정보': [],
     '환자 정보': [],
     '질병력': [],
+    '진단정보별 환자 수': ['질환명', '진단코드', '진단일자'],
+          '환자 수': ['질환명', '진단코드', '진단일자'],
+          '환자 수2': ['질환명', '진단코드', '진단일자'],
+          '추가 정보1': ['정보A', '정보B', '정보C'],
+          '추가 정보2': ['정보D', '정보E', '정보F'],
   });
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
