@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField } from '@mui/material';
+import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ExpandLessIcon from '@mui/icons-material/ExpandMore';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import chartIcon from '../assets/images/chart-botton-black.svg'; // 아이콘 이미지 임포트
+import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 이미지 임포트
 
 // Styled Components
 const Container = styled.div`
   width: 100%;
   margin-top: 20px; 
+  position: sticky;
 `;
 
 const FlexBox = styled.div`
   display: flex;
   align-items: center; /* Center align items vertically */
+  
 `;
 
 const StyledTabs = styled(Tabs)`
@@ -89,7 +91,7 @@ const StyledListItem = styled.div`
 const SubListItem = styled(StyledListItem)`
   background-color: inherit; 
   color: ${({ selected }) => (selected ? '#DD7610' : 'black')}; 
-  
+  margin-left: 15px;
    &:hover {
     background-color: inherit; /* 호버할 때 배경색이 변경되지 않도록 설정 */
   }
@@ -105,13 +107,13 @@ const SelectWrapper = styled.div`
 const LabelRow = styled.div`
   display: flex;
   justify-content: flex-start;
+border: 1px solid #ccc; /* 테두리 추가 */
+  box-sizing: border-box; /* 테두리가 추가되었으므로 박스 크기를 포함하도록 설정 */
 `;
 
 const Label = styled.label`
   min-width: 40px; 
   font-size: 16px; /* 폰트 크기를 더 줄였습니다 */
-  border: 1px solid #ccc; /* 테두리 추가 */
-  box-sizing: border-box; /* 테두리가 추가되었으므로 박스 크기를 포함하도록 설정 */
   text-align: center; /* 텍스트를 중앙 정렬 */
 `;
 
@@ -174,6 +176,7 @@ const TextFieldStyled = styled(TextField)`
 const ButtonStyled = styled.button`
     padding: 8px 16px;
     background-color: #ffffff;
+    
     color: black;
     border-radius: 4px;
     cursor: pointer;
@@ -320,14 +323,9 @@ const DataSelection = () => {
         categories: {
           '기본 정보(info)': ['기관 선택', '촬영일자', '촬영장비'],
           '환자정보': ['흡연', '음주', '성별'],
-          '진단정보별 환자 수': ['질환명', '진단코드', '진단일자'],
-          '환자 수': ['질환명', '진단코드', '진단일자'],
-          '환자 수2': ['질환명', '진단코드', '진단일자'],
-          '추가 정보1': ['정보A', '정보B', '정보C'],
-          '추가 정보2': ['정보D', '정보E', '정보F'],
         },
         institutions: ['기관1', '기관2', '기관3'],
-        genders: ['Male', 'Female'],
+        genders: ['남자', '여자'],
         selectedItems: selectedItemsTab1,
       };
     } else {
@@ -336,6 +334,11 @@ const DataSelection = () => {
           '기본 정보': ['기관', '촬영일자', '촬영장비'],
           '환자 정보': ['성별', '나이', '체중','키'],
           '질병력': ['당뇨','고혈압','골다공증'],
+          '진단정보별 환자 수': ['질환명', '진단코드', '진단일자'],
+          '환자 수': ['질환명', '진단코드', '진단일자'],
+          '환자 수2': ['질환명', '진단코드', '진단일자'],
+          '추가 정보1': ['정보A', '정보B', '정보C'],
+          '추가 정보2': ['정보D', '정보E', '정보F'],
         },
         institutions: [],
         selectedItems: selectedItemsTab2,
@@ -530,14 +533,14 @@ const DataSelection = () => {
             }
           })}
         </ChipsContainer>
-        <ButtonStyled
+        <Button
           variant="outlined"
           size="small"
           startIcon={<RefreshIcon />}
-          onClick={handleReset}
+          onClick={handleReset}  // 전체 초기화 핸들러 호출
         >
           초기화
-        </ButtonStyled>
+        </Button>
       </SelectedItemsBox>
     </Container>
   );

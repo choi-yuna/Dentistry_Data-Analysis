@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import chartIcon from '../assets/images/chart-botton.svg';
+import chartIcon from '../assets/images/chart-button.svg';
 
 const FormContainer = styled.div`
     padding: 10px 70px;
