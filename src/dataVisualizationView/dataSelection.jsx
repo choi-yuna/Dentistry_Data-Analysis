@@ -4,9 +4,9 @@ import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, 
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 이미지 임포트
+import chartIcon from '../assets/images/chart-button-black.svg';
 
-// Styled Components
+
 const Container = styled.div`
   width:${(props) => (props.collapsed ? '90%' : '90%')};
   margin-top: 5px; 
@@ -15,8 +15,7 @@ const Container = styled.div`
 
 const FlexBox = styled.div`
   display: flex;
-  align-items: center; /* Center align items vertically */
-  
+  align-items: center; 
 `;
 
 const StyledTabs = styled(Tabs)`
@@ -70,8 +69,8 @@ const StyledList = styled.div`
 const SubList = styled.div`
   width: 80%;
   display: flex;
-  flex-direction: row; /* 가로로 나열 */
-  flex-wrap: wrap; /* 컨텐츠가 화면을 넘을 경우 줄바꿈을 하도록 설정 */
+  flex-direction: row; 
+  flex-wrap: wrap;
   gap: 8px; 
 `;
 
@@ -219,7 +218,7 @@ const ChipsContainer = styled.div`
   gap: 8px;
 `;
 
-const DataSelection = ({collapsed}) => {
+const DataSelection = ({collapsed, onAnalyze}) => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedItemsTab1, setSelectedItemsTab1] = useState({
     '기본 정보(info)': [],
@@ -375,6 +374,12 @@ const DataSelection = ({collapsed}) => {
     setSelectedInstitution('');
   };
 
+const handleTabResult = (e) => {
+  e.preventDefault();
+  onAnalyze();
+};
+
+
   return (
     <Container collapsed={collapsed}>
       <FlexBox>
@@ -382,7 +387,7 @@ const DataSelection = ({collapsed}) => {
           <StyledTab label="데이터 구성 항목" />
           <StyledTab label="리포트 항목" />
         </StyledTabs>
-        <ButtonStyled type="submit"> {/* AnalyzeButton 삭제 후 직접 스타일링 적용 */}
+        <ButtonStyled  type="button" onClick={handleTabResult}> 
           데이터 분석
           <img src={chartIcon} alt="아이콘" />
         </ButtonStyled>

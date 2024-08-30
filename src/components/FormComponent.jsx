@@ -110,7 +110,7 @@ const Button = styled.button`
     }
 `;
 
-const FormComponent = ({ collapsed }) => {
+const FormComponent = ({ collapsed, onAnalyze  }) => {
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
@@ -125,6 +125,7 @@ const FormComponent = ({ collapsed }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(`Institution: ${institution}, Disease: ${disease}`);
+        onAnalyze();
     };
 
     return (
