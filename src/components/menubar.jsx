@@ -130,10 +130,9 @@ const ToggleIcon = styled.img`
   margin-right: 2px;
 `;
 
-const MenuBar = () => {
+const MenuBar = ({collapsed, setCollapsed} ) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
-  const [collapsed, setCollapsed] = useState(false);
 
 
   const navigate = useNavigate();

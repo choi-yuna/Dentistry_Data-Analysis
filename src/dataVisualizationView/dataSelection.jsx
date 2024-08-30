@@ -8,9 +8,9 @@ import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 �
 
 // Styled Components
 const Container = styled.div`
-  width: 80%;
-  margin-top: 20px; 
-  margin-left: 20%;
+  width:${(props) => (props.collapsed ? '90%' : '90%')};
+  margin-top: 5px; 
+  transition: width 1s ease, height 0.3s ease;
 `;
 
 const FlexBox = styled.div`
@@ -219,7 +219,7 @@ const ChipsContainer = styled.div`
   gap: 8px;
 `;
 
-const DataSelection = () => {
+const DataSelection = ({collapsed}) => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedItemsTab1, setSelectedItemsTab1] = useState({
     '기본 정보(info)': [],
@@ -376,7 +376,7 @@ const DataSelection = () => {
   };
 
   return (
-    <Container>
+    <Container collapsed={collapsed}>
       <FlexBox>
         <StyledTabs value={tabValue} onChange={handleTabChange}>
           <StyledTab label="데이터 구성 항목" />

@@ -4,10 +4,11 @@ import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
 
 const ResultCtn = styled.div`
-    width: 36%; 
+    width: ${(props) => (props.collapsed ? '60%' : '36%')};
     height: 45%; 
-    margin-left: 22%;
+    margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
     margin-top: -30px;
+    transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const FormCtn = styled.div`
@@ -49,7 +50,7 @@ const DetailButton = styled.button`
     }
 `;
 
-const DataAnalysisResults = () => {
+const DataAnalysisResults = ({collapsed}) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [excelData, setExcelData] = useState([
         ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
@@ -68,7 +69,7 @@ const DataAnalysisResults = () => {
     };
 
     return (
-        <ResultCtn>
+        <ResultCtn collapsed={collapsed}>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>

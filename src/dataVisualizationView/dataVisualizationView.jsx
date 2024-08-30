@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
@@ -11,7 +11,8 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden; /* 전체 페이지 스크롤을 막음 */
+  overflow: hidden;
+ transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const MainContent = styled.div`
@@ -21,7 +22,7 @@ const MainContent = styled.div`
 `;
 
 const StickyDataSelection = styled.div`
-  width: 95%;
+  width: 100%;
   margin-top: 20px;
   position: shrink;
   top: 100px;
@@ -38,9 +39,9 @@ const ContentCtn = styled.div`
   flex: 1;
   padding: 20px;
   margin-top: 50px;
-  margin-left: 30px;
-  height: calc(100vh - 150px); /* 페이지 높이에서 특정 값을 뺀 높이 */
-  overflow: hidden; /* ContentCtn 내에서 스크롤을 막음 */
+  margin-left : ${(props) => (props.collapsed ? '5%' : '20%')};
+  height: calc(100vh - 150px); 
+  overflow: hidden;
 `;
 
 const GridContainer = styled.div`
@@ -48,7 +49,7 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto;
   width: 85%;
-  margin-left: 20%;
+  margin-left: 5%;
 `;
 
 const ReportSection = styled.div`
@@ -60,21 +61,23 @@ const ReportSection = styled.div`
 `;
 
 const DataVisualizationView = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <AppContainer>
       <TopBar />
       <MainContent>
-        <MenuBar />
-        <ContentCtn>
+        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed}/>
+        <ContentCtn collapsed={collapsed}>
           <StickyDataSelection>
-            <DataSelection />
+            <DataSelection collapsed={collapsed} />
           </StickyDataSelection>
           <ReportSection>
             <GridContainer>
               {tablesData.map((table, index) => (
                 <React.Fragment key={index}>
-                  <TableResult tablesData={[table]} />
-                  <PieChartResult chart={table} />
+                  <TableResult collapsed={collapsed} tablesData={[table]} />
+                  <PieChartResult collapsed={collapsed} chart={table} />
                 </React.Fragment>
               ))}
             </GridContainer>

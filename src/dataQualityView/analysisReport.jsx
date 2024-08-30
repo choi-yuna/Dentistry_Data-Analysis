@@ -9,10 +9,10 @@ const ReportContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);;
   padding: 20px;
-  margin: 20px 0;
-  margin-left: 22%;
+  margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
   height: 400px;
-  width: 75%;
+  width: ${(props) => (props.collapsed ? '87%' : '75%')};
+  transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const ReportHeader = styled.div`
@@ -56,7 +56,7 @@ const ReportItem = styled.div`
   padding: 10px;
   margin: 10px;
   flex: 1 1 45%; /* 두 개의 차트가 가로로 배치되도록 설정 */
-  min-width: 250px; /* 최소 너비 */
+  min-width: 270px; /* 최소 너비 */
   box-sizing: border-box;
 
   @media (max-width: 768px) {
@@ -64,7 +64,7 @@ const ReportItem = styled.div`
   }
 `;
 
-const DataReport = () => {
+const DataReport = ({collapsed}) => {
   const chartsData = [
     {
       title: '데이터 품질 이상 항목',
@@ -159,7 +159,7 @@ const DataReport = () => {
   ];
 
   return (
-    <ReportContainer>
+    <ReportContainer collapsed={collapsed}>
       <ReportHeader>
         <ReportTitle>데이터 분석 리포트</ReportTitle>
         <IconContainer>

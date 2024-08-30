@@ -6,13 +6,14 @@ const FormContainer = styled.div`
     padding: 10px 70px;
     border-radius: 5px;
     display: flex;
-    width: 80%;
+    width: ${(props) => (props.collapsed ? '90%' : '70%')};
     background: #E7ECEE;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     gap: 15px;
     box-sizing: border-box;
     margin-top: 20px;
-    margin-left: 20%;
+    transition: width 0.3s ease, height 0.3s ease;
+
 `;
 
 const PageContainer = styled.div`
@@ -21,7 +22,7 @@ const PageContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding: 60px;
-    box-sizing: border-box;
+
 `;
 
 const FormInline = styled.form`
@@ -109,7 +110,7 @@ const Button = styled.button`
     }
 `;
 
-const FormComponent = () => {
+const FormComponent = ({ collapsed }) => {
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
@@ -128,7 +129,7 @@ const FormComponent = () => {
 
     return (
         <PageContainer>
-            <FormContainer>
+            <FormContainer collapsed={collapsed}>
                 <FormInline onSubmit={handleSubmit}>
                     <FormGroup>
                         <LabelSelectGroup>
