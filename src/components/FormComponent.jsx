@@ -6,12 +6,13 @@ const FormContainer = styled.div`
     padding: 10px 70px;
     border-radius: 5px;
     display: flex;
-    width: 95%;
+    width: 80%;
     background: #E7ECEE;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     gap: 15px;
     box-sizing: border-box;
     margin-top: 20px;
+    margin-left: 20%;
 `;
 
 const PageContainer = styled.div`

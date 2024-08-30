@@ -21,7 +21,7 @@ const MenuBarContainer = styled.div`
   flex-direction: column;
   align-items: center;
   transition: width 0.3s ease, height 0.3s ease;
-  position: relative;
+  position: fixed;
 `;
 
 const InnerContainer = styled.div`

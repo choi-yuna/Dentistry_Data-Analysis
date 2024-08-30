@@ -8,8 +8,9 @@ import chartIcon from '../assets/images/chart-button-black.svg'; // 아이콘 �
 
 // Styled Components
 const Container = styled.div`
-  width: 95%;
+  width: 80%;
   margin-top: 20px; 
+  margin-left: 20%;
 `;
 
 const FlexBox = styled.div`

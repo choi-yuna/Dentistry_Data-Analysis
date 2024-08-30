@@ -8,6 +8,7 @@ import PrintIcon from '../assets/images/printer.svg';
 const ResultCtn = styled.div`
     width: 100%; 
     margin-top: 20px;
+    
 `;
 
 const FormCtn = styled.div`
@@ -16,7 +17,7 @@ const FormCtn = styled.div`
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 89%;
+    width: 85%;
     height: auto;
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);

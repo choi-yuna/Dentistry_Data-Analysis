@@ -19,14 +19,14 @@ const Th = styled.th`
   padding: 10px;
   background-color: #C4C4C4;
   text-align: center;
-  width: 16.66%; /* 전체 테이블의 1/6 크기 */
+  width: 16.66%; 
 `;
 
 const Td = styled.td`
   border: 2px solid black;
   padding: 10px;
   text-align: center;
-  width: 16.66%; /* 전체 테이블의 1/6 크기 */
+  width: 16.66%; 
 `;
 
 const EmptyTh = styled.th`
@@ -34,7 +34,7 @@ const EmptyTh = styled.th`
   padding: 10px;
   background-color: #C4C4C4;
   text-align: center;
-  width: 33%; /* 전체 테이블의 1/6 크기 */
+  width: 33%; 
 `;
 
 const ColSpanTd = styled.td`
@@ -43,7 +43,7 @@ const ColSpanTd = styled.td`
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
-  width: 33.33%; /* 2칸을 차지하므로 전체 테이블의 1/3 크기 */
+  width: 33.33%;
 `;
 
 const MyTable = () => {

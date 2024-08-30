@@ -6,7 +6,7 @@ import Modal from './Modal';
 const ResultCtn = styled.div`
     width: 36%; 
     height: 45%; 
-    margin-left:20px;
+    margin-left: 22%;
     margin-top: -30px;
 `;
 

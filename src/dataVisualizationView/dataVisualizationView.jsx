@@ -43,17 +43,12 @@ const ContentCtn = styled.div`
   overflow: hidden; /* ContentCtn 내에서 스크롤을 막음 */
 `;
 
-const PageTitle = styled.h1`
-  margin-bottom: 0px;
-  font-size: 28px;
-  font-weight: bold;
-`;
-
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto;
-  width: 100%;
+  width: 85%;
+  margin-left: 20%;
 `;
 
 const ReportSection = styled.div`
@@ -61,6 +56,7 @@ const ReportSection = styled.div`
   height: calc(100vh - 200px); /* 페이지 높이에서 상단 요소들을 제외한 높이 */
   overflow-y: auto; /* 이 컨테이너에서만 세로 스크롤을 허용 */
   overflow-x: hidden; /* 가로 스크롤을 숨김 */
+
 `;
 
 const DataVisualizationView = () => {
@@ -74,7 +70,6 @@ const DataVisualizationView = () => {
             <DataSelection />
           </StickyDataSelection>
           <ReportSection>
-            <PageTitle>리포트 결과</PageTitle>
             <GridContainer>
               {tablesData.map((table, index) => (
                 <React.Fragment key={index}>

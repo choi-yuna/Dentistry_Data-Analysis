@@ -10,9 +10,9 @@ const ReportContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);;
   padding: 20px;
   margin: 20px 0;
-  margin-left: 20px;
+  margin-left: 22%;
   height: 400px;
-  width: 90%;
+  width: 75%;
 `;
 
 const ReportHeader = styled.div`
@@ -26,8 +26,8 @@ const ReportTitle = styled.h2`
   margin-bottom: 0px;
   margin-top: 0px;
   top: 0; 
-  background-color: #FAF8F8; /* 배경색을 컨테이너와 동일하게 설정 */
-  padding: 10px 0; /* 타이틀 텍스트에 패딩 추가 */
+  background-color: #FAF8F8;
+  padding: 10px 0; 
 `;
 
 const IconContainer = styled.div`
@@ -44,11 +44,10 @@ const Icon = styled.img`
 
 const ReportContent = styled.div`
   display: flex;
-  flex-wrap: wrap; /* 차트들을 두 개씩 한 줄에 배치 */
-  justify-content: space-between; /* 차트들 사이 공간 균등 배분 */
-  overflow-y: auto; /* 차트에 세로 스크롤바 적용 */
-  height: calc(90% - 20px); /* 전체 컨테이너에서 타이틀 높이를 제외한 높이 설정 */
-  font-size: 14px;
+  flex-wrap: wrap;
+  justify-content: space-between; 
+  overflow-y: auto;
+  height: calc(90% - 30px);
 `;
 
 const ReportItem = styled.div`
