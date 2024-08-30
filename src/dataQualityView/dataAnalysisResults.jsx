@@ -4,7 +4,7 @@ import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
 
 const ResultCtn = styled.div`
-    width: ${(props) => (props.collapsed ? '60%' : '36%')};
+    width: ${(props) => (props.collapsed ? '60%' : '38%')};
     height: 45%; 
     margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
     margin-top: -30px;

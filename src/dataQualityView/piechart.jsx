@@ -11,7 +11,7 @@ const PieChart = ({ title, data }) => {
     plugins: {
       legend: {
         display: true,
-        position: 'right', // 범례를 차트의 오른쪽에 배치
+        position: 'right',
         labels: {
           boxWidth: 5,
           padding: 5,
@@ -29,14 +29,31 @@ const PieChart = ({ title, data }) => {
         },
       },
     },
-    maintainAspectRatio: false, // 차트 비율 조정 허용
+    maintainAspectRatio: false, 
+  };
+
+
+  const modifiedData = {
+    ...data,
+    datasets: data.datasets.map((dataset) => ({
+      ...dataset,
+      backgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+        '#4BC0C0',
+        '#9966FF',
+        '#FF9F40',
+        '#E7E9ED'
+      ],
+    })),
   };
 
   return (
     <ChartContainer>
       <ChartTitle>{title}</ChartTitle>
       <ChartWrapper>
-        <Pie data={data} options={options} />
+        <Pie data={modifiedData} options={options} />
       </ChartWrapper>
     </ChartContainer>
   );
@@ -47,18 +64,17 @@ const ChartContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 250px; /* 고정된 높이 설정 */
-  width: 400px;  /* 고정된 너비 설정 */
+  height: 250px; 
+  width: 400px;  
   padding: 10px;
   background-color: #ffffff;
-  margin: auto; /* 수평 중앙 정렬 */
+  margin: auto; 
 `;
-
 
 const ChartWrapper = styled.div`
   position: relative;
-  height: 100%; /* 차트 영역의 고정된 높이 */
-  width: 90%; /* 차트 영역의 고정된 너비 */
+  height: 100%; 
+  width: 100%; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -67,6 +83,7 @@ const ChartWrapper = styled.div`
 const ChartTitle = styled.h3`
   margin-bottom: 20px;
   text-align: center;
+  text-weight: bold;
 `;
 
 export default PieChart;
