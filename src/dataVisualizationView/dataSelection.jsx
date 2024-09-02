@@ -243,7 +243,7 @@ const DataSelection = ({collapsed, onAnalyze}) => {
     '추가 정보1': [],
     '추가 정보2': [],
   });
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedInstitution, setSelectedInstitution] = useState('');
 
