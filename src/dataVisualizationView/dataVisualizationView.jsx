@@ -37,9 +37,9 @@ const ContentCtn = styled.div`
   align-items: flex-start;
   flex: 1;
   padding: 20px;
-  margin-top: 50px;
+  margin-top: 30px;
   margin-left: ${(props) => (props.collapsed ? '5%' : '20%')};
-  height: calc(100vh - 150px); 
+  height: calc(100vh - 80px); 
   overflow: hidden;
 `;
 
