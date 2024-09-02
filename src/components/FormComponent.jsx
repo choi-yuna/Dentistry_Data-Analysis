@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
 
 const FormContainer = styled.div`
-    padding: 10px 70px;
+    padding: 10px 60px;
     border-radius: 5px;
     display: flex;
     width: ${(props) => (props.collapsed ? '90%' : '70%')};
@@ -11,9 +11,8 @@ const FormContainer = styled.div`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     gap: 15px;
     box-sizing: border-box;
-    margin-top: 20px;
     transition: width 0.3s ease, height 0.3s ease;
-
+    margin-left: 3%;
 `;
 
 const PageContainer = styled.div`
@@ -21,7 +20,7 @@ const PageContainer = styled.div`
     width: 100%;
     justify-content: center;
     align-items: center;
-    padding: 60px;
+    padding: 50px;
 
 `;
 
