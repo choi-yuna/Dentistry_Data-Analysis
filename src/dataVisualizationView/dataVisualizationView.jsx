@@ -24,12 +24,10 @@ const MainContent = styled.div`
 
 const StickyDataSelection = styled.div`
   width: 100%;
-  margin-top: 20px;
   position: shrink;
   top: 100px;
   background-color: white;
   padding: 10px;
-  margin-bottom: 20px;
 `;
 
 const ContentCtn = styled.div`
