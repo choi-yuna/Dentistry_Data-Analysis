@@ -156,23 +156,22 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
 
   // 데이터 품질 평가 버튼 클릭 처리
   const handleQualityMenuClick = () => {
-    setActiveQuality(true);  // 품질 평가 버튼 활성화
-    setShowSubMenu(false);   // 서브메뉴 닫기
-    setActiveSubMenuItem(null); // 서브메뉴 활성화 상태 초기화
-    navigate('/');           // 라우팅 처리
+    setActiveQuality(true);  
+    setShowSubMenu(false);  
+    setActiveSubMenuItem(null);
+    navigate('/');         
   };
 
   // 데이터 분석 가시화 버튼 클릭 처리
   const handleVisualizationMenuClick = () => {
-    setActiveQuality(false);  // 품질 평가 버튼 비활성화
-    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);  // 서브메뉴 열기/닫기
-    navigate('/dataVisualization');  // 라우팅 처리
+    setActiveQuality(false); 
+    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);  
+    navigate('/dataVisualization');  
   };
 
   const handleSubMenuItemClick = (item) => {
-    setActiveSubMenuItem(item); // 서브메뉴 항목 활성화
-    setShowSubMenu(false); // 서브메뉴 닫기
-    // 이 부분에서 각 서브메뉴에 대한 라우팅 처리
+    setActiveSubMenuItem(item);
+    setShowSubMenu(false);
     switch (item) {
       case 'All':
         navigate('/all');
