@@ -13,7 +13,7 @@ const TopBarContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     background-color: #0C476A;
-    padding: 10px 20px;
+    padding: 0px 10px;
     color: white;
     box-sizing: border-box;
     z-index:1000;
@@ -26,9 +26,9 @@ const TopBarLeft = styled.div`
 `;
 
 const Logo = styled.img`
-    height: 60px;
-    margin-right: 10px;
-    left: 26px;
+    height: 42px;
+    margin-right: 5px;
+    left: 35px;
 `;
 
 const TopBarRight = styled.div`
@@ -37,11 +37,12 @@ const TopBarRight = styled.div`
     padding-top: 18px;
     padding-bottom: 2px;
     gap: 12%;
-    margin-right: 5%;
+    margin-right: 4%;
+    margin-bottom: 4px;
 `;
 
 const Icon = styled.img`
-    height: 40px;
+    height: 30px;
     cursor: pointer;
 `;
 
@@ -49,7 +50,7 @@ const Username = styled.span`
     margin-right: 2%;
     margin-top: 13px;
     white-space: nowrap;
-    font-size: 20px;
+    font-size: 15px;
     font-family: 'Inter';
 `;
 

@@ -16,7 +16,7 @@ const MenuBarContainer = styled.div`
   height: 100vh;
   background-color: #003250;
   padding: 7px;
-  margin-top: 80px;
+  margin-top: 57px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +51,7 @@ const ToggleButton = styled.button`
 
 const QualityMenuBtn = styled.button`
   width: 100%;
-  background-color: ${(props) => (props.active ? '#909090' : '#FFFFFF')};
+  background-color: ${(props) => (props.active ? '#E4E4E4' : '#FFFFFF')};
   border: none;
   padding: 15px;
   margin: 5px 0;
@@ -65,7 +65,7 @@ const QualityMenuBtn = styled.button`
   justify-content: space-between;
   align-items: center;
   &:hover {
-    background-color: #ececec;
+    background-color: #E4E4E4;
   }
 `;
 
@@ -133,38 +133,42 @@ const ToggleIcon = styled.img`
 const MenuBar = ({collapsed, setCollapsed} ) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
-
+  const [activQuality, setActiveQuality] = useState(false);
 
   const navigate = useNavigate();
   
   const handleToggle = () => {
     setCollapsed(!collapsed);
   };
-
-  //데이터 품질 평가
- const handleQualityMenuClick = () => {
-    navigate('/');
+  
+ // 데이터 품질 평가 버튼 클릭 처리
+  const handleQualityMenuClick = () => {
+    setActiveQuality(true);  // 품질 평가 버튼 활성화
+    setShowSubMenu(false);   // 서브메뉴 닫기
+    setActiveSubMenuItem(null); // 서브메뉴 활성화 상태 초기화
+    navigate('/');           // 라우팅 처리
   };
 
+  // 데이터 분석 가시화 버튼 클릭 처리
   const handleVisualizationMenuClick = () => {
-    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
-    navigate('/dataVisualization');
+    setActiveQuality(false);  // 품질 평가 버튼 비활성화
+    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);  // 서브메뉴 열기/닫기
+    navigate('/dataVisualization');  // 라우팅 처리
   };
   
   const handleSubMenuItemClick = (item) => {
-    setActiveSubMenuItem(item);
-    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
+    setActiveSubMenuItem(item); // 서브메뉴 항목 활성화
+    setShowSubMenu(false); // 서브메뉴 닫기
   };
-
   return (
     <MenuBarContainer collapsed={collapsed}>
       <ToggleButton onClick={handleToggle} collapsed={collapsed}>
             <ToggleIcon src={collapsed ? Close : Open} alt="Toggle Icon" />
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
-        <QualityMenuBtn>
+        <QualityMenuBtn active={activQuality} onClick={handleQualityMenuClick} >
           데이터 품질 평가
-          <Icon src={ClosedIcon} alt="Close Icon" onClick={handleQualityMenuClick} />
+          <Icon src={ClosedIcon} alt="Close Icon"/>
         </QualityMenuBtn>
       <VisualizeMenuBtn active={showSubMenu} onClick={handleVisualizationMenuClick}>
          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
