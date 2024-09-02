@@ -1,7 +1,8 @@
 import React from 'react';
 import DataQualityView from './dataQualityView/dataQuality';
-import DataVisualization from './dataVisualizationView/dataVisualizationView'
+import DataVisualization from './dataVisualizationView/dataVisualizationView';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import './App.css';  // CSS 파일을 임포트
 
 function App() {
   return (
@@ -11,11 +12,12 @@ function App() {
           <Route path="/" element={<DataQualityView />} />
           <Route path="/dataVisualization" element={<DataVisualization />} />
         </Routes>
+        <div className="copyright">
+          COPYRIGHT © FINANCE ALL SOLUTIONS CO., LTD.ALL RIGHT RESERVED.
+        </div>
       </div>
-  </Router>
+    </Router>
   );
 }
 
 export default App;
-
-
