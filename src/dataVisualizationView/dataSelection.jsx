@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, ListItemText, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
+import { IconButton, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg';
 
-
 const Container = styled.div`
-  width:${(props) => (props.collapsed ? '90%' : '90%')};
+  width: ${(props) => (props.collapsed ? '95%' : '95%')};
   margin-top: 5px; 
   transition: width 1s ease, height 0.3s ease;
 `;
@@ -21,7 +20,6 @@ const FlexBox = styled.div`
 const StyledTabs = styled(Tabs)`
   border: 1px solid #ccc;
   border-radius: 8px 8px 0 0;
-
 `;
 
 const StyledTab = styled(Tab)`
@@ -38,88 +36,96 @@ const StyledTab = styled(Tab)`
 
 const ListContainer = styled.div`
   display: flex;
+  flex-direction: column;
   border: 1px solid #ccc;
   border-radius: 0 0 8px 8px;
-
   padding: 8px; 
   background-color: #fff;
 `;
 
-const StyledList = styled.div`
-  width: 20%;
-  border-right: 1px solid #ccc;
-  padding-right: 8px; 
-  max-height: 180px; 
-  overflow-y: auto;
+const LabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
 
-  &::-webkit-scrollbar {
-    width: 6px; 
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
+const VerticalDivider = styled.div`
+  width: 1px;
+  height: 100%;
+  background-color: #aaa;
+  margin: 0 1px;
+  border: 1px solid #ccc;
+`;
+
+const Section = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #ccc; /* 구분선 추가 */
+`;
+
+const StyledList = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 8px;
+  padding-left: 8px;
+  margin-bottom: 4px;
 `;
 
 const SubList = styled.div`
-  width: 80%;
   display: flex;
-  flex-direction: row; 
-  flex-wrap: wrap;
-  gap: 8px; 
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
 `;
 
-const StyledListItem = styled.div`
-  padding: 4px;
-  background-color: ${({ selected }) => (selected ? '#f0f0f0' : 'inherit')};
+const StyledButtonItem = styled.button`
+  padding: 6px 8px;
+  background-color: ${({ selected }) => (selected ? '#DD7610' : '#f0f0f0')};
+  color: ${({ selected }) => (selected ? '#ffffff' : '#000000')};
+  border: 1px solid ${({ selected }) => (selected ? '#DD7610' : '#ccc')};
   border-radius: 4px;
-  margin-bottom: 4px;
-  cursor: ${({ isTextSelected }) => (isTextSelected ? 'copy' : 'pointer')};
-  
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    background-color: #e0e0e0;
+    background-color: ${({ selected }) => (selected ? '#c05b00' : '#e0e0e0')};
+    color: ${({ selected }) => (selected ? '#ffffff' : '#000000')};
   }
 `;
 
-const SubListItem = styled(StyledListItem)`
+const SubListItem = styled(StyledButtonItem)`
   background-color: inherit; 
   color: ${({ selected }) => (selected ? '#DD7610' : 'black')}; 
-  margin-left: 15px;
-   &:hover {
-    background-color: inherit; /* 호버할 때 배경색이 변경되지 않도록 설정 */
+  margin-right: 8px;
+  padding: 4px 8px;  /* 버튼 크기 조정 */
+  height: auto;  /* 버튼 높이 자동 조정 */
+  margin-bottom: 4px;
+  &:hover {
+    background-color: inherit;
   }
 `;
 
 const SelectWrapper = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 2px; /* 간격을 조금 줄였습니다 */
-  margin-top : 4px;
-`;
-
-const LabelRow = styled.div`
-  display: flex;
-  justify-content: flex-start;
-border: 1px solid #ccc; /* 테두리 추가 */
-  box-sizing: border-box; /* 테두리가 추가되었으므로 박스 크기를 포함하도록 설정 */
+  gap: 8px;
+  margin-top: 4px;
 `;
 
 const Label = styled.label`
-  min-width: 40px; 
-  font-size: 16px; /* 폰트 크기를 더 줄였습니다 */
-  text-align: center; /* 텍스트를 중앙 정렬 */
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 8px;
 `;
 
 const SelectField = styled(Select)`
   min-width: 70px;
   font-size: 0.8rem;
-  
+  margin-right: 8px;
 
   .MuiSelect-select {
     padding: 0px 4px;
@@ -173,38 +179,37 @@ const TextFieldStyled = styled(TextField)`
 `;
 
 const ButtonStyled = styled.button`
-    padding: 8px 16px;
-    background-color: #ffffff;
-    
-    color: black;
-    border-radius: 4px;
-    cursor: pointer;
-    white-space: nowrap;
-    height: 36px;
-    box-sizing: border-box;
-    min-width: 100px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 10px; /* Adds space between tabs and the button */
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: black;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 36px;
+  box-sizing: border-box;
+  min-width: 100px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
 
-    @media (max-width: 768px) {
-        width: 100%;
-    }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 
-    img {
-        width: 20px;
-        height: 20px;
-        margin-left: 5px;
-    }
+  img {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+  }
 `;
 
 const SelectedItemsBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px; 
+  padding: 5px; 
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -218,7 +223,7 @@ const ChipsContainer = styled.div`
   gap: 8px;
 `;
 
-const DataSelection = ({collapsed, onAnalyze}) => {
+const DataSelection = ({ collapsed, onAnalyze }) => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedItemsTab1, setSelectedItemsTab1] = useState({
     '기본 정보(info)': [],
@@ -374,11 +379,10 @@ const DataSelection = ({collapsed, onAnalyze}) => {
     setSelectedInstitution('');
   };
 
-const handleTabResult = (e) => {
-  e.preventDefault();
-  onAnalyze();
-};
-
+  const handleTabResult = (e) => {
+    e.preventDefault();
+    onAnalyze();
+  };
 
   return (
     <Container collapsed={collapsed}>
@@ -387,135 +391,150 @@ const handleTabResult = (e) => {
           <StyledTab label="데이터 구성 항목" />
           <StyledTab label="리포트 항목" />
         </StyledTabs>
-        <ButtonStyled  type="button" onClick={handleTabResult}> 
+        <ButtonStyled type="button" onClick={handleTabResult}>
           데이터 분석
           <img src={chartIcon} alt="아이콘" />
         </ButtonStyled>
-            <IconButton onClick={handleToggle} size="small">
-            {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}          
-            </IconButton>
+        <IconButton onClick={handleToggle} size="small">
+          {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
       </FlexBox>
 
       <Collapse in={open}>
-        <LabelRow>
-          <Label style={{ width: '21%' }}>대분류</Label>
-          <Label style={{ width: '79%' }}>중분류</Label>
-        </LabelRow>
         <ListContainer>
-          <StyledList>
-            {Object.keys(categories).map((category) => (
-              <StyledListItem key={category} selected={category === selectedCategory}>
-                <ListItemText primary={category} onClick={() => handleCategorySelect(category)} />
-              </StyledListItem>
-            ))}
-          </StyledList>
-          <SubList>
-            {tabValue === 0 && selectedCategory === '기본 정보(info)' ? (
-              <>
-                <SelectWrapper>
-                  <Label>기관:</Label>
-                  <SelectField
-                    value={selectedInstitution}
-                    onChange={handleInstitutionChange}
-                    displayEmpty
-                  >
-                    <MenuItem value="">
-                      <em>ALL</em>
-                    </MenuItem>
-                    {institutions.map((institution) => (
-                      <MenuItem key={institution} value={institution}>
-                        {institution}
-                      </MenuItem>
-                    ))}
-                  </SelectField>
-                </SelectWrapper>
-                <SelectWrapper>
-                  <Label>촬영일자:</Label>
-                  <TextFieldStyled
-                    type="date"
-                    defaultValue=""
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </SelectWrapper>
-                <SelectWrapper>
-                  <Label>촬영장비:</Label>
-                  <SelectField displayEmpty>
-                    <MenuItem value="">
-                      <em>장비 선택</em>
-                    </MenuItem>
-                  </SelectField>
-                </SelectWrapper>
-              </>
-            ) : (
-              tabValue === 0 && selectedCategory === '환자정보' ? (
+          <Section>
+            <LabelContainer>
+              <Label>대분류</Label>
+              <VerticalDivider />
+            </LabelContainer>
+            <StyledList>
+              {Object.keys(categories).map((category) => (
+                <StyledButtonItem
+                  key={category}
+                  selected={category === selectedCategory}
+                  onClick={() => handleCategorySelect(category)}
+                >
+                  {category}
+                </StyledButtonItem>
+              ))}
+            </StyledList>
+          </Section>
+          <Section>
+            <LabelContainer>
+              <Label>중분류</Label>
+              <VerticalDivider />
+            </LabelContainer>
+            <SubList>
+              {tabValue === 0 && selectedCategory === '기본 정보(info)' ? (
                 <>
                   <SelectWrapper>
-                    <Label>흡연:</Label>
+                    <Label>기관:</Label>
                     <SelectField
-                      value={selectedItemsTab1['환자정보']['흡연']}
-                      onChange={(e) => handleSelectChange('흡연', e.target.value)}
+                      value={selectedInstitution}
+                      onChange={handleInstitutionChange}
                       displayEmpty
                     >
                       <MenuItem value="">
-                        <em>None</em>
+                        <em>ALL</em>
                       </MenuItem>
-                      <MenuItem value="Yes">Yes</MenuItem>
-                      <MenuItem value="No">No</MenuItem>
+                      {institutions.map((institution) => (
+                        <MenuItem key={institution} value={institution}>
+                          {institution}
+                        </MenuItem>
+                      ))}
                     </SelectField>
                   </SelectWrapper>
                   <SelectWrapper>
-                    <Label>음주:</Label>
-                    <SelectField
-                      value={selectedItemsTab1['환자정보']['음주']}
-                      onChange={(e) => handleSelectChange('음주', e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="Yes">Yes</MenuItem>
-                      <MenuItem value="No">No</MenuItem>
-                    </SelectField>
-                  </SelectWrapper>
-                  <SelectWrapper>
-                        <Label>성별:</Label>
-                        <SelectField
-                            value={selectedItemsTab1['환자정보']['성별']}
-                            onChange={(e) => handleSelectChange('성별', e.target.value)}
-                            displayEmpty
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {genders.map((gender) => (
-                                <MenuItem key={gender} value={gender}>
-                                    {gender}
-                                </MenuItem>
-                            ))}
-                        </SelectField>
-                    </SelectWrapper>
-
-                </>
-              ) : (
-                subItems.map((subItem) => (
-                  <SubListItem
-                    key={subItem}
-                    selected={selectedItems[selectedCategory]?.includes(subItem)}
-                  >
-                    <ListItemText
-                      primary={subItem}
-                      onClick={() => handleItemClick(subItem)}
-                      style={{
-                        color: selectedItems[selectedCategory]?.includes(subItem) ? '#DD7610' : 'black',
+                    <Label>촬영일자:</Label>
+                    <TextFieldStyled
+                      type="date"
+                      defaultValue=""
+                      InputLabelProps={{
+                        shrink: true,
                       }}
                     />
-                  </SubListItem>
-                ))
-              )
-            )}
-          </SubList>
+                  </SelectWrapper>
+                  <SelectWrapper>
+                    <Label>촬영장비:</Label>
+                    <SelectField displayEmpty>
+                      <MenuItem value="">
+                        <em>장비 선택</em>
+                      </MenuItem>
+                    </SelectField>
+                  </SelectWrapper>
+                </>
+              ) : (
+                tabValue === 0 && selectedCategory === '환자정보' ? (
+                  <>
+                    <SelectWrapper>
+                      <Label>흡연:</Label>
+                      <SelectField
+                        value={selectedItemsTab1['환자정보']['흡연']}
+                        onChange={(e) => handleSelectChange('흡연', e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </SelectField>
+                    </SelectWrapper>
+                    <SelectWrapper>
+                      <Label>음주:</Label>
+                      <SelectField
+                        value={selectedItemsTab1['환자정보']['음주']}
+                        onChange={(e) => handleSelectChange('음주', e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="Yes">Yes</MenuItem>
+                        <MenuItem value="No">No</MenuItem>
+                      </SelectField>
+                    </SelectWrapper>
+                    <SelectWrapper>
+                      <Label>성별:</Label>
+                      <SelectField
+                        value={selectedItemsTab1['환자정보']['성별']}
+                        onChange={(e) => handleSelectChange('성별', e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {genders.map((gender) => (
+                          <MenuItem key={gender} value={gender}>
+                            {gender}
+                          </MenuItem>
+                        ))}
+                      </SelectField>
+                    </SelectWrapper>
+                  </>
+                ) : (
+                  subItems.map((subItem) => (
+                    <SubListItem
+                      key={subItem}
+                      selected={selectedItems[selectedCategory]?.includes(subItem)}
+                    >
+                      <span
+                        onClick={() => handleItemClick(subItem)}
+                        style={{
+                          color: selectedItems[selectedCategory]?.includes(subItem)
+                            ? '#DD7610'
+                            : 'black',
+                          fontSize: '12px', // 글자 크기 조정
+                        }}
+                      >
+                        {subItem}
+                      </span>
+                    </SubListItem>
+                  ))
+                )
+              )}
+            </SubList>
+          </Section>
         </ListContainer>
       </Collapse>
 
@@ -547,7 +566,7 @@ const handleTabResult = (e) => {
           variant="outlined"
           size="small"
           startIcon={<RefreshIcon />}
-          onClick={handleReset}  // 전체 초기화 핸들러 호출
+          onClick={handleReset}
         >
           초기화
         </Button>
