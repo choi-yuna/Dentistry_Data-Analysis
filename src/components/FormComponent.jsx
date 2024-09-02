@@ -148,9 +148,9 @@ const FormComponent = ({ collapsed, onAnalyze  }) => {
                             <Label htmlFor="disease">질환 :</Label>
                             <Select id="disease" value={disease} onChange={handleDiseaseChange}>
                                 <option value="">선택하세요</option>
-                                <option value="disease1">질환 1</option>
-                                <option value="disease2">질환 2</option>
-                                <option value="disease3">질환 3</option>
+                                <option value="disease1">치주질환</option>
+                                <option value="disease2">두개안면</option>
+                                <option value="disease3">구강암</option>
                             </Select>
                         </LabelSelectGroup>
                     </FormGroup>
