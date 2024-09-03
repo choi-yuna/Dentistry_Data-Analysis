@@ -55,13 +55,14 @@ const ReportItem = styled.div`
   border-radius: 4px;
   padding: 10px;
   margin: 10px;
-  flex: 1 1 45%; /* 두 개의 차트가 가로로 배치되도록 설정 */
-  min-width: 270px; /* 최소 너비 */
+  flex: 1 1 45%; 
+  min-width: 270px; 
   box-sizing: border-box;
 
   @media (max-width: 768px) {
-    flex: 1 1 100%; /* 작은 화면에서는 차트가 한 줄에 하나씩 배치 */
+    flex: 1 1 100%;
   }
+    z-index: 0.5;
 `;
 
 const DataReport = ({collapsed}) => {
