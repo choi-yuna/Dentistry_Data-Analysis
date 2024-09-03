@@ -1,6 +1,12 @@
+// src/components/FormComponent.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
+import { data } from '../data/DataModel';
+import { analyzeData } from '../utils/dataAnalysis';
+import { analyzeItems } from '../utils/itemAnalysis';
+import { calculateQualityRate } from '../utils/qualityAnalysis';
+import { calculateOverallQuality } from '../utils/overallAnalysis'; // 전체 데이터 분석 함수 import
 
 const FormContainer = styled.div`
     padding: 10px 60px;
@@ -21,7 +27,6 @@ const PageContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding: 50px;
-
 `;
 
 const FormInline = styled.form`
@@ -109,7 +114,7 @@ const Button = styled.button`
     }
 `;
 
-const FormComponent = ({ collapsed, onAnalyze  }) => {
+const FormComponent = ({ collapsed, onAnalyze }) => {
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
@@ -123,8 +128,59 @@ const FormComponent = ({ collapsed, onAnalyze  }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(`Institution: ${institution}, Disease: ${disease}`);
-        onAnalyze();
+        
+        // 기존 환자 수 기준 분석
+        const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(data, institution, disease);
+        console.log(`널 값의 개수 (환자 수 기준): ${nullCount}`);
+        console.log(`수정 필요 항목 환자 수 (환자 수 기준): ${invalidCount}`);
+        console.log(`완전성 비율 (환자 수 기준): ${completenessRatio.toFixed(2)}%`);
+        console.log(`유효성 비율 (환자 수 기준): ${validityRatio.toFixed(2)}%`);
+        
+        // 항목 수 기준 분석
+        const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(data);
+        console.log(`전체 항목 수: ${totalItems}`);
+        console.log(`누락된 항목의 개수 (항목 수 기준): ${missingItemCount}`);
+        console.log(`수정 필요 항목의 개수 (항목 수 기준): ${invalidItemCount}`);
+        console.log(`개수 완전성 비율 (항목 수 기준): ${itemCompletenessRatio.toFixed(2)}%`);
+        console.log(`유효성 비율 (항목 수 기준): ${itemValidityRatio.toFixed(2)}%`);
+
+        // 품질율 분석
+        const { totalPatients, totalItems: qualityTotalItems, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(data);
+        console.log(`총 환자 수: ${totalPatients}`);
+        console.log(`총 항목 수: ${qualityTotalItems}`);
+        console.log(`품질율 (환자 수 기준): ${patientQualityRate.toFixed(2)}%`);
+        console.log(`품질율 (항목 수 기준): ${itemQualityRate.toFixed(2)}%`);
+
+        // 전체 데이터 분석
+        const { totalPatients: overallPatients, totalItems: overallItems, validPatientCount: overallValidPatients, patientQualityRate: overallPatientQualityRate, validItemCount: overallValidItems, itemQualityRate: overallItemQualityRate } = calculateOverallQuality(data);
+        console.log(`전체 환자 수: ${overallPatients}`);
+        console.log(`전체 항목 수: ${overallItems}`);
+        console.log(`전체 품질율 (환자 수 기준): ${overallPatientQualityRate.toFixed(2)}%`);
+        console.log(`전체 품질율 (항목 수 기준): ${overallItemQualityRate.toFixed(2)}%`);
+
+        onAnalyze({
+            nullCount,
+            invalidCount,
+            completenessRatio,
+            validityRatio,
+            totalItems,
+            missingItemCount,
+            invalidItemCount,
+            itemCompletenessRatio,
+            itemValidityRatio,
+            totalPatients,
+            qualityTotalItems,
+            validPatientCount,
+            patientQualityRate,
+            validItemCount,
+            itemQualityRate,
+            overallPatients,
+            overallItems,
+            overallValidPatients,
+            overallPatientQualityRate,
+            overallValidItems,
+            overallItemQualityRate
+        });
     };
 
     return (
@@ -136,9 +192,11 @@ const FormComponent = ({ collapsed, onAnalyze  }) => {
                             <Label htmlFor="institution">기관 :</Label>
                             <Select id="institution" value={institution} onChange={handleInstitutionChange}>
                                 <option value="">선택하세요</option>
-                                <option value="institution1">원광대학교</option>
-                                <option value="institution2">고려대학교</option>
-                                <option value="institution3">서강대학교</option>
+                                <option value="1">원광대</option>
+                                <option value="2">고려대</option>
+                                <option value="3">서울대</option>
+                                <option value="5">단국대</option>
+                                <option value="7">보라매병원</option>
                             </Select>
                         </LabelSelectGroup>
                     </FormGroup>
@@ -147,9 +205,10 @@ const FormComponent = ({ collapsed, onAnalyze  }) => {
                             <Label htmlFor="disease">질환 :</Label>
                             <Select id="disease" value={disease} onChange={handleDiseaseChange}>
                                 <option value="">선택하세요</option>
-                                <option value="disease1">치주질환</option>
-                                <option value="disease2">두개안면</option>
-                                <option value="disease3">구강암</option>
+                                <option value="A">치주질환</option>
+                                <option value="B">골수염</option>
+                                <option value="C">두개안면</option>
+                                <option value="D">구강암</option>
                             </Select>
                         </LabelSelectGroup>
                     </FormGroup>
