@@ -130,7 +130,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         e.preventDefault();
 
         try {
-            const patientData = await fetchPatientData(institution, disease);
+            const patientData = await fetchPatientData("ba6bdbde-bc29-45e4-8c07-adf771261bc4",institution, disease);
             console.log('Fetched patient data:', patientData);
 
 
