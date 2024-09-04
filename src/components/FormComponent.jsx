@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
-
 import { analyzeData } from '../utils/dataAnalysis';
 import { analyzeItems } from '../utils/itemAnalysis';
 import { calculateQualityRate } from '../utils/qualityAnalysis';
 import { calculateOverallQuality } from '../utils/overallAnalysis'; 
 import { fetchPatientData } from '../api/fileUploadApi';
+import { useFileContext } from '../FileContext'; // Context에서 fileId 가져오기
 
 const FormContainer = styled.div`
     padding: 10px 60px;
@@ -115,9 +115,11 @@ const Button = styled.button`
 `;
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
-    const [selectedFile, setSelectedFile] = useState(null); 
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
+
+    // Context에서 fileId를 가져옴
+    const { fileId } = useFileContext();
 
     const handleInstitutionChange = (e) => {
         setInstitution(e.target.value);
@@ -131,16 +133,15 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         e.preventDefault();
 
         try {
-            if (!selectedFile) {
-                console.warn("파일을 선택하세요.");
+            if (!fileId) {
+                console.warn("파일이 업로드되지 않았습니다.");
                 return;
             }
 
-            // selectedFile을 포함하여 서버에 데이터 요청
-            const patientData = await fetchPatientData(selectedFile, institution, disease);
+            // 서버에 데이터 요청 (fileId, institution, disease 포함)
+            const patientData = await fetchPatientData(fileId, institution, disease);
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
-    
             // 데이터 필터링 및 분석 작업 계속 진행
             const filteredData = patientData.filter(
                 (item) =>

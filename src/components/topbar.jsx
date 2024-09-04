@@ -5,6 +5,7 @@ import fileUploadIcon from '../assets/images/file-upload.svg';
 import userIcon from '../assets/images/user.svg';
 import logoutIcon from '../assets/images/logout.svg';
 import { uploadZipFile } from '../api/fileUploadApi'; // API 호출 함수 임포트
+import { useFileContext } from '../FileContext';
 
 const TopBarContainer = styled.div`
     position: fixed;
@@ -62,6 +63,7 @@ const HiddenFileInput = styled.input`
 
 const TopBar = () => {
     const [file, setFile] = useState(null);
+    const { setFileId } = useFileContext();
 
     // 파일이 변경될 때 호출되는 핸들러
     const handleFileChange = (e) => {
@@ -77,6 +79,7 @@ const TopBar = () => {
         try {
             const fileId = await uploadZipFile(file); // 파일 업로드 API 호출
             console.log('Uploaded file with ID:', fileId);
+            setFileId(fileId);
             alert(`File uploaded successfully! File ID: ${fileId}`);
         } catch (error) {
             console.error('File upload failed:', error);
