@@ -1,16 +1,8 @@
-// src/utils/overallAnalysis.js
-
 export const calculateOverallQuality = (data) => {
-
     const totalPatients = data.length;
-
-
-    const relevantKeys = Object.keys(data[0]).filter(key => {
-        return data.every(entry => entry[key] !== undefined);
-    });
+    const relevantKeys = Object.keys(data[0]);
 
     const totalItems = relevantKeys.length;
-
 
     let validPatientCount = 0;
     data.forEach(entry => {
@@ -26,7 +18,6 @@ export const calculateOverallQuality = (data) => {
     });
 
     let validItemCount = 0;
-
     relevantKeys.forEach(key => {
         let isItemValid = true;
         data.forEach(entry => {
@@ -38,7 +29,6 @@ export const calculateOverallQuality = (data) => {
             validItemCount++;
         }
     });
-
 
     const patientQualityRate = (validPatientCount / totalPatients) * 100;
     const itemQualityRate = (validItemCount / totalItems) * 100;
