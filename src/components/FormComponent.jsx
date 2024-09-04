@@ -115,6 +115,7 @@ const Button = styled.button`
 `;
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
+    const [selectedFile, setSelectedFile] = useState(null); 
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
@@ -130,15 +131,22 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         e.preventDefault();
 
         try {
-            const patientData = await fetchPatientData("ba6bdbde-bc29-45e4-8c07-adf771261bc4",institution, disease);
-            console.log('Fetched patient data:', patientData);
+            if (!selectedFile) {
+                console.warn("파일을 선택하세요.");
+                return;
+            }
 
+            // selectedFile을 포함하여 서버에 데이터 요청
+            const patientData = await fetchPatientData(selectedFile, institution, disease);
+            console.log('서버에서 받은 분석된 데이터:', patientData);
 
+    
+            // 데이터 필터링 및 분석 작업 계속 진행
             const filteredData = patientData.filter(
                 (item) =>
                     item.DISEASE_CLASS === disease && item.INSTITUTION_ID === institution
             );
-
+    
             if (filteredData.length === 0) {
                 console.warn('선택한 조건에 맞는 데이터가 없습니다.');
                 return;
@@ -191,7 +199,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 overallValidPatients,
                 overallPatientQualityRate,
                 overallValidItems,
-                overallItemQualityRate
+                overallItemQualityRate 
             });
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);

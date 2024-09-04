@@ -11,7 +11,7 @@ export const uploadZipFile = async (file) => {
                 'Content-Type': 'multipart/form-data', // 파일을 업로드하는 요청임을 명시
             },
         });
-
+        console.log('Server response:', response.data);
         return response.data.fileId; // 서버에서 반환한 fileId를 받음
     } catch (error) {
         console.error('Error uploading ZIP file:', error);
@@ -19,18 +19,24 @@ export const uploadZipFile = async (file) => {
     }
 };
 
-
-export const fetchPatientData = async (fileId,institutionId, diseaseClass) => {
+export const fetchPatientData = async (file, institutionId, diseaseClass) => {
     try {
+        console.log('Uploading file..');
+
+        const fileId = await uploadZipFile(file); // 파일 업로드
+
+        console.log('Received fileId:', fileId);
+
         const response = await axios.post('http://localhost:8080/api/analyze', {
             fileId: fileId,
-            INSTITUTION_ID: institutionId,
-            DISEASE_CLASS: diseaseClass,
+            institutionId: institutionId,
+            diseaseClass: diseaseClass,
         });
-        console.log(response.data);
+
+        console.log('Response from analyze:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error analyzing data:', error);
+        console.error('Error analyzing data:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
