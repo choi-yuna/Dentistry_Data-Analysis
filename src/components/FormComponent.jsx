@@ -1,12 +1,12 @@
-// src/components/FormComponent.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
-import { data } from '../data/DataModel';
+
 import { analyzeData } from '../utils/dataAnalysis';
 import { analyzeItems } from '../utils/itemAnalysis';
 import { calculateQualityRate } from '../utils/qualityAnalysis';
-import { calculateOverallQuality } from '../utils/overallAnalysis'; // 전체 데이터 분석 함수 import
+import { calculateOverallQuality } from '../utils/overallAnalysis'; 
+import { fetchPatientData } from '../api/fileUploadApi';
 
 const FormContainer = styled.div`
     padding: 10px 60px;
@@ -126,61 +126,76 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         setDisease(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // 기존 환자 수 기준 분석
-        const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(data, institution, disease);
-        console.log(`널 값의 개수 (환자 수 기준): ${nullCount}`);
-        console.log(`수정 필요 항목 환자 수 (환자 수 기준): ${invalidCount}`);
-        console.log(`완전성 비율 (환자 수 기준): ${completenessRatio.toFixed(2)}%`);
-        console.log(`유효성 비율 (환자 수 기준): ${validityRatio.toFixed(2)}%`);
-        
-        // 항목 수 기준 분석
-        const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(data);
-        console.log(`전체 항목 수: ${totalItems}`);
-        console.log(`누락된 항목의 개수 (항목 수 기준): ${missingItemCount}`);
-        console.log(`수정 필요 항목의 개수 (항목 수 기준): ${invalidItemCount}`);
-        console.log(`개수 완전성 비율 (항목 수 기준): ${itemCompletenessRatio.toFixed(2)}%`);
-        console.log(`유효성 비율 (항목 수 기준): ${itemValidityRatio.toFixed(2)}%`);
 
-        // 품질율 분석
-        const { totalPatients, totalItems: qualityTotalItems, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(data);
-        console.log(`총 환자 수: ${totalPatients}`);
-        console.log(`총 항목 수: ${qualityTotalItems}`);
-        console.log(`품질율 (환자 수 기준): ${patientQualityRate.toFixed(2)}%`);
-        console.log(`품질율 (항목 수 기준): ${itemQualityRate.toFixed(2)}%`);
+        try {
+            const patientData = await fetchPatientData(institution, disease);
+            console.log('Fetched patient data:', patientData);
 
-        // 전체 데이터 분석
-        const { totalPatients: overallPatients, totalItems: overallItems, validPatientCount: overallValidPatients, patientQualityRate: overallPatientQualityRate, validItemCount: overallValidItems, itemQualityRate: overallItemQualityRate } = calculateOverallQuality(data);
-        console.log(`전체 환자 수: ${overallPatients}`);
-        console.log(`전체 항목 수: ${overallItems}`);
-        console.log(`전체 품질율 (환자 수 기준): ${overallPatientQualityRate.toFixed(2)}%`);
-        console.log(`전체 품질율 (항목 수 기준): ${overallItemQualityRate.toFixed(2)}%`);
 
-        onAnalyze({
-            nullCount,
-            invalidCount,
-            completenessRatio,
-            validityRatio,
-            totalItems,
-            missingItemCount,
-            invalidItemCount,
-            itemCompletenessRatio,
-            itemValidityRatio,
-            totalPatients,
-            qualityTotalItems,
-            validPatientCount,
-            patientQualityRate,
-            validItemCount,
-            itemQualityRate,
-            overallPatients,
-            overallItems,
-            overallValidPatients,
-            overallPatientQualityRate,
-            overallValidItems,
-            overallItemQualityRate
-        });
+            const filteredData = patientData.filter(
+                (item) =>
+                    item.DISEASE_CLASS === disease && item.INSTITUTION_ID === institution
+            );
+
+            if (filteredData.length === 0) {
+                console.warn('선택한 조건에 맞는 데이터가 없습니다.');
+                return;
+            }
+
+            // 필터링된 데이터로 분석 수행
+            const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(filteredData, institution, disease);
+            console.log(`널 값의 개수 (환자 수 기준): ${nullCount}`);
+            console.log(`수정 필요 항목 환자 수 (환자 수 기준): ${invalidCount}`);
+            console.log(`완전성 비율 (환자 수 기준): ${completenessRatio.toFixed(2)}%`);
+            console.log(`유효성 비율 (환자 수 기준): ${validityRatio.toFixed(2)}%`);
+
+            const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(filteredData);
+            console.log(`전체 항목 수: ${totalItems}`);
+            console.log(`누락된 항목의 개수 (항목 수 기준): ${missingItemCount}`);
+            console.log(`수정 필요 항목의 개수 (항목 수 기준): ${invalidItemCount}`);
+            console.log(`개수 완전성 비율 (항목 수 기준): ${itemCompletenessRatio.toFixed(2)}%`);
+            console.log(`유효성 비율 (항목 수 기준): ${itemValidityRatio.toFixed(2)}%`);
+
+            const { totalPatients, totalItems: qualityTotalItems, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(filteredData);
+            console.log(`총 환자 수: ${totalPatients}`);
+            console.log(`총 항목 수: ${qualityTotalItems}`);
+            console.log(`품질율 (환자 수 기준): ${patientQualityRate.toFixed(2)}%`);
+            console.log(`품질율 (항목 수 기준): ${itemQualityRate.toFixed(2)}%`);
+
+            const { totalPatients: overallPatients, totalItems: overallItems, validPatientCount: overallValidPatients, patientQualityRate: overallPatientQualityRate, validItemCount: overallValidItems, itemQualityRate: overallItemQualityRate } = calculateOverallQuality(filteredData);
+            console.log(`전체 환자 수: ${overallPatients}`);
+            console.log(`전체 항목 수: ${overallItems}`);
+            console.log(`전체 품질율 (환자 수 기준): ${overallPatientQualityRate.toFixed(2)}%`);
+            console.log(`전체 품질율 (항목 수 기준): ${overallItemQualityRate.toFixed(2)}%`);
+
+            onAnalyze({
+                nullCount,
+                invalidCount,
+                completenessRatio,
+                validityRatio,
+                totalItems,
+                missingItemCount,
+                invalidItemCount,
+                itemCompletenessRatio,
+                itemValidityRatio,
+                totalPatients,
+                qualityTotalItems,
+                validPatientCount,
+                patientQualityRate,
+                validItemCount,
+                itemQualityRate,
+                overallPatients,
+                overallItems,
+                overallValidPatients,
+                overallPatientQualityRate,
+                overallValidItems,
+                overallItemQualityRate
+            });
+        } catch (error) {
+            console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
+        }
     };
 
     return (
