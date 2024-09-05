@@ -60,20 +60,25 @@ const ReportSection = styled.div`
 
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedDisease, setSelectedDisease] = useState('All'); // 선택된 질환 상태 추가
   const { visualizationResults, setVisualizationResults } = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
     setVisualizationResults(true);
   };
 
+  const handleDiseaseSelect = (disease) => {
+    setSelectedDisease(disease); // 질환을 선택할 때 상태 업데이트
+  };
+
   return (
     <AppContainer>
       <TopBar />
       <MainContent>
-        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} onDiseaseSelect={handleDiseaseSelect} /> {/* 질환 선택 콜백 전달 */}
         <ContentCtn collapsed={collapsed}>
           <StickyDataSelection>
-            <DataSelection collapsed={collapsed} onAnalyze={handleAnalyze} />
+            <DataSelection disease={selectedDisease} collapsed={collapsed} onAnalyze={handleAnalyze} /> {/* 선택된 질환 전달 */}
           </StickyDataSelection>
           {visualizationResults && (
             <>
