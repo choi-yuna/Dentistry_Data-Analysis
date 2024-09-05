@@ -56,7 +56,7 @@ const DataQualityView = () => {
               <>
                 {/* 분석된 데이터를 DataAnalysisResults에 전달 */}
                 <DataAnalysisResults collapsed={collapsed}/>
-                <DataReport collapsed={collapsed} />
+                <DataReport collapsed={collapsed}  />
               </>
             )}
           </ContentCtn>

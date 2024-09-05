@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const PieChart = ({ title, data }) => {
+const PieChart = ({ title, data }) => {  // analyzedData 제거
   const options = {
     plugins: {
       legend: {
@@ -68,7 +68,6 @@ const ChartContainer = styled.div`
   padding: 10px;
   background-color: #ffffff;
   margin: auto; 
-  z-index: 0; /* 다른 요소들보다 우선순위 낮게 설정 */
 `;
 
 const ChartWrapper = styled.div`
@@ -83,7 +82,7 @@ const ChartWrapper = styled.div`
 const ChartTitle = styled.h3`
   margin-bottom: 20px;
   text-align: center;
-  font-weight: bold; /* 오타 수정: text-weight -> font-weight */
+  font-weight: bold;
 `;
 
 export default PieChart;
