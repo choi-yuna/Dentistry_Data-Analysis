@@ -6,6 +6,7 @@ import DataQualityView from './dataQualityView/dataQuality';
 import DataVisualization from './dataVisualizationView/dataVisualizationView';
 import FormComponent from './components/FormComponent';
 import MyTable from './dataQualityView/dataAnalysisTable';
+import './App.css'; 
 
 function App() {
   return (
@@ -14,7 +15,6 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
-              {/* DataQualityView에 FormComponent와 MyTable을 함께 사용 */}
               <Route path="/" element={<DataQualityView />} />
               <Route path="/dataVisualization" element={<DataVisualization />} />
             </Routes>

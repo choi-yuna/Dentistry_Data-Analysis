@@ -114,12 +114,11 @@ const Button = styled.button`
     }
 `;
 
-const FormComponent = ({ collapsed }) => {
+const FormComponent = ({ collapsed, onAnalyze }) => {
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
     const { fileId } = useFileContext();
-    const { setAnalyzedData } = useContext(DataContext);  // DataContext에서 setAnalyzedData 가져오기
 
     const handleInstitutionChange = (e) => {
         setInstitution(e.target.value);
@@ -159,7 +158,7 @@ const FormComponent = ({ collapsed }) => {
             const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
 
             // 분석된 데이터를 전역적으로 저장
-            setAnalyzedData({
+            const analyzedData = {
                 nullCount,
                 invalidCount,
                 completenessRatio,
@@ -180,11 +179,16 @@ const FormComponent = ({ collapsed }) => {
                 overallPatientQualityRate,
                 overallValidItems,
                 overallItemQualityRate,
-            });
+            };
+
+            // 부모 컴포넌트로 분석된 데이터를 전달
+            onAnalyze(analyzedData);
+
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
         }
     };
+
 
     return (
         <PageContainer>
