@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext  } from 'react';
 import styled from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
 import { analyzeData } from '../utils/dataAnalysis';
@@ -7,7 +7,7 @@ import { calculateQualityRate } from '../utils/qualityAnalysis';
 import { calculateOverallQuality } from '../utils/overallAnalysis'; 
 import { fetchPatientData } from '../api/fileUploadApi';
 import { useFileContext } from '../FileContext'; // Context에서 fileId 가져오기
-
+import { DataContext } from '../context/DataContext';
 const FormContainer = styled.div`
     padding: 10px 60px;
     border-radius: 5px;
@@ -114,12 +114,12 @@ const Button = styled.button`
     }
 `;
 
-const FormComponent = ({ collapsed, onAnalyze }) => {
+const FormComponent = ({ collapsed }) => {
     const [institution, setInstitution] = useState('');
     const [disease, setDisease] = useState('');
 
-    // Context에서 fileId를 가져옴
     const { fileId } = useFileContext();
+    const { setAnalyzedData } = useContext(DataContext);  // DataContext에서 setAnalyzedData 가져오기
 
     const handleInstitutionChange = (e) => {
         setInstitution(e.target.value);
@@ -128,51 +128,38 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
     const handleDiseaseChange = (e) => {
         setDisease(e.target.value);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         try {
             if (!fileId) {
                 console.warn("파일이 업로드되지 않았습니다.");
                 return;
             }
-    
-            // 서버에 데이터 요청 (fileId, institution, disease 포함)
-            const response = await fetchPatientData(fileId, institution, disease);
-    
-            // 서버에서 받은 데이터가 배열이 아니면 배열 형태로 접근
-            const patientData = Array.isArray(response) ? response : response.data;
-    
+            if (!institution || !disease) {
+                console.warn('기관과 질환을 모두 선택해야 합니다.');
+                return;
+            }
+
+            // 서버에서 반환된 데이터의 형식을 명확하게 처리
+            const { data: patientData = [] } = await fetchPatientData(fileId, institution, disease);
+
+            if (!patientData || patientData.length === 0) {
+                console.warn("서버에서 데이터를 받지 못했습니다.");
+                return;
+            }
+
             console.log('서버에서 받은 분석된 데이터:', patientData);
-    
+
             // 서버에서 받은 데이터를 바로 분석 수행
             const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
-            console.log(`널 값의 개수 (환자 수 기준): ${nullCount}`);
-            console.log(`수정 필요 항목 환자 수 (환자 수 기준): ${invalidCount}`);
-            console.log(`완전성 비율 (환자 수 기준): ${completenessRatio.toFixed(2)}%`);
-            console.log(`유효성 비율 (환자 수 기준): ${validityRatio.toFixed(2)}%`);
-    
             const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(patientData);
-            console.log(`전체 항목 수: ${totalItems}`);
-            console.log(`누락된 항목의 개수 (항목 수 기준): ${missingItemCount}`);
-            console.log(`수정 필요 항목의 개수 (항목 수 기준): ${invalidItemCount}`);
-            console.log(`개수 완전성 비율 (항목 수 기준): ${itemCompletenessRatio.toFixed(2)}%`);
-            console.log(`유효성 비율 (항목 수 기준): ${itemValidityRatio.toFixed(2)}%`);
-    
-            const { totalPatients, totalItems: qualityTotalItems, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
-            console.log(`총 환자 수: ${totalPatients}`);
-            console.log(`총 항목 수: ${qualityTotalItems}`);
-            console.log(`품질율 (환자 수 기준): ${patientQualityRate.toFixed(2)}%`);
-            console.log(`품질율 (항목 수 기준): ${itemQualityRate.toFixed(2)}%`);
-    
-            const { totalPatients: overallPatients, totalItems: overallItems, validPatientCount: overallValidPatients, patientQualityRate: overallPatientQualityRate, validItemCount: overallValidItems, itemQualityRate: overallItemQualityRate } = calculateOverallQuality(patientData);
-            console.log(`전체 환자 수: ${overallPatients}`);
-            console.log(`전체 항목 수: ${overallItems}`);
-            console.log(`전체 품질율 (환자 수 기준): ${overallPatientQualityRate.toFixed(2)}%`);
-            console.log(`전체 품질율 (항목 수 기준): ${overallItemQualityRate.toFixed(2)}%`);
-    
-            // 분석 결과를 부모 컴포넌트로 전달
-            onAnalyze({
+            const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
+            const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
+
+            // 분석된 데이터를 전역적으로 저장
+            setAnalyzedData({
                 nullCount,
                 invalidCount,
                 completenessRatio,
@@ -183,7 +170,6 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 itemCompletenessRatio,
                 itemValidityRatio,
                 totalPatients,
-                qualityTotalItems,
                 validPatientCount,
                 patientQualityRate,
                 validItemCount,
@@ -193,13 +179,12 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 overallValidPatients,
                 overallPatientQualityRate,
                 overallValidItems,
-                overallItemQualityRate 
+                overallItemQualityRate,
             });
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
         }
     };
-    
 
     return (
         <PageContainer>

@@ -26,33 +26,44 @@ const ContentCtn = styled.div`
   margin-left: ${(props) => (props.collapsed ? '0px' : '40px')}; 
   transition: margin-left 0.3s ease;
   margin-top: 10px;
+    visibility: visible;  /* 확실하게 visibility 속성이 visible로 되어 있는지 확인 */
+  display: block; 
 `;
 
 const DataQualityView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { dataQualityResults, setDataQualityResults } = useContext(AnalysisContext);
 
-  const handleAnalyze = () => {
-    setDataQualityResults(true);
-  };
+    // 분석된 데이터를 상태로 관리
+    const [analyzedData, setAnalyzedData] = useState(null);
 
-  return (
-    <AppContainer>
-      <TopBar />
-      <MainContent>
-        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
-        <ContentCtn collapsed={collapsed}>
-          <FormComponent collapsed={collapsed} onAnalyze={handleAnalyze}/>
-          {dataQualityResults && (
-            <>
-              <DataAnalysisResults collapsed={collapsed} />
-              <DataReport collapsed={collapsed} />
-            </>
-          )}
-        </ContentCtn>
-      </MainContent>
-    </AppContainer>
-  );
-};
+    // 분석된 데이터를 설정하는 함수
+    const handleAnalyze = (data) => {
+      console.log('분석된 데이터:', data);
+      setAnalyzedData(data);  // 분석된 데이터를 상태에 저장
+      setDataQualityResults(true);  // 분석 결과 표시
+    };
+
+    return (
+      <AppContainer>
+        <TopBar />
+        <MainContent>
+          <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
+          <ContentCtn collapsed={collapsed}>
+            {/* 분석 버튼 클릭 시 handleAnalyze 호출 */}
+            <FormComponent collapsed={collapsed} onAnalyze={handleAnalyze}/>
+            {dataQualityResults && (
+              <>
+                {/* 분석된 데이터를 DataAnalysisResults에 전달 */}
+                <DataAnalysisResults collapsed={collapsed} analyzedData={analyzedData}/>
+                <DataReport collapsed={collapsed} />
+              </>
+            )}
+          </ContentCtn>
+        </MainContent>
+      </AppContainer>
+    );
+  };
+  
 
 export default DataQualityView;
