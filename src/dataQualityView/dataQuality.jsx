@@ -26,7 +26,7 @@ const ContentCtn = styled.div`
   margin-left: ${(props) => (props.collapsed ? '0px' : '40px')}; 
   transition: margin-left 0.3s ease;
   margin-top: 10px;
-    visibility: visible;  /* 확실하게 visibility 속성이 visible로 되어 있는지 확인 */
+  visibility: visible; 
   display: block; 
 `;
 
@@ -55,7 +55,7 @@ const DataQualityView = () => {
             {dataQualityResults && (
               <>
                 {/* 분석된 데이터를 DataAnalysisResults에 전달 */}
-                <DataAnalysisResults collapsed={collapsed} analyzedData={analyzedData}/>
+                <DataAnalysisResults collapsed={collapsed}/>
                 <DataReport collapsed={collapsed} />
               </>
             )}

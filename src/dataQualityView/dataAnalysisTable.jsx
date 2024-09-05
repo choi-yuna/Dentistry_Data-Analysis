@@ -2,7 +2,6 @@ import React, { useState,useContext } from 'react';
 import styled from 'styled-components';
 import { DataContext } from '../context/DataContext';
 
-
 const TableContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -21,14 +20,14 @@ const Th = styled.th`
   padding: 10px;
   background-color: #C4C4C4;
   text-align: center;
-  width: 16.66%;
+  width: 20%; /* 각 셀을 동일한 크기로 */
 `;
 
 const Td = styled.td`
   border: 2px solid black;
   padding: 10px;
   text-align: center;
-  width: 16.66%;
+  width: 20%; /* 각 셀을 동일한 크기로 */
 `;
 
 const ColSpanTd = styled.td`
@@ -37,18 +36,17 @@ const ColSpanTd = styled.td`
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
-  width: 33.33%;
+  width: 20%; /* 각 셀을 동일한 크기로 */
 `;
 
-const MyTable = () => {
- const { analyzedData } = useContext(DataContext);
 
+const MyTable = ({analyzedData  }) => {
+
+ console.log('DataAnalysisTable 컴포넌트에서 받은 데이터:', analyzedData);
  const [loading, setLoading] = useState(false);
 
   return (
     <div>
- 
-
       {/* 데이터가 없을 경우 로딩 중 메시지 */}
       {!analyzedData && !loading && <div>분석할 데이터를 입력하세요</div>}
 
@@ -67,7 +65,7 @@ const MyTable = () => {
             </thead>
             <tbody>
               <tr>
-                <ColSpanTd colSpan="2">전체 데이터</ColSpanTd>
+                <ColSpanTd>전체 데이터</ColSpanTd>
                 <Td>{analyzedData.totalPatients || 0}</Td>
                 <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
                 <Td>{analyzedData.totalItems || 0}</Td>
@@ -75,7 +73,7 @@ const MyTable = () => {
               </tr>
 
               <tr>
-                <ColSpanTd colSpan="2">임상 데이터 품질율</ColSpanTd>
+                <ColSpanTd>임상 데이터 품질율</ColSpanTd>
                 <Td>{analyzedData.validPatientCount || 0}</Td>
                 <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
                 <Td>{analyzedData.validItemCount || 0}</Td>
@@ -83,7 +81,7 @@ const MyTable = () => {
               </tr>
 
               <tr>
-                <ColSpanTd colSpan="2">완전성</ColSpanTd>
+                <ColSpanTd>완전성</ColSpanTd>
                 <Td>{analyzedData.totalPatients || 0}</Td>
                 <Td>{analyzedData.completenessRatio?.toFixed(2) || '0.00'}%</Td>
                 <Td>{analyzedData.totalItems || 0}</Td>
@@ -91,7 +89,7 @@ const MyTable = () => {
               </tr>
 
               <tr>
-                <ColSpanTd colSpan="2">유효성</ColSpanTd>
+                <ColSpanTd>유효성</ColSpanTd>
                 <Td>{analyzedData.totalPatients || 0}</Td>
                 <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
                 <Td>{analyzedData.totalItems || 0}</Td>
