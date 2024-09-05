@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState,useContext } from 'react';
 import styled from 'styled-components';
 import { DataContext } from '../context/DataContext';
 
@@ -36,17 +36,21 @@ const ColSpanTd = styled.td`
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
-  width: 30%; /* 각 셀을 동일한 크기로 */
+  width: 20%; /* 각 셀을 동일한 크기로 */
 `;
 
-const MyTable = () => {
-  const { analyzedData } = useContext(DataContext);
-  const [loading, setLoading] = useState(false);
+
+const MyTable = ({analyzedData  }) => {
+
+ console.log('DataAnalysisTable 컴포넌트에서 받은 데이터:', analyzedData);
+ const [loading, setLoading] = useState(false);
 
   return (
     <div>
+      {/* 데이터가 없을 경우 로딩 중 메시지 */}
       {!analyzedData && !loading && <div>분석할 데이터를 입력하세요</div>}
 
+      {/* 분석된 데이터가 있을 때만 테이블을 렌더링 */}
       {analyzedData && (
         <TableContainer>
           <Table>

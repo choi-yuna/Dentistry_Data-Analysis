@@ -50,7 +50,7 @@ const DetailButton = styled.button`
     }
 `;
 
-const DataAnalysisResults = ({ collapsed,analyzedData  }) => {
+const DataAnalysisResults = ({ collapsed, analyzedData }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [excelData, setExcelData] = useState([
         ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
@@ -67,7 +67,9 @@ const DataAnalysisResults = ({ collapsed,analyzedData  }) => {
     const handleCloseModal = () => {
         setModalOpen(false);
     };
+    console.log('DataAnalysisResults 컴포넌트에서 받은 데이터:', analyzedData);
 
+    // analyzedData가 null이거나 undefined인 경우 DataAnalysisTable을 렌더링하지 않음
     return (
         <ResultCtn $collapsed={collapsed}>
             <FormCtn>
@@ -75,8 +77,12 @@ const DataAnalysisResults = ({ collapsed,analyzedData  }) => {
                     <Title>데이터 분석결과</Title>
                     <DetailButton onClick={handleDetailButtonClick}>품질 이상 항목 세부보기</DetailButton>
                 </TitleBar>
-                {/* analyzedData가 존재할 경우에만 DataAnalysisTable 렌더링 */}
-                {analyzedData && <DataAnalysisTable analyzedData={analyzedData} />}
+                {/* analyzedData가 유효한 객체일 때만 렌더링 */}
+                {analyzedData && Object.keys(analyzedData).length > 0 ? (
+                    <DataAnalysisTable analyzedData={analyzedData} />
+                ) : (
+                    <p>분석할 데이터가 없습니다.</p>
+                )}
             </FormCtn>
             <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
         </ResultCtn>

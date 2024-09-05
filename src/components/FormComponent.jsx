@@ -151,12 +151,15 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
+            
             // 서버에서 받은 데이터를 바로 분석 수행
             const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
             const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(patientData);
             const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
             const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
 
+
+            
             // 분석된 데이터를 전역적으로 저장
             const analyzedData = {
                 nullCount,
