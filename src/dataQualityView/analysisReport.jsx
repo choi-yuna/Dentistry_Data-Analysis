@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import PieChart from './piechart'; // PieChart 컴포넌트를 가져옵니다
+import PieChart from './piechart'; 
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
+import { DataContext } from '../context/DataContext';
 
 const ReportContainer = styled.div`
   background-color: #FAF8F8;
   border-radius: 8px;
-  box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);;
+  box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
   padding: 20px;
   margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
   height: 400px;
@@ -25,15 +26,13 @@ const ReportTitle = styled.h2`
   font-size: 18px;
   margin-bottom: 0px;
   margin-top: 0px;
-  top: 0; 
-  background-color: #FAF8F8;
-  padding: 10px 0; 
+  padding: 10px 0;
 `;
 
 const IconContainer = styled.div`
   display: flex;
   gap: 10px;
-  margin-left : 10px;
+  margin-left: 10px;
 `;
 
 const Icon = styled.img`
@@ -62,10 +61,17 @@ const ReportItem = styled.div`
   @media (max-width: 768px) {
     flex: 1 1 100%;
   }
-    z-index: 0.5;
 `;
 
-const DataReport = ({collapsed}) => {
+const DataReport = ({ collapsed }) => {
+  const { analyzedData } = useContext(DataContext);
+
+  // 데이터를 가져왔는지 확인
+  if (!analyzedData || Object.keys(analyzedData).length === 0) {
+    return <p>분석할 데이터가 없습니다.</p>; 
+  }
+
+  // 차트 데이터 생성
   const chartsData = [
     {
       title: '데이터 품질 이상 항목',
@@ -74,7 +80,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '데이터 품질 이상 항목',
-            data: [40, 60],
+            data: [
+              Number(analyzedData.invalidCount) || 0, 
+              Number(analyzedData.totalItems) - Number(analyzedData.invalidCount) || 0,
+            ],
             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
             borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
             borderWidth: 1,
@@ -89,7 +98,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '데이터 품질 이상 환자',
-            data: [30, 70],
+            data: [
+              Number(analyzedData.nullCount) || 0, 
+              Number(analyzedData.totalPatients) - Number(analyzedData.nullCount) || 0,
+            ],
             backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)'],
             borderColor: ['rgba(255, 159, 64, 1)', 'rgba(75, 192, 192, 1)'],
             borderWidth: 1,
@@ -104,7 +116,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '누락 항목',
-            data: [20, 80],
+            data: [
+              Number(analyzedData.missingItemCount) || 0,
+              Number(analyzedData.totalItems) - Number(analyzedData.missingItemCount) || 0,
+            ],
             backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)'],
             borderColor: ['rgba(255, 206, 86, 1)', 'rgba(153, 102, 255, 1)'],
             borderWidth: 1,
@@ -119,7 +134,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '누락 환자',
-            data: [50, 50],
+            data: [
+              Number(analyzedData.nullCount) || 0,
+              Number(analyzedData.totalPatients) - Number(analyzedData.nullCount) || 0,
+            ],
             backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
             borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
             borderWidth: 1,
@@ -134,7 +152,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '수정이 필요한 환자',
-            data: [60, 40],
+            data: [
+              Number(analyzedData.invalidCount) || 0, 
+              Number(analyzedData.totalPatients) - Number(analyzedData.invalidCount) || 0,
+            ],
             backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 159, 64, 0.2)'],
             borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 159, 64, 1)'],
             borderWidth: 1,
@@ -149,7 +170,10 @@ const DataReport = ({collapsed}) => {
         datasets: [
           {
             label: '수정이 필요한 항목',
-            data: [10, 90],
+            data: [
+              Number(analyzedData.missingItemCount) || 0,
+              Number(analyzedData.totalItems) - Number(analyzedData.missingItemCount) || 0,
+            ],
             backgroundColor: ['rgba(153, 102, 255, 0.2)', 'rgba(255, 206, 86, 0.2)'],
             borderColor: ['rgba(153, 102, 255, 1)', 'rgba(255, 206, 86, 1)'],
             borderWidth: 1,

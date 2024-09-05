@@ -87,7 +87,7 @@ const DataAnalysisResults = ({ collapsed }) => {
                     <p>분석할 데이터가 없습니다.</p>
                 )}
             </FormCtn>
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
         </ResultCtn>
     );
 };

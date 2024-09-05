@@ -36,11 +36,11 @@ const ColSpanTd = styled.td`
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
-  width: 20%; /* 각 셀을 동일한 크기로 */
+  width: 35%; /* 각 셀을 동일한 크기로 */
 `;
 
 
-const MyTable = ({analyzedData  }) => {
+const MyTable = ({analyzedData}) => {
 
  console.log('DataAnalysisTable 컴포넌트에서 받은 데이터:', analyzedData);
  const [loading, setLoading] = useState(false);
