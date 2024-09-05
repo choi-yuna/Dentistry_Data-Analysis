@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react'; 
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
+import { DataContext } from '../context/DataContext'; 
+
 
 const ResultCtn = styled.div`
     width: ${(props) => (props.$collapsed ? '60%' : '38%')};
@@ -50,8 +52,9 @@ const DetailButton = styled.button`
     }
 `;
 
-const DataAnalysisResults = ({ collapsed, analyzedData }) => {
+const DataAnalysisResults = ({ collapsed }) => {
     const [isModalOpen, setModalOpen] = useState(false);
+    const { analyzedData } = useContext(DataContext); 
     const [excelData, setExcelData] = useState([
         ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
         ["Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", "Data8"],                

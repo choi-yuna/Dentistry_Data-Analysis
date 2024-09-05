@@ -119,7 +119,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
     const [disease, setDisease] = useState('');
 
     const { fileId } = useFileContext();
-
+    const { setAnalyzedData } = useContext(DataContext); 
     const handleInstitutionChange = (e) => {
         setInstitution(e.target.value);
     };
@@ -186,6 +186,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
             // 부모 컴포넌트로 분석된 데이터를 전달
             onAnalyze(analyzedData);
+            setAnalyzedData(analyzedData); 
 
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
