@@ -130,10 +130,10 @@ const ToggleIcon = styled.img`
   margin-right: 2px;
 `;
 
-const MenuBar = ({ collapsed, setCollapsed }) => {
+const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
-  const [activQuality, setActiveQuality] = useState(false);
+  const [activeQuality, setActiveQuality] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -154,7 +154,6 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
     setCollapsed(!collapsed);
   };
 
-  // 데이터 품질 평가 버튼 클릭 처리
   const handleQualityMenuClick = () => {
     setActiveQuality(true);  
     setShowSubMenu(false);  
@@ -162,7 +161,6 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
     navigate('/');         
   };
 
-  // 데이터 분석 가시화 버튼 클릭 처리
   const handleVisualizationMenuClick = () => {
     setActiveQuality(false); 
     setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);  
@@ -172,6 +170,7 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
   const handleSubMenuItemClick = (item) => {
     setActiveSubMenuItem(item);
     setShowSubMenu(false);
+    onDiseaseSelect(item);  // 선택한 질환을 상위 컴포넌트로 전달
     switch (item) {
       case 'All':
         navigate('/all');
@@ -199,7 +198,7 @@ const MenuBar = ({ collapsed, setCollapsed }) => {
         <ToggleIcon src={collapsed ? Close : Open} alt="Toggle Icon" />
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
-        <QualityMenuBtn active={activQuality} onClick={handleQualityMenuClick}>
+        <QualityMenuBtn active={activeQuality} onClick={handleQualityMenuClick}>
           데이터 품질 평가
           <Icon src={ClosedIcon} alt="Close Icon" />
         </QualityMenuBtn>
