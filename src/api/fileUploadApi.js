@@ -21,6 +21,7 @@ export const uploadZipFile = async (file) => {
 
 export const fetchPatientData = async (fileId, institutionId, diseaseClass) => {
     try {
+        console.log('전송할 데이터:', { fileId, institutionId, diseaseClass }); 
         const response = await axios.post('http://localhost:8080/api/analyze', {
             fileId: fileId,
             institutionId: institutionId,

@@ -4,9 +4,9 @@ import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
 
 const ResultCtn = styled.div`
-    width: ${(props) => (props.collapsed ? '60%' : '38%')};
+    width: ${(props) => (props.$collapsed ? '60%' : '38%')};
     height: 45%; 
-    margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
+    margin-left: ${(props) => (props.$collapsed ? '9%' : '20%')};
     margin-top: -30px;
     transition: width 0.3s ease, height 0.3s ease;
 `;
@@ -50,7 +50,7 @@ const DetailButton = styled.button`
     }
 `;
 
-const DataAnalysisResults = ({collapsed}) => {
+const DataAnalysisResults = ({ collapsed,analyzedData  }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [excelData, setExcelData] = useState([
         ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
@@ -58,8 +58,8 @@ const DataAnalysisResults = ({collapsed}) => {
         ["Data9", "Data10", "Data11", "Data12", "Data13", "Data14", "Data15", "Data16"],        
         ["Data17", "Data18", "Data19", "Data20", "Data21", "Data22", "Data23", "Data24"],       
         ["Data25", "Data26", "Data27", "Data28", "Data29", "Data30", "Data31", "Data32"],         
-        //임시 데이터
     ]);
+
     const handleDetailButtonClick = () => {
         setModalOpen(true);
     };
@@ -69,15 +69,16 @@ const DataAnalysisResults = ({collapsed}) => {
     };
 
     return (
-        <ResultCtn collapsed={collapsed}>
+        <ResultCtn $collapsed={collapsed}>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
                     <DetailButton onClick={handleDetailButtonClick}>품질 이상 항목 세부보기</DetailButton>
                 </TitleBar>
-                <DataAnalysisTable />
+                {/* analyzedData가 존재할 경우에만 DataAnalysisTable 렌더링 */}
+                {analyzedData && <DataAnalysisTable analyzedData={analyzedData} />}
             </FormCtn>
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
         </ResultCtn>
     );
 };

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState,useContext } from 'react';
 import styled from 'styled-components';
-import { fetchAndAnalyzeData } from '../utils/fetchData'; // 분석 및 데이터 받아오는 함수
+import { DataContext } from '../context/DataContext';
+
 
 const TableContainer = styled.div`
   display: flex;
@@ -20,22 +21,14 @@ const Th = styled.th`
   padding: 10px;
   background-color: #C4C4C4;
   text-align: center;
-  width: 16.66%; 
+  width: 16.66%;
 `;
 
 const Td = styled.td`
   border: 2px solid black;
   padding: 10px;
   text-align: center;
-  width: 16.66%; 
-`;
-
-const EmptyTh = styled.th`
-  border: 2px solid black;
-  padding: 10px;
-  background-color: #C4C4C4;
-  text-align: center;
-  width: 33%; 
+  width: 16.66%;
 `;
 
 const ColSpanTd = styled.td`
@@ -47,95 +40,70 @@ const ColSpanTd = styled.td`
   width: 33.33%;
 `;
 
-const MyTable = ({ fileId, institutionId, diseaseClass }) => {
-  const [analyzedData, setAnalyzedData] = useState(null);  // 분석 결과 상태 추가
-  const [loading, setLoading] = useState(true);  // 로딩 상태 추가
+const MyTable = () => {
+ const { analyzedData } = useContext(DataContext);
 
-  // 서버에서 데이터를 받아오고 분석
-  useEffect(() => {
-    const getDataAndAnalyze = async () => {
-      try {
-        const analysisResult = await fetchAndAnalyzeData(fileId, institutionId, diseaseClass);  // 데이터 받아와서 분석
-        setAnalyzedData(analysisResult);  // 분석된 데이터 상태에 저장
-      } catch (error) {
-        console.error('데이터 분석 중 오류 발생:', error);
-      } finally {
-        setLoading(false);  
-      }
-    };
-
-    getDataAndAnalyze();
-  }, [fileId, institutionId, diseaseClass]);  // fileId, institutionId, diseaseClass가 변경될 때마다 실행
-
-  // 로딩 중일 때 로딩 메시지 표시
-  if (loading) {
-    return <div>로딩 중...</div>;
-  }
-
-  // analyzedData가 없을 때 에러 메시지 표시
-  if (!analyzedData) {
-    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
-  }
-
-
-  const {
-    totalPatients,
-    patientQualityRate,
-    totalItems,
-    itemQualityRate,
-    completenessRatio,
-    validityRatio,
-  } = analyzedData;
+ const [loading, setLoading] = useState(false);
 
   return (
-    <TableContainer>
-      <Table>
-        <thead>
-          <tr>
-            <EmptyTh colSpan="2"></EmptyTh>
-            <Th colSpan="2">환자</Th>
-            <Th colSpan="2">항목</Th>
-          </tr>
-          <tr>
-            <EmptyTh colSpan="2"></EmptyTh>
-            <Th>명</Th>
-            <Th>비율</Th>
-            <Th>개</Th>
-            <Th>비율</Th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <ColSpanTd colSpan="2">전체데이터</ColSpanTd>
-            <Td>{totalPatients}</Td>
-            <Td>{patientQualityRate.toFixed(2)}%</Td>
-            <Td>{totalItems}</Td>
-            <Td>{itemQualityRate.toFixed(2)}%</Td>
-          </tr>
-          <tr>
-            <ColSpanTd colSpan="2">임상데이터 품질율</ColSpanTd>
-            <Td>{totalPatients}</Td>
-            <Td>{patientQualityRate.toFixed(2)}%</Td>
-            <Td>{totalItems}</Td>
-            <Td>{itemQualityRate.toFixed(2)}%</Td>
-          </tr>
-          <tr>
-            <ColSpanTd colSpan="2">완전성</ColSpanTd>
-            <Td>{totalPatients}</Td>
-            <Td>{completenessRatio.toFixed(2)}%</Td>
-            <Td>{totalItems}</Td>
-            <Td>{completenessRatio.toFixed(2)}%</Td>
-          </tr>
-          <tr>
-            <ColSpanTd colSpan="2">유효성</ColSpanTd>
-            <Td>{totalPatients}</Td>
-            <Td>{validityRatio.toFixed(2)}%</Td>
-            <Td>{totalItems}</Td>
-            <Td>{validityRatio.toFixed(2)}%</Td>
-          </tr>
-        </tbody>
-      </Table>
-    </TableContainer>
+    <div>
+ 
+
+      {/* 데이터가 없을 경우 로딩 중 메시지 */}
+      {!analyzedData && !loading && <div>분석할 데이터를 입력하세요</div>}
+
+      {/* 분석된 데이터가 있을 때만 테이블을 렌더링 */}
+      {analyzedData && (
+        <TableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <Th>데이터 종류</Th>
+                <Th>환자 수</Th>
+                <Th>비율</Th>
+                <Th>항목 수</Th>
+                <Th>비율</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <ColSpanTd colSpan="2">전체 데이터</ColSpanTd>
+                <Td>{analyzedData.totalPatients || 0}</Td>
+                <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.totalItems || 0}</Td>
+                <Td>{analyzedData.itemQualityRate?.toFixed(2) || '0.00'}%</Td>
+              </tr>
+
+              <tr>
+                <ColSpanTd colSpan="2">임상 데이터 품질율</ColSpanTd>
+                <Td>{analyzedData.validPatientCount || 0}</Td>
+                <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.validItemCount || 0}</Td>
+                <Td>{analyzedData.itemQualityRate?.toFixed(2) || '0.00'}%</Td>
+              </tr>
+
+              <tr>
+                <ColSpanTd colSpan="2">완전성</ColSpanTd>
+                <Td>{analyzedData.totalPatients || 0}</Td>
+                <Td>{analyzedData.completenessRatio?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.totalItems || 0}</Td>
+                <Td>{analyzedData.itemCompletenessRatio?.toFixed(2) || '0.00'}%</Td>
+              </tr>
+
+              <tr>
+                <ColSpanTd colSpan="2">유효성</ColSpanTd>
+                <Td>{analyzedData.totalPatients || 0}</Td>
+                <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.totalItems || 0}</Td>
+                <Td>{analyzedData.itemValidityRatio?.toFixed(2) || '0.00'}%</Td>
+              </tr>
+            </tbody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {loading && <div>로딩 중...</div>}
+    </div>
   );
 };
 
