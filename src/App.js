@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FileProvider } from './FileContext';
-import { DataProvider } from './context/DataContext'; // DataProvider 추가
+import { DataProvider } from './context/DataContext'; 
 import DataQualityView from './dataQualityView/dataQuality';
 import DataVisualization from './dataVisualizationView/dataVisualizationView';
 import FormComponent from './components/FormComponent';
@@ -15,6 +15,7 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
+
               <Route path="/" element={<DataQualityView />} />
               <Route path="/dataVisualization" element={<DataVisualization />} />
             </Routes>
