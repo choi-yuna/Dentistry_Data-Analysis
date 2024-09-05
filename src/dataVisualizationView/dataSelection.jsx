@@ -5,17 +5,17 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg';
-import { diseaseSpecificData } from '../utils/diseaseData';  // diseaseSpecificData를 import
+import { diseaseSpecificData } from '../utils/diseaseData';
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
-  margin-top: 5px; 
+  margin-top: 5px;
   transition: width 1s ease, height 0.3s ease;
 `;
 
 const FlexBox = styled.div`
   display: flex;
-  align-items: center; 
+  align-items: center;
 `;
 
 const StyledTabs = styled(Tabs)`
@@ -40,7 +40,7 @@ const ListContainer = styled.div`
   flex-direction: column;
   border: 1px solid #ccc;
   border-radius: 0 0 8px 8px;
-  padding: 8px; 
+  padding: 8px;
   background-color: #fff;
 `;
 
@@ -62,7 +62,7 @@ const Section = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 4px;
-  border-bottom: 1px solid #ccc; /* 구분선 추가 */
+  border-bottom: 1px solid #ccc;
 `;
 
 const StyledList = styled.div`
@@ -99,12 +99,13 @@ const StyledButtonItem = styled.button`
 `;
 
 const SubListItem = styled(StyledButtonItem)`
-  background-color: inherit; 
-  color: ${({ selected }) => (selected ? '#DD7610' : 'black')}; 
+  background-color: inherit;
+  color: ${({ selected }) => (selected ? '#DD7610' : 'black')};
   margin-right: 8px;
   padding: 4px 8px;
-  height: auto; 
+  height: auto;
   margin-bottom: 4px;
+
   &:hover {
     background-color: inherit;
   }
@@ -153,7 +154,7 @@ const SelectedItemsBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px; 
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -362,30 +363,30 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                   </SelectWrapper>
                 </>
               ) : (
-                subItems.map((subItem) => (
-                  <SubListItem
-                    key={subItem.label || subItem}
-                    selected={selectedItemsTab1[selectedCategory]?.some(
-                      (item) => item.label ? item.label === subItem.label : item === subItem
-                    )}
-                  >
-                    <span
-                      onClick={() => handleItemClick(subItem)}
-                      style={{
-                        color: selectedItems[selectedCategory]?.some(
-                          (item) => item.label ? item.label === subItem.label : item === subItem
-                        )
-                          ? '#DD7610'
-                          : 'black',
-                        fontSize: '12px',
-                      }}
-                    >
-                      {subItem.label || subItem}
-                    </span>
-                  </SubListItem>
-                ))
-              )}
-            </SubList>
+                subItems.map((subItem) => {
+                    const isSelected = selectedItems[selectedCategory]?.some(
+                      (item) => (item.label ? item.label === subItem.label : item === subItem)
+                    );
+
+                    return (
+                      <SubListItem
+                        key={subItem.label || subItem}
+                        selected={isSelected}
+                        >
+                        <span
+                          onClick={() => handleItemClick(subItem)}
+                          style={{
+                            color: isSelected ? '#DD7610' : 'black',
+                            fontSize: '12px',
+                          }}
+                        >
+                          {subItem.label || subItem}
+                        </span>
+                      </SubListItem>
+                    );
+                  })
+                )}
+              </SubList>
           </Section>
         </ListContainer>
       </Collapse>
