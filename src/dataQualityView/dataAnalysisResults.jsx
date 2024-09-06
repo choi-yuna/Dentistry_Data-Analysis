@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'; 
+import React, { useState, useContext,useEffect } from 'react'; 
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
@@ -55,13 +55,22 @@ const DetailButton = styled.button`
 const DataAnalysisResults = ({ collapsed }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const { analyzedData } = useContext(DataContext); 
-    const [excelData, setExcelData] = useState([
-        ["Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8"], 
-        ["Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", "Data8"],                
-        ["Data9", "Data10", "Data11", "Data12", "Data13", "Data14", "Data15", "Data16"],        
-        ["Data17", "Data18", "Data19", "Data20", "Data21", "Data22", "Data23", "Data24"],       
-        ["Data25", "Data26", "Data27", "Data28", "Data29", "Data30", "Data31", "Data32"],         
-    ]);
+    const { originalPatientData } = useContext(DataContext);
+    const [excelData, setExcelData] = useState([]);
+
+    // useEffect를 사용해 originalPatientData가 변경될 때 excelData를 동적으로 업데이트
+    useEffect(() => {
+        if (originalPatientData && originalPatientData.length > 0) {
+            // originalPatientData의 첫 번째 객체의 키를 사용하여 헤더 생성
+            const headers = Object.keys(originalPatientData[0]);
+
+            // 각 객체의 값을 배열로 변환하여 데이터 생성
+            const rows = originalPatientData.map(item => Object.values(item));
+
+            // headers와 rows를 결합하여 excelData로 설정
+            setExcelData([headers, ...rows]);
+        }
+    }, [originalPatientData]);
 
     const handleDetailButtonClick = () => {
         setModalOpen(true);
@@ -71,6 +80,7 @@ const DataAnalysisResults = ({ collapsed }) => {
         setModalOpen(false);
     };
     console.log('DataAnalysisResults 컴포넌트에서 받은 데이터:', analyzedData);
+    console.log('컴포넌트에서 받은 데이터:', originalPatientData);
 
     // analyzedData가 null이거나 undefined인 경우 DataAnalysisTable을 렌더링하지 않음
     return (

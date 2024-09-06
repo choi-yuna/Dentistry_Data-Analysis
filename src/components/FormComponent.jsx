@@ -154,7 +154,7 @@ const Button = styled.button`
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
     const [loading, setLoading] = useState(false);  // 로딩 상태 추가
-    const { institution, setInstitution, disease, setDisease, setAnalyzedData } = useContext(DataContext);
+    const { institution, setInstitution, disease, setDisease, setAnalyzedData,setOriginalPatientData } = useContext(DataContext);
     const { fileId } = useFileContext();
 
     const handleInstitutionChange = (e) => {
@@ -188,7 +188,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 setLoading(false);
                 return;
             }
-
+            setOriginalPatientData(patientData);
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
             const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
