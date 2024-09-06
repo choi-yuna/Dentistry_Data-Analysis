@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FileProvider } from './FileContext';
 import { DataProvider } from './context/DataContext'; 
+import { DataSelectionProvider } from './context/DataSelectionContext'; 
 import DataQualityView from './dataQualityView/dataQuality';
 import DataVisualization from './dataVisualizationView/dataVisualizationView';
 import FormComponent from './components/FormComponent';
@@ -12,6 +13,7 @@ function App() {
   return (
     <FileProvider>
       <DataProvider>
+        <DataSelectionProvider>
         <Router>
           <div className="App">
             <Routes>
@@ -24,6 +26,7 @@ function App() {
             </div>
           </div>
         </Router>
+        </DataSelectionProvider>
       </DataProvider>
     </FileProvider>
   );
