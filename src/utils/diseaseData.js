@@ -4,11 +4,7 @@ export const diseaseSpecificData = {
     치주질환: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
-        '환자정보': {
-          '흡연': '',
-          '음주': '',
-          '성별': '',
-        },
+        '환자 정보': [],
         '치주질환 정보': [],
         '치료 단계': [],
       },
@@ -22,21 +18,39 @@ export const diseaseSpecificData = {
         '기본 정보(info)': [
           { 
             label: '기관 선택', 
-            value: 'institution_selection', 
+            value: 'INSTITUTION_ID', 
             options: [
-              { display: '기관1', send: 'A' },
-              { display: '기관2', send: 'B' },
-              { display: '기관3', send: 'C' },
-              { display: '기관4', send: 'D' }
+              { display: '원광대학교', send: '1' },
+              { display: '고려대학교', send: '2' },
+              { display: '서울대학교', send: '3' },
+              { display: '국립암센터', send: '4' },
+              { display: '단국대학교', send: '5' },
+              { display: '조선대학교', send: '6' },
+              { display: '보라매병원', send: '7' },
             ] 
           },
-          { label: '치료일자', value: 'treatment_date' },
-          { label: '치료 장비', value: 'treatment_device' },
+
+          { label: '촬영장비', 
+            value: 'MAKER_INFO',
+            options: [
+                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+            ]
+        },
         ],
         '환자정보': [
-          { label: '치료 기간', value: 'treatment_duration' },
-          { label: '환자 나이', value: 'patient_age' },
-          { label: '치료 방법', value: 'treatment_method' },
+          { label: '성별', 
+            value: 'P_GENDER' ,
+            options: [
+                { display: '남', send: '1' },
+                { display: '여', send: '2' },
+            ]
+          },
+          { label: '나이', 
+            value: 'P_AGE',
+            options: [
+                { display: '10 - 20', send: '1' },
+                { display: '20 - 30', send: '2' },
+            ] },
         ],
       },
       categoriesTab2: {
@@ -60,11 +74,7 @@ export const diseaseSpecificData = {
     구강암: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
-        '환자정보': {
-          '흡연': '',
-          '음주': '',
-          '성별': '',
-        },
+        '환자 정보': [],
         '암 정보': [],
         '치료 상태': [],
       },
@@ -106,11 +116,7 @@ export const diseaseSpecificData = {
     악골골수염: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
-        '환자정보': {
-          '흡연': '',
-          '음주': '',
-          '성별': '',
-        },
+        '환자 정보': [],
         '골수염 정보': [],
         '치료 상태': [],
       },
@@ -152,11 +158,7 @@ export const diseaseSpecificData = {
     default: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
-        '환자정보': {
-          '흡연': '',
-          '음주': '',
-          '성별': '',
-        },
+        '환자 정보': [],
         '진단정보별 환자 수': [],
         '환자 수': [],
         '추가 정보1': [],
@@ -173,14 +175,41 @@ export const diseaseSpecificData = {
       },
       categoriesTab1: {
         '기본 정보(info)': [
-          { label: '기관 선택', value: 'institution_selection' },
-          { label: '촬영일자', value: 'capture_date' },
-          { label: '촬영장비', value: 'capture_device' },
+          { 
+            label: '기관 선택', 
+            value: 'INSTITUTION_ID', 
+            options: [
+              { display: '원광대학교', send: '1' },
+              { display: '고려대학교', send: '2' },
+              { display: '서울대학교', send: '3' },
+              { display: '국립암센터', send: '4' },
+              { display: '단국대학교', send: '5' },
+              { display: '조선대학교', send: '6' },
+              { display: '보라매병원', send: '7' },
+            ] 
+          },
+
+          { label: '촬영장비', 
+            value: 'MAKER_INFO',
+            options: [
+                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+            ]
+        },
         ],
         '환자정보': [
-          { label: '흡연', value: 'smoking' },
-          { label: '음주', value: 'drinking' },
-          { label: '성별', value: 'gender' },
+          { label: '성별', 
+            value: 'P_GENDER' ,
+            options: [
+                { display: '남', send: '1' },
+                { display: '여', send: '2' },
+            ]
+          },
+          { label: '나이', 
+            value: 'P_AGE',
+            options: [
+                { display: '10 - 20', send: '1' },
+                { display: '20 - 30', send: '2' },
+            ] },
         ],
       },
       categoriesTab2: {

@@ -125,10 +125,33 @@ const Label = styled.label`
 `;
 
 const SelectField = styled(Select)`
-  min-width: 70px;
+  min-width: 100px;  // 너비 조정
   font-size: 0.8rem;
+  height: 30px;      // 높이 조정
   margin-right: 8px;
+  margin-bottom: 8px;
+
+  .MuiSelect-select {
+    padding: 7px;    // 내부 여백 조정
+    font-size: 0.8rem;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  .MuiOutlinedInput-input {
+    padding: 8px;    // 입력 필드 패딩
+    font-size: 0.8rem;
+    height: 36px;
+    line-height: 1.2;
+  }
+
+  .MuiInputBase-root {
+    font-size: 0.8rem;
+    height: 36px;
+  }
 `;
+
 
 const TextFieldStyled = styled(TextField)`
   min-width: 80px;
@@ -176,7 +199,6 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
   const [selectedItemsTab2, setSelectedItemsTab2] = useState(diseaseData.selectedItemsTab2);
   const [open, setOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedInstitution, setSelectedInstitution] = useState('');
 
   useEffect(() => {
     setSelectedItemsTab1(diseaseData.selectedItemsTab1);
@@ -186,31 +208,6 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
     setSelectedCategory('');
-    setSelectedInstitution('');
-  };
-
-  const handleDelete = (itemToDelete, category) => {
-    if (tabValue === 0) {
-      if (category === '환자정보') {
-        setSelectedItemsTab1({
-          ...selectedItemsTab1,
-          [category]: {
-            ...selectedItemsTab1[category],
-            [itemToDelete.split(': ')[0]]: '',
-          },
-        });
-      } else {
-        setSelectedItemsTab1({
-          ...selectedItemsTab1,
-          [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
-        });
-      }
-    } else {
-      setSelectedItemsTab2({
-        ...selectedItemsTab2,
-        [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
-      });
-    }
   };
 
   const handleToggle = () => {
@@ -221,61 +218,67 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     setSelectedCategory(category);
   };
 
-  const handleItemClick = (subItem, type = 'general') => {
+  const handleItemClick = (selected, category) => {
     const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
     const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
-
-    const itemLabel = typeof subItem === 'object' ? subItem.label : subItem;
-
-    if (type === '환자정보') {
+  
+    // selectedItems[category]가 배열이 아니면 빈 배열로 초기화
+    const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
+  
+    // 선택된 항목이 이미 존재하는지 확인
+    const existingItemIndex = categoryItems.findIndex(item => item.label === selected.label);
+  
+    if (existingItemIndex !== -1) {
+      // 이미 선택된 항목이 있다면 값을 업데이트
+      const updatedItems = [...categoryItems];
+      updatedItems[existingItemIndex] = selected;
       setSelectedItems({
         ...selectedItems,
-        [type]: {
-          ...selectedItems[type],
-          [subItem.label]: subItem.value,
-        },
+        [category]: updatedItems,
       });
     } else {
-      if (selectedItems[selectedCategory]?.includes(itemLabel)) {
-        setSelectedItems({
-          ...selectedItems,
-          [selectedCategory]: selectedItems[selectedCategory].filter((item) => item !== itemLabel),
-        });
-      } else {
-        setSelectedItems({
-          ...selectedItems,
-          [selectedCategory]: [...selectedItems[selectedCategory], itemLabel],
-        });
-      }
+      // 선택되지 않은 경우 새로운 항목을 추가
+      setSelectedItems({
+        ...selectedItems,
+        [category]: [...categoryItems, selected],
+      });
     }
   };
+  
 
-  const handleInstitutionChange = (event) => {
-    setSelectedInstitution(event.target.value);
-    handleItemClick(event.target.value);
+
+  const handleDelete = (itemToDelete, category) => {
+    if (tabValue === 0) {
+      setSelectedItemsTab1({
+        ...selectedItemsTab1,
+        [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
+      });
+    } else {
+      setSelectedItemsTab2({
+        ...selectedItemsTab2,
+        [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
+      });
+    }
   };
 
   const getSelectableItems = () => {
     return tabValue === 0
       ? {
-          categories: diseaseData.categoriesTab1,
-          institutions: diseaseData.institutions,
-          genders: diseaseData.genders,
-          selectedItems: selectedItemsTab1,
-        }
+        categories: diseaseData.categoriesTab1,
+        selectedItems: selectedItemsTab1,
+      }
       : {
-          categories: diseaseData.categoriesTab2,
-          selectedItems: selectedItemsTab2,
-        };
+        categories: diseaseData.categoriesTab2,
+        selectedItems: selectedItemsTab2,
+      };
   };
 
-  const { categories, institutions, selectedItems } = getSelectableItems();
+  const { categories, selectedItems } = getSelectableItems();
   const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
 
   const handleReset = () => {
     setSelectedItemsTab1(diseaseData.selectedItemsTab1);
     setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-    setSelectedInstitution('');
   };
 
   const handleTabResult = (e) => {
@@ -319,111 +322,111 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             </StyledList>
           </Section>
           <Section>
-            <LabelContainer>
-              <Label>중분류</Label>
-              <VerticalDivider />
-            </LabelContainer>
-            <SubList>
-              {tabValue === 0 && selectedCategory === '기본 정보(info)' ? (
-                <>
-                  <SelectWrapper>
-                    <Label>기관:</Label>
-                    <SelectField
-                      value={selectedInstitution}
-                      onChange={handleInstitutionChange}
-                      displayEmpty
-                    >
-                      <MenuItem value="">
-                        <em>ALL</em>
-                      </MenuItem>
-                      {institutions.map((institution) => (
-                        <MenuItem key={institution.value} value={institution.value}>
-                          {institution.label}
-                        </MenuItem>
-                      ))}
-                    </SelectField>
-                  </SelectWrapper>
-                  <SelectWrapper>
-                    <Label>촬영일자:</Label>
-                    <TextFieldStyled
-                      type="date"
-                      defaultValue=""
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </SelectWrapper>
-                  <SelectWrapper>
-                    <Label>촬영장비:</Label>
-                    <SelectField displayEmpty>
-                      <MenuItem value="">
-                        <em>장비 선택</em>
-                      </MenuItem>
-                    </SelectField>
-                  </SelectWrapper>
-                </>
-              ) : (
-                subItems.map((subItem) => {
-                    const isSelected = selectedItems[selectedCategory]?.some(
-                      (item) => (item.label ? item.label === subItem.label : item === subItem)
-                    );
+  <LabelContainer>
+    <Label>중분류</Label>
+    <VerticalDivider />
+  </LabelContainer>
 
-                    return (
-                      <SubListItem
-                        key={subItem.label || subItem}
-                        selected={isSelected}
-                        >
-                        <span
-                          onClick={() => handleItemClick(subItem)}
-                          style={{
-                            color: isSelected ? '#DD7610' : 'black',
-                            fontSize: '12px',
-                          }}
-                        >
-                          {subItem.label || subItem}
-                        </span>
-                      </SubListItem>
-                    );
-                  })
-                )}
-              </SubList>
-          </Section>
+  {tabValue === 0 && selectedCategory ? (
+  <SelectWrapper>
+    {subItems.map((subItem) => (
+      <div key={subItem.label || subItem}>
+        <Label>{subItem.label || subItem}</Label>
+        {subItem.options ? (
+          <SelectField
+            value={selectedItems[selectedCategory]?.find(item => item.label === subItem.label)?.value || ''} // 선택된 값
+            onChange={(event) => handleItemClick({ label: subItem.label, value: event.target.value }, selectedCategory)} // 값 변경 시 반영
+            displayEmpty
+          >
+            <MenuItem value="">
+              <em>ALL</em>
+            </MenuItem>
+            {subItem.options.map((option) => (
+              <MenuItem key={option.display} value={option.display}>
+                {option.display}
+              </MenuItem>
+            ))}
+          </SelectField>
+        ) : (
+          <TextFieldStyled
+            type="text"
+            value={subItem.value || ''}
+            disabled
+          />
+        )}
+      </div>
+    ))}
+  </SelectWrapper>
+) : (
+    <SubList>
+      {subItems.map((subItem) => {
+        const isSelected =
+          Array.isArray(selectedItems[selectedCategory]) &&
+          selectedItems[selectedCategory].some(
+            (item) => (typeof item === 'object' ? item.label === subItem.label : item === subItem)
+          );
+
+        return (
+          <SubListItem
+            key={subItem.label || subItem}
+            selected={isSelected}
+            onClick={() => handleItemClick(subItem)}
+          >
+            <span
+              style={{
+                color: isSelected ? '#DD7610' : 'black',
+                fontSize: '12px',
+              }}
+            >
+              {subItem.label || subItem}
+            </span>
+          </SubListItem>
+        );
+      })}
+    </SubList>
+  )}
+</Section>
+
         </ListContainer>
       </Collapse>
 
       <SelectedItemsBox>
-        <ChipsContainer>
-          {Object.entries(selectedItems).flatMap(([category, items]) => {
-            if (category === '환자정보') {
-              return Object.entries(items)
-                .filter(([key, value]) => value !== '')
-                .map(([key, value]) => (
-                  <Chip
-                    key={`${category}-${key}`}
-                    label={`${key}: ${value}`}
-                    onDelete={() => handleDelete(`${key}: ${value}`, category)}
-                  />
-                ));
-            } else {
-              return items.map((item) => (
-                <Chip
-                  key={`${category}-${item.label || item}`}
-                  label={typeof item === 'object' ? item.label : item}
-                  onDelete={() => handleDelete(item, category)}
-                />
-              ));
-            }
-          })}
-        </ChipsContainer>
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<RefreshIcon />}
-          onClick={handleReset}
-        >
-          초기화
-        </Button>
-      </SelectedItemsBox>
+      <ChipsContainer>
+  {Object.entries(selectedItems).flatMap(([category, items]) => {
+    if (tabValue === 0) {
+      // 데이터 구성 항목 Chip 표시
+      return Array.isArray(items) ? items.map((item) => (
+        <Chip
+          key={`${category}-${item.label || item}`}
+          label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
+          onDelete={() => handleDelete(item, category)}
+        />
+      )) : [];
+    } else if (tabValue === 1) {
+      // 리포트 항목 Chip 표시
+      return Array.isArray(items) ? items.map((item) => (
+        <Chip
+          key={`${category}-${item}`}
+          label={item.label ? `${item.label}` : item}
+          onDelete={() => handleDelete(item, category)}
+        />
+      )) : [];
+    }
+    return [];
+  })}
+</ChipsContainer>
+
+
+
+  <Button
+    variant="outlined"
+    size="small"
+    startIcon={<RefreshIcon />}
+    onClick={handleReset}
+  >
+    초기화
+  </Button>
+</SelectedItemsBox>
     </Container>
   );
 };
