@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext  } from 'react';
 import styled from 'styled-components';
 import { IconButton, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -6,6 +6,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg';
 import { diseaseSpecificData } from '../utils/diseaseData';
+import { DataSelectionContext } from '../context/DataSelectionContext';
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
@@ -192,100 +193,128 @@ const ChipsContainer = styled.div`
 `;
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
-  const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
+    const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
 
-  const [tabValue, setTabValue] = useState(0);
-  const [selectedItemsTab1, setSelectedItemsTab1] = useState(diseaseData.selectedItemsTab1);
-  const [selectedItemsTab2, setSelectedItemsTab2] = useState(diseaseData.selectedItemsTab2);
-  const [open, setOpen] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('');
+    // Context에서 상태와 setter 함수를 가져옴
+    const {
+      tabValue,
+      setTabValue,
+      selectedItemsTab1,
+      setSelectedItemsTab1,
+      selectedItemsTab2,
+      setSelectedItemsTab2,
+      selectedCategory,
+      setSelectedCategory,
+    } = useContext(DataSelectionContext);
 
-  useEffect(() => {
-    setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-    setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-  }, [disease, diseaseData.selectedItemsTab1, diseaseData.selectedItemsTab2]);
+    const [open, setOpen] = useState(true);
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-    setSelectedCategory('');
-  };
+    // 질환이 변경될 때 해당 질환의 저장된 선택 항목을 불러옴
+    useEffect(() => {
+      const savedTab1 = localStorage.getItem(`${disease}_selectedItemsTab1`);
+      const savedTab2 = localStorage.getItem(`${disease}_selectedItemsTab2`);
 
-  const handleToggle = () => {
-    setOpen((open) => !open);
-  };
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-  };
-
-  const handleItemClick = (selected, category) => {
-    const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
-    const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
-  
-    // selectedItems[category]가 배열이 아니면 빈 배열로 초기화
-    const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
-  
-    // 선택된 항목이 이미 존재하는지 확인
-    const existingItemIndex = categoryItems.findIndex(item => item.label === selected.label);
-  
-    if (existingItemIndex !== -1) {
-      // 이미 선택된 항목이 있다면 값을 업데이트
-      const updatedItems = [...categoryItems];
-      updatedItems[existingItemIndex] = selected;
-      setSelectedItems({
-        ...selectedItems,
-        [category]: updatedItems,
-      });
-    } else {
-      // 선택되지 않은 경우 새로운 항목을 추가
-      setSelectedItems({
-        ...selectedItems,
-        [category]: [...categoryItems, selected],
-      });
-    }
-  };
-  
-
-
-  const handleDelete = (itemToDelete, category) => {
-    if (tabValue === 0) {
-      setSelectedItemsTab1({
-        ...selectedItemsTab1,
-        [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
-      });
-    } else {
-      setSelectedItemsTab2({
-        ...selectedItemsTab2,
-        [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
-      });
-    }
-  };
-
-  const getSelectableItems = () => {
-    return tabValue === 0
-      ? {
-        categories: diseaseData.categoriesTab1,
-        selectedItems: selectedItemsTab1,
+      if (savedTab1) {
+        setSelectedItemsTab1(JSON.parse(savedTab1));
+      } else {
+        setSelectedItemsTab1(diseaseData.selectedItemsTab1);
       }
-      : {
-        categories: diseaseData.categoriesTab2,
-        selectedItems: selectedItemsTab2,
-      };
-  };
 
-  const { categories, selectedItems } = getSelectableItems();
-  const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
+      if (savedTab2) {
+        setSelectedItemsTab2(JSON.parse(savedTab2));
+      } else {
+        setSelectedItemsTab2(diseaseData.selectedItemsTab2);
+      }
+    }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
 
-  const handleReset = () => {
-    setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-    setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-  };
+    // selectedItemsTab1이 변경될 때 해당 질환의 선택 항목을 localStorage에 저장
+    useEffect(() => {
+      if (selectedItemsTab1) {
+        localStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
+      }
+    }, [selectedItemsTab1, disease]);
 
-  const handleTabResult = (e) => {
-    e.preventDefault();
-    onAnalyze();
-  };
+    // selectedItemsTab2가 변경될 때 해당 질환의 선택 항목을 localStorage에 저장
+    useEffect(() => {
+      if (selectedItemsTab2) {
+        localStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
+      }
+    }, [selectedItemsTab2, disease]);
 
+    const handleTabChange = (event, newValue) => {
+      setTabValue(newValue);
+      setSelectedCategory('');
+    };
+
+    const handleToggle = () => {
+      setOpen((open) => !open);
+    };
+
+    const handleCategorySelect = (category) => {
+      setSelectedCategory(category);
+    };
+
+    const handleItemClick = (selected, category) => {
+      const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
+      const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
+
+      const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
+      const existingItemIndex = categoryItems.findIndex(item => item.label === selected.label);
+
+      if (existingItemIndex !== -1) {
+        const updatedItems = [...categoryItems];
+        updatedItems[existingItemIndex] = selected;
+        setSelectedItems({
+          ...selectedItems,
+          [category]: updatedItems,
+        });
+      } else {
+        setSelectedItems({
+          ...selectedItems,
+          [category]: [...categoryItems, selected],
+        });
+      }
+    };
+
+    const handleDelete = (itemToDelete, category) => {
+      if (tabValue === 0) {
+        setSelectedItemsTab1({
+          ...selectedItemsTab1,
+          [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
+        });
+      } else {
+        setSelectedItemsTab2({
+          ...selectedItemsTab2,
+          [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
+        });
+      }
+    };
+
+    const getSelectableItems = () => {
+      return tabValue === 0
+        ? {
+            categories: diseaseData.categoriesTab1,
+            selectedItems: selectedItemsTab1,
+          }
+        : {
+            categories: diseaseData.categoriesTab2,
+            selectedItems: selectedItemsTab2,
+          };
+    };
+
+    const { categories, selectedItems } = getSelectableItems();
+    const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
+
+    const handleReset = () => {
+      setSelectedItemsTab1(diseaseData.selectedItemsTab1);
+      setSelectedItemsTab2(diseaseData.selectedItemsTab2);
+    };
+
+    const handleTabResult = (e) => {
+      e.preventDefault();
+      onAnalyze();
+    };
+    
   return (
     <Container collapsed={collapsed}>
       <FlexBox>
