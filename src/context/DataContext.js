@@ -1,15 +1,18 @@
 import React, { createContext, useState } from 'react';
 
-// Context 생성
-export const DataContext = createContext();
+// 초기 데이터 상태
+const DataContext = createContext();
 
-// Provider 컴포넌트 생성
-export const DataProvider = ({ children }) => {
-  const [analyzedData, setAnalyzedData] = useState(null);  // 분석된 데이터를 저장할 상태
+const DataProvider = ({ children }) => {
+    const [institution, setInstitution] = useState('');
+    const [disease, setDisease] = useState('');
+    const [analyzedData, setAnalyzedData] = useState(null);
 
-  return (
-    <DataContext.Provider value={{ analyzedData, setAnalyzedData }}>
-      {children}
-    </DataContext.Provider>
-  );
+    return (
+        <DataContext.Provider value={{ institution, setInstitution, disease, setDisease, analyzedData, setAnalyzedData }}>
+            {children}
+        </DataContext.Provider>
+    );
 };
+
+export { DataContext, DataProvider };

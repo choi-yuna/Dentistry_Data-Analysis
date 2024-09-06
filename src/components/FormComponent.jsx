@@ -1,13 +1,51 @@
-import React, { useState,useContext  } from 'react';
-import styled from 'styled-components';
+import React, { useState, useContext } from 'react';
+import styled, { keyframes } from 'styled-components';
 import chartIcon from '../assets/images/chart-button.svg';
 import { analyzeData } from '../utils/dataAnalysis';
 import { analyzeItems } from '../utils/itemAnalysis';
 import { calculateQualityRate } from '../utils/qualityAnalysis';
 import { calculateOverallQuality } from '../utils/overallAnalysis'; 
 import { fetchPatientData } from '../api/fileUploadApi';
-import { useFileContext } from '../FileContext'; // Context에서 fileId 가져오기
+import { useFileContext } from '../FileContext'; 
 import { DataContext } from '../context/DataContext';
+
+// 로딩 스피너 애니메이션 정의
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  border: 4px solid #f3f3f3; 
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: ${spin} 1s linear infinite;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3); /* 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 화면 최상단에 위치 */
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  color: #0d4a68;
+  font-weight: bold;
+`;
+
 const FormContainer = styled.div`
     padding: 10px 60px;
     border-radius: 5px;
@@ -115,11 +153,10 @@ const Button = styled.button`
 `;
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
-    const [institution, setInstitution] = useState('');
-    const [disease, setDisease] = useState('');
-
+    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
+    const { institution, setInstitution, disease, setDisease, setAnalyzedData } = useContext(DataContext);
     const { fileId } = useFileContext();
-    const { setAnalyzedData } = useContext(DataContext); 
+
     const handleInstitutionChange = (e) => {
         setInstitution(e.target.value);
     };
@@ -130,37 +167,35 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);  // 로딩 상태를 true로 설정
 
         try {
             if (!fileId) {
-                console.warn("파일이 업로드되지 않았습니다.");
+                alert("파일이 업로드되지 않았습니다.");
+                setLoading(false);
                 return;
             }
             if (!institution || !disease) {
-                console.warn('기관과 질환을 모두 선택해야 합니다.');
+                alert('기관과 질환을 모두 선택해야 합니다.');
+                setLoading(false);
                 return;
             }
 
-            // 서버에서 반환된 데이터의 형식을 명확하게 처리
             const { data: patientData = [] } = await fetchPatientData(fileId, institution, disease);
 
             if (!patientData || patientData.length === 0) {
                 console.warn("서버에서 데이터를 받지 못했습니다.");
+                setLoading(false);
                 return;
             }
 
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
-            
-            // 서버에서 받은 데이터를 바로 분석 수행
             const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
             const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(patientData);
             const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
             const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
 
-
-            
-            // 분석된 데이터를 전역적으로 저장
             const analyzedData = {
                 nullCount,
                 invalidCount,
@@ -184,15 +219,14 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 overallItemQualityRate,
             };
 
-            // 부모 컴포넌트로 분석된 데이터를 전달
             onAnalyze(analyzedData);
-            setAnalyzedData(analyzedData); 
-
+            setAnalyzedData(analyzedData);
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
+        } finally {
+            setLoading(false);  // 데이터 로드 완료 후 로딩 상태를 false로 설정
         }
     };
-
 
     return (
         <PageContainer>
@@ -224,13 +258,22 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                         </LabelSelectGroup>
                     </FormGroup>
                     <AnalyzeButtonContainer>
-                        <Button type="submit">
-                            데이터 분석
-                            <img src={chartIcon} alt="아이콘" />
+                        <Button type="submit" disabled={loading}> {/* 로딩 중일 때 버튼 비활성화 */}
+                            {loading ? '로딩 중...' : '데이터 분석'}
+                            {!loading && <img src={chartIcon} alt="아이콘" />} {/* 로딩 중이 아닐 때 아이콘 표시 */}
                         </Button>
                     </AnalyzeButtonContainer>
                 </FormInline>
             </FormContainer>
+
+            {loading && (
+                <LoadingOverlay>
+                    <LoadingMessage>
+                        <Spinner />
+                        <p>로딩 중...</p>
+                    </LoadingMessage>
+                </LoadingOverlay>
+            )}
         </PageContainer>
     );
 };
