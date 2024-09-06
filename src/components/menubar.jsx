@@ -11,6 +11,8 @@ import Osteomyelitis from '../assets/images/osteomyelitis.svg';
 import Open from '../assets/images/open.svg';
 import Close from '../assets/images/close.svg';
 import { fetchDiseaseData } from '../api/fileUploadApi'
+
+
 const MenuBarContainer = styled.div`
   width: ${(props) => (props.collapsed ? '1%' : '18%')};
   height: 100vh;
@@ -172,13 +174,13 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
     setActiveSubMenuItem(item);
     setShowSubMenu(false);
 
-    try {
-      const data = await fetchDiseaseData(item);  // API 호출
-      console.log('받은 데이터:', data);
-      onDiseaseSelect(data);  // 부모 컴포넌트에 데이터 전달
-    } catch (error) {
-      console.error('데이터를 가져오는 중 오류 발생:', error);
-    }
+    // try {
+    //   const data = await fetchDiseaseData(item);  // API 호출
+    //   console.log('받은 데이터:', data);
+    //   onDiseaseSelect(data);  // 부모 컴포넌트에 데이터 전달
+    // } catch (error) {
+    //   console.error('데이터를 가져오는 중 오류 발생:', error);
+    // }
 
     switch (item) {
       case 'All':
