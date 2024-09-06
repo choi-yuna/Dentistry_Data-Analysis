@@ -211,109 +211,113 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     // 질환이 변경될 때 해당 질환의 저장된 선택 항목을 불러옴
     useEffect(() => {
-      const savedTab1 = localStorage.getItem(`${disease}_selectedItemsTab1`);
-      const savedTab2 = localStorage.getItem(`${disease}_selectedItemsTab2`);
-
-      if (savedTab1) {
-        setSelectedItemsTab1(JSON.parse(savedTab1));
-      } else {
+        // 첫 로딩 시에만 로컬 스토리지에서 데이터를 불러옴
+        const savedTab1 = localStorage.getItem(`${disease}_selectedItemsTab1`);
+        const savedTab2 = localStorage.getItem(`${disease}_selectedItemsTab2`);
+      
+        // 탭1 (데이터 구성 항목) 불러오기
+        if (savedTab1) {
+          const parsedTab1 = JSON.parse(savedTab1);
+          setSelectedItemsTab1(parsedTab1);
+        } else {
+          setSelectedItemsTab1(diseaseData.selectedItemsTab1);
+        }
+      
+        // 탭2 (리포트 항목) 불러오기
+        if (savedTab2) {
+          const parsedTab2 = JSON.parse(savedTab2);
+          setSelectedItemsTab2(parsedTab2);
+        } else {
+          setSelectedItemsTab2(diseaseData.selectedItemsTab2);
+        }
+      }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
+      
+    
+      // 탭 변경 시 로컬 스토리지에서 항목 불러오기
+      const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);  // 탭을 변경할 때 상태만 변경
+        setSelectedCategory(''); // 카테고리 초기화
+      };
+      
+    
+      const handleToggle = () => {
+        setOpen((open) => !open);
+      };
+    
+      const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+      };
+    
+      const handleItemClick = (selected, category) => {
+        const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
+        const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
+      
+        const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
+      
+        // 항목이 이미 선택되어 있는지 확인
+        const existingItemIndex = categoryItems.findIndex(item =>
+          typeof item === 'object' ? item.label === selected.label : item === selected
+        );
+      
+        if (existingItemIndex !== -1) {
+          // 항목이 이미 선택되어 있으면 제거 (토글 방식)
+          const updatedItems = [...categoryItems];
+          updatedItems.splice(existingItemIndex, 1);
+          setSelectedItems({
+            ...selectedItems,
+            [category]: updatedItems,
+          });
+        } else {
+          // 항목이 선택되지 않은 경우에만 추가
+          setSelectedItems({
+            ...selectedItems,
+            [category]: [...categoryItems, selected],
+          });
+        }
+      };
+      
+      const handleDelete = (itemToDelete, category) => {
+        if (tabValue === 0) {
+          setSelectedItemsTab1({
+            ...selectedItemsTab1,
+            [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
+          });
+        } else {
+          setSelectedItemsTab2({
+            ...selectedItemsTab2,
+            [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
+          });
+        }
+      };
+    
+      const getSelectableItems = () => {
+        return tabValue === 0
+          ? {
+              categories: diseaseData.categoriesTab1,
+              selectedItems: selectedItemsTab1,
+            }
+          : {
+              categories: diseaseData.categoriesTab2,
+              selectedItems: selectedItemsTab2,
+            };
+      };
+    
+      const { categories, selectedItems } = getSelectableItems();
+      const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
+    
+      const handleReset = () => {
         setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-      }
-
-      if (savedTab2) {
-        setSelectedItemsTab2(JSON.parse(savedTab2));
-      } else {
         setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-      }
-    }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
+      };
+    
+      const handleTabResult = (e) => {
+        e.preventDefault();
 
-    // selectedItemsTab1이 변경될 때 해당 질환의 선택 항목을 localStorage에 저장
-    useEffect(() => {
-      if (selectedItemsTab1) {
-        localStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
-      }
-    }, [selectedItemsTab1, disease]);
+ console.log('데이터 구성 항목:', selectedItemsTab1);
+  console.log('리포트 항목:', selectedItemsTab2);
 
-    // selectedItemsTab2가 변경될 때 해당 질환의 선택 항목을 localStorage에 저장
-    useEffect(() => {
-      if (selectedItemsTab2) {
-        localStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
-      }
-    }, [selectedItemsTab2, disease]);
-
-    const handleTabChange = (event, newValue) => {
-      setTabValue(newValue);
-      setSelectedCategory('');
-    };
-
-    const handleToggle = () => {
-      setOpen((open) => !open);
-    };
-
-    const handleCategorySelect = (category) => {
-      setSelectedCategory(category);
-    };
-
-    const handleItemClick = (selected, category) => {
-      const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
-      const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
-
-      const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
-      const existingItemIndex = categoryItems.findIndex(item => item.label === selected.label);
-
-      if (existingItemIndex !== -1) {
-        const updatedItems = [...categoryItems];
-        updatedItems[existingItemIndex] = selected;
-        setSelectedItems({
-          ...selectedItems,
-          [category]: updatedItems,
-        });
-      } else {
-        setSelectedItems({
-          ...selectedItems,
-          [category]: [...categoryItems, selected],
-        });
-      }
-    };
-
-    const handleDelete = (itemToDelete, category) => {
-      if (tabValue === 0) {
-        setSelectedItemsTab1({
-          ...selectedItemsTab1,
-          [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
-        });
-      } else {
-        setSelectedItemsTab2({
-          ...selectedItemsTab2,
-          [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
-        });
-      }
-    };
-
-    const getSelectableItems = () => {
-      return tabValue === 0
-        ? {
-            categories: diseaseData.categoriesTab1,
-            selectedItems: selectedItemsTab1,
-          }
-        : {
-            categories: diseaseData.categoriesTab2,
-            selectedItems: selectedItemsTab2,
-          };
-    };
-
-    const { categories, selectedItems } = getSelectableItems();
-    const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
-
-    const handleReset = () => {
-      setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-      setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-    };
-
-    const handleTabResult = (e) => {
-      e.preventDefault();
-      onAnalyze();
-    };
+        onAnalyze();
+      };
     
   return (
     <Container collapsed={collapsed}>
@@ -421,31 +425,29 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
       <SelectedItemsBox>
       <ChipsContainer>
-  {Object.entries(selectedItems).flatMap(([category, items]) => {
-    if (tabValue === 0) {
-      // 데이터 구성 항목 Chip 표시
-      return Array.isArray(items) ? items.map((item) => (
-        <Chip
-          key={`${category}-${item.label || item}`}
-          label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
-          onDelete={() => handleDelete(item, category)}
-        />
-      )) : [];
-    } else if (tabValue === 1) {
-      // 리포트 항목 Chip 표시
-      return Array.isArray(items) ? items.map((item) => (
-        <Chip
-          key={`${category}-${item}`}
-          label={item.label ? `${item.label}` : item}
-          onDelete={() => handleDelete(item, category)}
-        />
-      )) : [];
-    }
-    return [];
-  })}
+  {Object.entries(selectedItems)
+    .filter(([category, items]) => category && items.length > 0)  // category가 유효한지 확인
+    .flatMap(([category, items]) => {
+      if (tabValue === 0) {
+        return Array.isArray(items) ? items.map((item, index) => (
+          <Chip
+            key={`${category}-${item.label || item}-${index}`}  // index 추가
+            label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
+            onDelete={() => handleDelete(item, category)}
+          />
+        )) : [];
+      } else if (tabValue === 1) {
+        return Array.isArray(items) ? items.map((item, index) => (
+          <Chip
+            key={`${category}-${item}-${index}`}  // index 추가
+            label={item.label ? `${item.label}` : item}
+            onDelete={() => handleDelete(item, category)}
+          />
+        )) : [];
+      }
+      return [];
+    })}
 </ChipsContainer>
-
-
 
   <Button
     variant="outlined"
