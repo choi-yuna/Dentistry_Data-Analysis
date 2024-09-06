@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import headerMapping from '../utils/headerMapping';  // 헤더 매핑 가져오기
 
 const ModalOverlay = styled.div`
     position: fixed;
@@ -11,7 +12,7 @@ const ModalOverlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index:900;
+    z-index: 900;
 `;
 
 const ModalContent = styled.div`
@@ -83,6 +84,7 @@ const ExcelCell = styled.td`
     padding: 8px;
     border: 1px solid #ddd;
     text-align: left;
+    background-color: ${({ isNull }) => (isNull ? 'yellow' : 'white')};
 `;
 
 const Modal = ({ isOpen, onClose, excelData }) => {
@@ -99,8 +101,10 @@ const Modal = ({ isOpen, onClose, excelData }) => {
                     <ExcelTable>
                         <thead>
                             <ExcelHeaderRow>
-                                {excelData[0] && excelData[0].map((cell, index) => (
-                                    <ExcelHeaderCell key={index}>{cell}</ExcelHeaderCell>
+                                {excelData[0] && excelData[0].map((header, index) => (
+                                    <ExcelHeaderCell key={index}>
+                                        {headerMapping[header] || header}  {/* 헤더 매핑 적용 */}
+                                    </ExcelHeaderCell>
                                 ))}
                             </ExcelHeaderRow>
                         </thead>
@@ -108,7 +112,9 @@ const Modal = ({ isOpen, onClose, excelData }) => {
                             {excelData.slice(1).map((row, rowIndex) => (
                                 <ExcelRow key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
-                                        <ExcelCell key={cellIndex}>{cell}</ExcelCell>
+                                        <ExcelCell key={cellIndex} isNull={cell === null || cell === ''}>
+                                            {cell !== null && cell !== '' ? cell : 'N/A'}
+                                        </ExcelCell>
                                     ))}
                                 </ExcelRow>
                             ))}
