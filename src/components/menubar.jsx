@@ -187,16 +187,16 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
       case 'All':
         navigate('/all');
         break;
-      case '치주질환':
+      case 'A':
         navigate('/periodontalDisease');
         break;
-      case '악골골수염':
+      case 'B':
         navigate('/osteomyelitis');
         break;
-      case '두개안면':
+      case 'C':
         navigate('/craniofacial');
         break;
-      case '구강암':
+      case 'D':
         navigate('/oralCancer');
         break;
       default:
@@ -237,29 +237,29 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
                 All
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === '치주질환'}
-                onClick={() => handleSubMenuItemClick('치주질환')}
+                active={activeSubMenuItem === 'A'}
+                onClick={() => handleSubMenuItemClick('A')}
               >
                 <SubMenuItemIcon src={PeriodontalDisease} alt="치주질환 Icon" />
                 치주질환
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === '악골골수염'}
-                onClick={() => handleSubMenuItemClick('악골골수염')}
+                active={activeSubMenuItem === 'B'}
+                onClick={() => handleSubMenuItemClick('B')}
               >
                 <SubMenuItemIcon src={Osteomyelitis} alt="악골골수염 Icon" />
                 악골골수염
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === '두개안면'}
-                onClick={() => handleSubMenuItemClick('두개안면')}
+                active={activeSubMenuItem === 'C'}
+                onClick={() => handleSubMenuItemClick('C')}
               >
                 <SubMenuItemIcon src={Surface} alt="두개안면 Icon" />
                 두개안면
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === '구강암'}
-                onClick={() => handleSubMenuItemClick('구강암')}
+                active={activeSubMenuItem === 'D'}
+                onClick={() => handleSubMenuItemClick('D')}
               >
                 <SubMenuItemIcon src={Cancer} alt="구강암 Icon" />
                 구강암

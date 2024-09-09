@@ -1,29 +1,35 @@
 import axios from 'axios';
 
-
-export const uploadZipFile = async (file) => {
+// 다중 파일을 업로드하는 함수
+export const uploadExcelFiles = async (files) => {
     try {
         const formData = new FormData();
-        formData.append('file', file); // 파일을 formData에 추가
+        
+        // 여러 파일을 FormData에 추가
+        files.forEach((file, index) => {
+            formData.append(`files`, file); // 여러 파일을 'files'라는 이름으로 전송
+        });
 
-        const response = await axios.post('http://localhost:8080/api/upload-zip', formData, {
+        const response = await axios.post('http://localhost:8080/api/upload-folder', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data', // 파일을 업로드하는 요청임을 명시
             },
         });
+
         console.log('Server response:', response.data);
-        return response.data.fileId; // 서버에서 반환한 fileId를 받음
+        return response.data.fileIds; // 서버에서 반환한 fileIds 리스트 받음
     } catch (error) {
-        console.error('Error uploading ZIP file:', error);
+        console.error('Error uploading files:', error);
         throw error;
     }
 };
 
-export const fetchPatientData = async (fileId, institutionId, diseaseClass) => {
+// 다중 파일 ID를 사용한 데이터 분석 함수
+export const fetchPatientData = async (fileIds, institutionId, diseaseClass) => {
     try {
-        console.log('전송할 데이터:', { fileId, institutionId, diseaseClass }); 
+        console.log('전송할 데이터:', { fileIds, institutionId, diseaseClass }); 
         const response = await axios.post('http://localhost:8080/api/analyze', {
-            fileId: fileId,
+            fileIds: fileIds,   // 배열로 전달
             institutionId: institutionId,
             diseaseClass: diseaseClass,
         });
@@ -35,6 +41,8 @@ export const fetchPatientData = async (fileId, institutionId, diseaseClass) => {
         throw error;
     }
 };
+
+
 
 
 // 질환 데이터를 가져오는 API 함수

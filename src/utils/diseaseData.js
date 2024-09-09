@@ -189,7 +189,7 @@ export const diseaseSpecificData = {
 
 
 
-    치주질환: {
+    A: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
         '환자 정보': [],
@@ -274,7 +274,7 @@ export const diseaseSpecificData = {
       },
     },
   
-    구강암: {
+    D: {
         selectedItemsTab1: {
           '기본 정보(info)': [],
           '환자 정보': [],
@@ -331,7 +331,7 @@ export const diseaseSpecificData = {
       },
 
 
-    악골골수염: {
+    B: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
         '환자 정보': [],
@@ -414,7 +414,7 @@ export const diseaseSpecificData = {
       },      
     },
 
-    두개안면: {
+    C: {
         selectedItemsTab1: {
           '기본 정보(info)': [],
           '환자 정보': [],

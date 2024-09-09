@@ -4,7 +4,7 @@ import logo from '../assets/images/fas-logo.svg';
 import fileUploadIcon from '../assets/images/file-upload.svg';
 import userIcon from '../assets/images/user.svg';
 import logoutIcon from '../assets/images/logout.svg';
-import { uploadZipFile } from '../api/fileUploadApi'; // API 호출 함수 임포트
+import { uploadExcelFiles } from '../api/fileUploadApi'; // API 호출 함수 임포트
 import { useFileContext } from '../FileContext';
 
 const TopBarContainer = styled.div`
@@ -62,25 +62,29 @@ const HiddenFileInput = styled.input`
 `;
 
 const TopBar = () => {
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const { setFileId } = useFileContext();
 
-    // 파일이 변경될 때 호출되는 핸들러
+    // 폴더 내 파일들이 변경될 때 호출되는 핸들러
     const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            setFile(selectedFile);
-            handleUpload(selectedFile); // 파일 선택 후 즉시 업로드
+        const selectedFiles = Array.from(e.target.files);
+        const excelFiles = selectedFiles.filter((file) => file.name.endsWith('.xlsx')); // 엑셀 파일만 필터링
+        if (excelFiles.length > 0) {
+            setFiles(excelFiles); // 엑셀 파일만 상태에 저장
+            handleUpload(excelFiles); // 엑셀 파일만 업로드
+        } else {
+            alert('선택한 폴더에 엑셀 파일이 없습니다.');
         }
     };
 
     // 파일 업로드 처리 함수
-    const handleUpload = async (file) => {
+    const handleUpload = async (files) => {
         try {
-            const fileId = await uploadZipFile(file); // 파일 업로드 API 호출
-            console.log('Uploaded file with ID:', fileId);
-            setFileId(fileId);
-            alert(`File uploaded successfully! File ID: ${fileId}`);
+            // 여러 파일을 한번에 업로드
+            const fileIds = await uploadExcelFiles(files); // 다중 파일 업로드 API 호출
+            console.log('Uploaded file IDs:', fileIds);
+            setFileId(fileIds); // 업로드된 파일 ID 배열 저장
+            alert('All Excel files uploaded successfully!');
         } catch (error) {
             console.error('File upload failed:', error);
             alert('File upload failed. Please try again.');
@@ -104,11 +108,13 @@ const TopBar = () => {
                 {/* 파일 업로드 아이콘 클릭 시 파일 선택 창 열기 */}
                 <Icon src={fileUploadIcon} alt="Upload" onClick={handleIconClick} />
 
-                {/* 숨겨진 파일 입력 필드 */}
+                {/* 숨겨진 폴더 입력 필드 */}
                 <HiddenFileInput
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
+                    webkitdirectory="true" // 폴더 선택을 가능하게 함
+                    multiple // 다중 파일 선택을 가능하게 함
                 />
 
                 <Icon src={userIcon} alt="User" />
