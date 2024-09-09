@@ -319,10 +319,29 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       const handleTabResult = (e) => {
         e.preventDefault();
 
- console.log('데이터 구성 항목:', selectedItemsTab1);
-  console.log('리포트 항목:', selectedItemsTab2);
-
-        onAnalyze();
+        const resultToSendTab1 = {};
+        Object.keys(selectedItemsTab1).forEach((category) => {
+            selectedItemsTab1[category].forEach((item) => {
+                // 옵션이 있는 경우 (SelectField 선택)
+                const foundOption = diseaseSpecificData.All.categoriesTab1[category].find(opt => opt.label === item.label);
+    
+                if (foundOption && foundOption.options) {
+                    const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+                    if (selectedOption) {
+                        resultToSendTab1[foundOption.value] = selectedOption.send;  // send 값을 서버로 보낼 값으로 설정
+                    }
+                } else {
+                    // 옵션이 없는 경우 일반적인 값
+                    resultToSendTab1[item.label] = item.value;
+                }
+            });
+        });
+        resultToSendTab1['DISEASE_CLASS'] = disease;
+        // 콘솔에 변환된 데이터를 출력
+        console.log('서버로 전송할 데이터 구성 항목 (Tab 1):', resultToSendTab1);
+    
+        // 여기서 서버로 데이터를 전송할 수 있습니다
+        onAnalyze();  // 예시로 분석 함수 호출
       };
     
   return (
