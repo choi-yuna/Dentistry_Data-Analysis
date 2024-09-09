@@ -173,6 +173,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const handleSubMenuItemClick = async (item) => {
     setActiveSubMenuItem(item);
     setShowSubMenu(false);
+    onDiseaseSelect(item); 
 
     // try {
     //   const data = await fetchDiseaseData(item);  // API 호출

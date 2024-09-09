@@ -77,10 +77,11 @@ const StyledList = styled.div`
 
 const SubList = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-wrap: wrap; /* 항목을 여러 줄로 나눌 수 있도록 설정 */
+  gap: 2px; /* 항목 간 간격 */
   padding-left: 8px;
 `;
+
 
 const StyledButtonItem = styled.button`
   padding: 6px 8px;
@@ -212,8 +213,8 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     // 질환이 변경될 때 해당 질환의 저장된 선택 항목을 불러옴
     useEffect(() => {
         // 첫 로딩 시에만 로컬 스토리지에서 데이터를 불러옴
-        const savedTab1 = localStorage.getItem(`${disease}_selectedItemsTab1`);
-        const savedTab2 = localStorage.getItem(`${disease}_selectedItemsTab2`);
+        const savedTab1 =  sessionStorage.getItem(`${disease}_selectedItemsTab1`);
+        const savedTab2 = sessionStorage.getItem(`${disease}_selectedItemsTab2`);
       
         // 탭1 (데이터 구성 항목) 불러오기
         if (savedTab1) {
@@ -233,6 +234,11 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
       
     
+        // 세션 스토리지에 데이터를 저장
+        useEffect(() => {
+            sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
+            sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
+        }, [selectedItemsTab1, selectedItemsTab2, disease]);
       // 탭 변경 시 로컬 스토리지에서 항목 불러오기
       const handleTabChange = (event, newValue) => {
         setTabValue(newValue);  // 탭을 변경할 때 상태만 변경
