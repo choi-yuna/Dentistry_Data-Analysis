@@ -214,27 +214,23 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     // 질환이 변경될 때 해당 질환의 저장된 선택 항목을 불러옴
     useEffect(() => {
-        // 첫 로딩 시에만 로컬 스토리지에서 데이터를 불러옴
-        const savedTab1 =  sessionStorage.getItem(`${disease}_selectedItemsTab1`);
-        const savedTab2 = sessionStorage.getItem(`${disease}_selectedItemsTab2`);
-      
-        // 탭1 (데이터 구성 항목) 불러오기
-        if (savedTab1) {
-          const parsedTab1 = JSON.parse(savedTab1);
-          setSelectedItemsTab1(parsedTab1);
-        } else {
-          setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-        }
-      
-        // 탭2 (리포트 항목) 불러오기
-        if (savedTab2) {
-          const parsedTab2 = JSON.parse(savedTab2);
-          setSelectedItemsTab2(parsedTab2);
-        } else {
-          setSelectedItemsTab2(diseaseData.selectedItemsTab2);
-        }
-      }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
-      
+      const savedTab1 = sessionStorage.getItem(`${disease}_selectedItemsTab1`);
+      const savedTab2 = sessionStorage.getItem(`${disease}_selectedItemsTab2`);
+    
+      if (savedTab1) {
+        const parsedTab1 = JSON.parse(savedTab1);
+        setSelectedItemsTab1(parsedTab1);
+      } else {
+        setSelectedItemsTab1(diseaseData.selectedItemsTab1 || {});
+      }
+    
+      if (savedTab2) {
+        const parsedTab2 = JSON.parse(savedTab2);
+        setSelectedItemsTab2(parsedTab2);
+      } else {
+        setSelectedItemsTab2(diseaseData.selectedItemsTab2 || {});  // Tab 2 초기화
+      }
+    }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
     
         // 세션 스토리지에 데이터를 저장
         useEffect(() => {
@@ -255,20 +251,24 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       const handleCategorySelect = (category) => {
         setSelectedCategory(category);
       };
-    
       const handleItemClick = (selected, category) => {
+        if (!category) {
+          console.warn("카테고리가 없습니다. 선택된 항목:", selected);
+          return;
+        }
+      
         const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
         const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
       
+        // category가 undefined일 때 빈 배열로 초기화
         const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
       
-        // 항목이 이미 선택되어 있는지 확인
         const existingItemIndex = categoryItems.findIndex(item =>
           typeof item === 'object' ? item.label === selected.label : item === selected
         );
       
         if (existingItemIndex !== -1) {
-          // 항목이 이미 선택되어 있으면 제거 (토글 방식)
+          // 항목이 이미 선택되어 있으면 제거
           const updatedItems = [...categoryItems];
           updatedItems.splice(existingItemIndex, 1);
           setSelectedItems({
@@ -282,7 +282,10 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             [category]: [...categoryItems, selected],
           });
         }
+      
+        console.log(`selectedItems (${tabValue === 0 ? 'Tab 1' : 'Tab 2'}):`, selectedItems);
       };
+      
       
       const handleDelete = (itemToDelete, category) => {
         if (tabValue === 0) {
@@ -299,19 +302,22 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       };
     
       const getSelectableItems = () => {
+        // categories와 selectedItems가 undefined일 경우 빈 객체/배열로 대체
         return tabValue === 0
           ? {
-              categories: diseaseData.categoriesTab1,
-              selectedItems: selectedItemsTab1,
+              categories: diseaseData.categoriesTab1 || {}, // undefined일 경우 빈 객체로 처리
+              selectedItems: selectedItemsTab1 || {},      // undefined일 경우 빈 객체로 처리
             }
           : {
-              categories: diseaseData.categoriesTab2,
-              selectedItems: selectedItemsTab2,
+              categories: diseaseData.categoriesTab2 || {}, // undefined일 경우 빈 객체로 처리
+              selectedItems: selectedItemsTab2 || {},      // undefined일 경우 빈 객체로 처리
             };
-      };
+    };
+    
     
       const { categories, selectedItems } = getSelectableItems();
       const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
+
     
       const handleReset = () => {
         setSelectedItemsTab1(diseaseData.selectedItemsTab1);
@@ -323,31 +329,59 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
         e.preventDefault();
     
         const resultToSendTab1 = {};
+        const headersToSendTab2 = []; // 리포트 항목 (Tab 2) 값들을 저장할 배열
         
         // selectedItemsTab1의 각 카테고리를 순회
         Object.keys(selectedItemsTab1).forEach((category) => {
-            selectedItemsTab1[category].forEach((item) => {
-                // 카테고리별 선택된 항목 찾기
-                const foundOption = diseaseSpecificData.All.categoriesTab1[category].find(opt => opt.label === item.label);
+            const tab1Categories = diseaseSpecificData[disease]?.categoriesTab1 || {}; // 기본값으로 빈 객체 설정
+            if (tab1Categories[category]) {
+                selectedItemsTab1[category].forEach((item) => {
+                    const foundOption = tab1Categories[category].find(opt => opt.label === item.label);
     
-                if (foundOption && foundOption.options) {
-                    // 선택된 옵션이 있는 경우
-                    const selectedOption = foundOption.options.find(opt => opt.display === item.value);
-                    if (selectedOption) {
-                        resultToSendTab1[foundOption.value] = selectedOption.send;  // send 값을 설정
+                    if (foundOption && foundOption.options) {
+                        const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+                        if (selectedOption) {
+                            resultToSendTab1[foundOption.value] = selectedOption.send !== undefined ? selectedOption.send : "";  // send 값이 undefined일 경우 빈 문자열로 처리
+                        }
+                    } else {
+                        resultToSendTab1[item.label] = item.value !== undefined ? item.value : "";  // undefined일 경우 빈 문자열로 처리
                     }
-                } else {
-                    // 선택된 옵션이 없는 경우 label을 그대로 사용
-                    resultToSendTab1[item.label] = item.value;
-                }
-            });
+                });
+            }
         });
+    
+        // selectedItemsTab2의 각 카테고리를 순회하여 리포트 항목의 value 값 수집
+Object.keys(selectedItemsTab2).forEach((category) => {
+  const tab2Categories = diseaseSpecificData[disease]?.categoriesTab2 || {}; // 기본값으로 빈 객체 설정
+  const items = selectedItemsTab2[category] || []; // selectedItemsTab2[category]가 undefined일 경우 빈 배열로 처리
+
+  if (tab2Categories[category]) {
+      items.forEach((item) => {
+          // 선택된 item의 label에 해당하는 option을 찾음
+          const foundOption = tab2Categories[category].find(opt => opt.label === item.label);
+
+          if (foundOption && foundOption.options) {
+              // 옵션에서 선택된 item.value 값과 매칭되는 항목을 찾음
+              const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+              if (selectedOption) {
+                  // selectedOption의 value 값을 headersToSendTab2에 추가 (value 값이 undefined일 경우 빈 문자열 처리)
+                  headersToSendTab2.push(selectedOption.send !== undefined ? selectedOption.send : "");
+              }
+          } else if (foundOption) {
+              // options가 없는 경우, foundOption의 value 값을 사용
+              headersToSendTab2.push(foundOption.value !== undefined ? foundOption.value : "");
+          }
+      });
+  }
+});
+
     
         // 전송할 데이터 구성
         const finalData = {
             ...resultToSendTab1,
             DISEASE_CLASS: disease,  // 질병 선택
             fileIds: fileId,  // fileId는 전역에서 가져옴
+            header: headersToSendTab2 // 선택한 리포트 항목의 value 값들을 header로 추가
         };
     
         // 콘솔에 전송할 데이터를 출력
@@ -367,6 +401,9 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             console.error('데이터 분석 요청 중 오류 발생:', error);
         }
     };
+    
+    
+    
     
   return (
     <Container collapsed={collapsed}>
@@ -452,7 +489,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
           <SubListItem
             key={subItem.label || subItem}
             selected={isSelected}
-            onClick={() => handleItemClick(subItem)}
+            onClick={() => handleItemClick(subItem, selectedCategory)}
           >
             <span
               style={{
@@ -488,7 +525,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       } else if (tabValue === 1) {
         return Array.isArray(items) ? items.map((item, index) => (
           <Chip
-            key={`${category}-${item}-${index}`}  // index 추가
+            key={`${category}-${item.label}-${index}`}  // index 추가
             label={item.label ? `${item.label}` : item}
             onDelete={() => handleDelete(item, category)}
           />
