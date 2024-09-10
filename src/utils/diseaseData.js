@@ -1,5 +1,3 @@
-// src/data/diseaseData.js
-
 export const diseaseSpecificData = {
 
     All: {
@@ -188,13 +186,12 @@ export const diseaseSpecificData = {
 
 
 
-
+    //A - 치주질환
     A: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
         '환자 정보': [],
-        '치주질환 정보': [],
-        '치료 단계': [],
+
       },
       selectedItemsTab2: {
         '기본 정보': [],
@@ -274,69 +271,13 @@ export const diseaseSpecificData = {
       },
     },
   
-    D: {
-        selectedItemsTab1: {
-          '기본 정보(info)': [],
-          '환자 정보': [],
-          '골수염 정보': [],
-          '치료 상태': [],
-        },
-        selectedItemsTab2: {
-          '기본 정보': [],
-          '환자 정보': [],
-          '진단 정보': [],
-          'MRONJ': [],
-          'Medical History' : [],
-          'Local Factors': [],
-          '추가사항': [],
-        },
-        categoriesTab1: {
-          '기본 정보(info)': [
-            { label: '기관 선택', value: 'INSTITUTION_ID' },
-            { label: '수술일자', value: 'SURGERY_DATE' },
-            { label: '수술 장비', value: 'SURGERY_DEVICE' },
-          ],
-          '환자정보': [
-            { label: '수술 기간', value: 'SURGERY_DURATION' },
-            { label: '환자 상태', value: 'PATIENT_CONDITION' },
-            { label: '치료 방법', value: 'TREATMENT_METHOD' },
-          ],
-        },
-        categoriesTab2: {
-          '기본 정보': [
-            { label: '기관', value: 'INSTITUTION_ID' },
-            { label: '촬영일자', value: 'CAPTURE_TIME' },
-            { label: '촬영장비', value: 'MAKER_INFO' },
-          ],
-          '환자 정보': [
-            { label: '성별', value: 'P_GENDER' },
-            { label: '나이', value: 'P_AGE' },
-            { label: '체중', value: 'P_WEIGHT' },
-            { label: '키', value: 'P_HEIGHT' },
-            { label: '주거지역', value: 'P_RES_AREA' },
-          ],
-          '전신질환 유무': [
-            { label: '흡연', value: 'DH_SMOKE' },
-            { label: '음주', value: 'DH_ALCHO' },
-            { label: '당뇨', value: 'DH_DIAB' },
-          ],
-          '진단정보별 환자수': [
-            { label: '진단명', value: 'DI_NAME' },
-            { label: '병소부위', value: 'DI_LOC' },
-            { label: '수술명', value: 'DI_SUR' },
-            { label: '방사선 치료 유무', value: 'DI_RAD' },
-            { label: '항암치료 유무', value: 'DI_CAN' },
-          ],
-        },      
-      },
 
 
+  //B - 악골 골수염
     B: {
       selectedItemsTab1: {
         '기본 정보(info)': [],
         '환자 정보': [],
-        '골수염 정보': [],
-        '치료 상태': [],
       },
       selectedItemsTab2: {
         '기본 정보': [],
@@ -349,14 +290,105 @@ export const diseaseSpecificData = {
       },
       categoriesTab1: {
         '기본 정보(info)': [
-          { label: '기관 선택', value: 'INSTITUTION_ID' },
-          { label: '수술일자', value: 'SURGERY_DATE' },
-          { label: '수술 장비', value: 'SURGERY_DEVICE' },
+          { 
+            label: '기관 선택', 
+            value: 'INSTITUTION_ID', 
+            options: [
+              { display: '원광대학교', send: '1' },
+              { display: '고려대학교', send: '2' },
+              { display: '서울대학교', send: '3' },
+              { display: '국립암센터', send: '4' },
+              { display: '단국대학교', send: '5' },
+              { display: '조선대학교', send: '6' },
+              { display: '보라매병원', send: '7' },
+            ] 
+          },
+
+          { label: '촬영장비', 
+            value: 'MAKER_INFO',
+            options: [
+                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+            ]
+        },
+
+        { 
+          label: '촬영일자',  
+          value: 'CAPTURE_TIME',
+          options: [
+            { display: '14년', send: 14 },
+            { display: '15년', send: 15 },
+            { display: '16년', send: 16 },
+            { display: '17년', send: 17 },
+            { display: '18년', send: 18 },
+            { display: '19년', send: 19 },
+            { display: '20년', send: 20 },
+            { display: '21년', send: 21 },
+            { display: '22년', send: 22 },
+            { display: '23년', send: 23 },
+          ]
+        },
+
         ],
         '환자정보': [
-          { label: '수술 기간', value: 'SURGERY_DURATION' },
-          { label: '환자 상태', value: 'PATIENT_CONDITION' },
-          { label: '치료 방법', value: 'TREATMENT_METHOD' },
+          { 
+        label: '성별', 
+        value: 'P_GENDER',
+        options: [
+          { display: '남', send: '1' },
+          { display: '여', send: '2' },
+        ]
+      },
+      { 
+        label: '나이',  
+        value: 'P_AGE',
+        options: [
+          { display: '10 - 20', send: '1' },
+          { display: '21 - 30', send: '2' },
+          { display: '31 - 40', send: '3' },
+          { display: '41 - 50', send: '4' },
+          { display: '51 - 60', send: '5' },
+          { display: '61 - 70', send: '6' },
+          { display: '71 - 80', send: '7' },
+          { display: '81 이상', send: '8' },
+        ]
+      },
+      { 
+        label: '체중', 
+        value: 'P_WEIGHT',
+        options: [
+          { display: '40 이하', send: '1' },
+          { display: '41 - 50', send: '2' },
+          { display: '51 - 60', send: '3' },
+          { display: '61 - 70', send: '4' },
+          { display: '71 - 80', send: '5' },
+          { display: '81 이상', send: '6' },
+        ]
+      },
+      { 
+        label: '키', 
+        value: 'P_HEIGHT',
+        options: [
+          { display: '150 이하', send: '1' },
+          { display: '151 - 160', send: '2' },
+          { display: '161 - 170', send: '3' },
+          { display: '171 - 180', send: '4' },
+          { display: '181 - 190', send: '5' },
+          { display: '191 이상', send: '6' },
+        ]
+      },
+      { 
+        label: '주거지역',  
+        value: 'P_RES_AREA',
+        options: [
+          { display: '서울', send: '1' },
+          { display: '경기', send: '2' },
+          { display: '충청', send: '3' },
+          { display: '전라', send: '4' },
+          { display: '경상', send: '5' },
+          { display: '강원', send: '6' },
+          { display: '제주', send: '7' },
+        ]
+      }
         ],
       },
       categoriesTab2: {
@@ -414,12 +446,166 @@ export const diseaseSpecificData = {
       },      
     },
 
+    //D - 두개안면
+    D: {
+      selectedItemsTab1: {
+        '기본 정보(info)': [],
+        '환자 정보': [],
+      },
+      selectedItemsTab2: {
+        '기본 정보': [],
+        '환자 정보': [],
+        '진단 정보': [],
+        'MRONJ': [],
+        'Medical History' : [],
+        'Local Factors': [],
+        '추가사항': [],
+      },
+      categoriesTab1: {
+        '기본 정보(info)': [
+          { 
+            label: '기관 선택', 
+            value: 'INSTITUTION_ID', 
+            options: [
+              { display: '원광대학교', send: '1' },
+              { display: '고려대학교', send: '2' },
+              { display: '서울대학교', send: '3' },
+              { display: '국립암센터', send: '4' },
+              { display: '단국대학교', send: '5' },
+              { display: '조선대학교', send: '6' },
+              { display: '보라매병원', send: '7' },
+            ] 
+          },
+
+          { 
+            label: '촬영 종류',  
+            value: 'IMAGE_SRC',
+            options: [
+              { display: '파노라마', send: '1' },
+              { display: 'CBCT', send: '2' },
+              { display: 'MDCT', send: '3' },
+            ]
+          },
+
+          { label: '촬영장비', 
+            value: 'MAKER_INFO',
+            options: [
+                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+            ]
+        },
+
+        { 
+          label: '촬영일자',  
+          value: 'CAPTURE_TIME',
+          options: [
+            { display: '14년', send: 14 },
+            { display: '15년', send: 15 },
+            { display: '16년', send: 16 },
+            { display: '17년', send: 17 },
+            { display: '18년', send: 18 },
+            { display: '19년', send: 19 },
+            { display: '20년', send: 20 },
+            { display: '21년', send: 21 },
+            { display: '22년', send: 22 },
+            { display: '23년', send: 23 },
+          ]
+        },
+        ],
+        '환자정보': [
+          { 
+            label: '성별', 
+            value: 'P_GENDER',
+            options: [
+              { display: '남', send: '1' },
+              { display: '여', send: '2' },
+            ]
+          },
+          { 
+            label: '나이',  
+            value: 'P_AGE',
+            options: [
+              { display: '10 - 20', send: '1' },
+              { display: '21 - 30', send: '2' },
+              { display: '31 - 40', send: '3' },
+              { display: '41 - 50', send: '4' },
+              { display: '51 - 60', send: '5' },
+              { display: '61 - 70', send: '6' },
+              { display: '71 - 80', send: '7' },
+              { display: '81 이상', send: '8' },
+            ]
+          },
+          { 
+            label: '체중', 
+            value: 'P_WEIGHT',
+            options: [
+              { display: '40 이하', send: '1' },
+              { display: '41 - 50', send: '2' },
+              { display: '51 - 60', send: '3' },
+              { display: '61 - 70', send: '4' },
+              { display: '71 - 80', send: '5' },
+              { display: '81 이상', send: '6' },
+            ]
+          },
+          { 
+            label: '키', 
+            value: 'P_HEIGHT',
+            options: [
+              { display: '150 이하', send: '1' },
+              { display: '151 - 160', send: '2' },
+              { display: '161 - 170', send: '3' },
+              { display: '171 - 180', send: '4' },
+              { display: '181 - 190', send: '5' },
+              { display: '191 이상', send: '6' },
+            ]
+          },
+          { 
+            label: '주거지역',  
+            value: 'P_RES_AREA',
+            options: [
+              { display: '서울', send: '1' },
+              { display: '경기', send: '2' },
+              { display: '충청', send: '3' },
+              { display: '전라', send: '4' },
+              { display: '경상', send: '5' },
+              { display: '강원', send: '6' },
+              { display: '제주', send: '7' },
+            ]
+          }
+        ],
+      },
+      categoriesTab2: {
+        '기본 정보': [
+          { label: '기관', value: 'INSTITUTION_ID' },
+          { label: '촬영일자', value: 'CAPTURE_TIME' },
+          { label: '촬영장비', value: 'MAKER_INFO' },
+        ],
+        '환자 정보': [
+          { label: '성별', value: 'P_GENDER' },
+          { label: '나이', value: 'P_AGE' },
+          { label: '체중', value: 'P_WEIGHT' },
+          { label: '키', value: 'P_HEIGHT' },
+          { label: '주거지역', value: 'P_RES_AREA' },
+        ],
+        '전신질환 유무': [
+          { label: '흡연', value: 'DH_SMOKE' },
+          { label: '음주', value: 'DH_ALCHO' },
+          { label: '당뇨', value: 'DH_DIAB' },
+        ],
+        '진단정보별 환자수': [
+          { label: '진단명', value: 'DI_NAME' },
+          { label: '병소부위', value: 'DI_LOC' },
+          { label: '수술명', value: 'DI_SUR' },
+          { label: '방사선 치료 유무', value: 'DI_RAD' },
+          { label: '항암치료 유무', value: 'DI_CAN' },
+        ],
+      },      
+    },
+    //C : 구강암
     C: {
         selectedItemsTab1: {
           '기본 정보(info)': [],
           '환자 정보': [],
-          '골수염 정보': [],
-          '치료 상태': [],
+          '전신질환 유무' : [],
         },
         selectedItemsTab2: {
           '기본 정보': [],
@@ -432,15 +618,149 @@ export const diseaseSpecificData = {
         },
         categoriesTab1: {
           '기본 정보(info)': [
-            { label: '기관 선택', value: 'INSTITUTION_ID' },
-            { label: '수술일자', value: 'SURGERY_DATE' },
-            { label: '수술 장비', value: 'SURGERY_DEVICE' },
+            { 
+              label: '기관 선택', 
+              value: 'INSTITUTION_ID', 
+              options: [
+                { display: '원광대학교', send: '1' },
+                { display: '고려대학교', send: '2' },
+                { display: '서울대학교', send: '3' },
+                { display: '국립암센터', send: '4' },
+                { display: '단국대학교', send: '5' },
+                { display: '조선대학교', send: '6' },
+                { display: '보라매병원', send: '7' },
+              ] 
+            },
+  
+            { 
+              label: '촬영 종류',  
+              value: 'IMAGE_SRC',
+              options: [
+                { display: '파노라마', send: '1' },
+                { display: 'CBCT', send: '2' },
+                { display: 'MDCT', send: '3' },
+              ]
+            },
+  
+            { label: '촬영장비', 
+              value: 'MAKER_INFO',
+              options: [
+                  { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+              ]
+          },
+  
+          { 
+            label: '촬영일자',  
+            value: 'CAPTURE_TIME',
+            options: [
+              { display: '14년', send: 14 },
+              { display: '15년', send: 15 },
+              { display: '16년', send: 16 },
+              { display: '17년', send: 17 },
+              { display: '18년', send: 18 },
+              { display: '19년', send: 19 },
+              { display: '20년', send: 20 },
+              { display: '21년', send: 21 },
+              { display: '22년', send: 22 },
+              { display: '23년', send: 23 },
+            ]
+          },
           ],
           '환자정보': [
-            { label: '수술 기간', value: 'SURGERY_DURATION' },
-            { label: '환자 상태', value: 'PATIENT_CONDITION' },
-            { label: '치료 방법', value: 'TREATMENT_METHOD' },
+            { 
+              label: '성별', 
+              value: 'P_GENDER',
+              options: [
+                { display: '남', send: '1' },
+                { display: '여', send: '2' },
+              ]
+            },
+            { 
+              label: '나이',  
+              value: 'P_AGE',
+              options: [
+                { display: '10 - 20', send: '1' },
+                { display: '21 - 30', send: '2' },
+                { display: '31 - 40', send: '3' },
+                { display: '41 - 50', send: '4' },
+                { display: '51 - 60', send: '5' },
+                { display: '61 - 70', send: '6' },
+                { display: '71 - 80', send: '7' },
+                { display: '81 이상', send: '8' },
+              ]
+            },
+            { 
+              label: '체중', 
+              value: 'P_WEIGHT',
+              options: [
+                { display: '40 이하', send: '1' },
+                { display: '41 - 50', send: '2' },
+                { display: '51 - 60', send: '3' },
+                { display: '61 - 70', send: '4' },
+                { display: '71 - 80', send: '5' },
+                { display: '81 이상', send: '6' },
+              ]
+            },
+            { 
+              label: '키', 
+              value: 'P_HEIGHT',
+              options: [
+                { display: '150 이하', send: '1' },
+                { display: '151 - 160', send: '2' },
+                { display: '161 - 170', send: '3' },
+                { display: '171 - 180', send: '4' },
+                { display: '181 - 190', send: '5' },
+                { display: '191 이상', send: '6' },
+              ]
+            },
+            { 
+              label: '주거지역',  
+              value: 'P_RES_AREA',
+              options: [
+                { display: '서울', send: '1' },
+                { display: '경기', send: '2' },
+                { display: '충청', send: '3' },
+                { display: '전라', send: '4' },
+                { display: '경상', send: '5' },
+                { display: '강원', send: '6' },
+                { display: '제주', send: '7' },
+              ]
+            }
           ],
+          '전신질환 유무': [  
+          { 
+            label: '흡연', 
+            value: 'SMOKING', 
+            options: [
+              { display: '유', send: '1' },
+              { display: '무', send: '2' },
+            ]
+          },
+          { 
+            label: '음주', 
+            value: 'DRINKING', 
+            options: [
+              { display: '유', send: '1' },
+              { display: '무', send: '2' },
+            ]
+          },
+          { 
+            label: '당뇨', 
+            value: 'DIABETES', 
+            options: [
+              { display: '유', send: '1' },
+              { display: '무', send: '2' },
+            ]
+          },
+          { 
+            label: '심혈관 질환', 
+            value: 'CARDIOVASCULAR_DISEASE', 
+            options: [
+              { display: '유', send: '1' },
+              { display: '무', send: '2' },
+            ]
+          },
+        ],
         },
         categoriesTab2: {
           '기본 정보': [
