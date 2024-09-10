@@ -729,16 +729,17 @@ export const diseaseSpecificData = {
           ],
           '전신질환 유무': [  
           { 
-            label: '흡연', 
-            value: 'SMOKING', 
+            label: '흡연력', 
+            value: 'LS_SMOKE' ,
             options: [
-              { display: '유', send: '1' },
-              { display: '무', send: '2' },
+                { display: '10개피/일 이상', send: '1' },
+                { display: '10개피/일 미만', send: '2' },
+                { display: '금연', send: '3' },
             ]
           },
           { 
             label: '음주', 
-            value: 'DRINKING', 
+            value: 'LS_ALCHOLE', 
             options: [
               { display: '유', send: '1' },
               { display: '무', send: '2' },
@@ -746,7 +747,7 @@ export const diseaseSpecificData = {
           },
           { 
             label: '당뇨', 
-            value: 'DIABETES', 
+            value: 'MH_DIABETES', 
             options: [
               { display: '유', send: '1' },
               { display: '무', send: '2' },
