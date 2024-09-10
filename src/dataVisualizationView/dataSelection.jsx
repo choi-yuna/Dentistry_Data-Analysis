@@ -8,6 +8,7 @@ import chartIcon from '../assets/images/chart-button-black.svg';
 import { diseaseSpecificData } from '../utils/diseaseData';
 import { DataSelectionContext } from '../context/DataSelectionContext';
 import { useFileContext } from '../FileContext';
+import { fetchFilteredPatientData } from '../api/analzeDataApi'
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
@@ -318,38 +319,54 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       };
       
       const { fileId } = useFileContext();
-
-      const handleTabResult = (e) => {
+      const handleTabResult = async (e) => {
         e.preventDefault();
-
+    
         const resultToSendTab1 = {};
+        
+        // selectedItemsTab1의 각 카테고리를 순회
         Object.keys(selectedItemsTab1).forEach((category) => {
             selectedItemsTab1[category].forEach((item) => {
-                // 옵션이 있는 경우 (SelectField 선택)
+                // 카테고리별 선택된 항목 찾기
                 const foundOption = diseaseSpecificData.All.categoriesTab1[category].find(opt => opt.label === item.label);
     
                 if (foundOption && foundOption.options) {
+                    // 선택된 옵션이 있는 경우
                     const selectedOption = foundOption.options.find(opt => opt.display === item.value);
                     if (selectedOption) {
-                        resultToSendTab1[foundOption.value] = selectedOption.send;  // send 값을 서버로 보낼 값으로 설정
+                        resultToSendTab1[foundOption.value] = selectedOption.send;  // send 값을 설정
                     }
                 } else {
-                    // 옵션이 없는 경우 일반적인 값
+                    // 선택된 옵션이 없는 경우 label을 그대로 사용
                     resultToSendTab1[item.label] = item.value;
                 }
             });
         });
+    
+        // 전송할 데이터 구성
         const finalData = {
-          ...resultToSendTab1,
-          DISEASE_CLASS: disease,
-          fileIds: fileId,  // fileId를 전역에서 가져와 전송
+            ...resultToSendTab1,
+            DISEASE_CLASS: disease,  // 질병 선택
+            fileIds: fileId,  // fileId는 전역에서 가져옴
         };
-        // 콘솔에 변환된 데이터를 출력
+    
+        // 콘솔에 전송할 데이터를 출력
         console.log('서버로 전송할 데이터 구성 항목 (Tab 1):', finalData);
     
-        // 여기서 서버로 데이터를 전송할 수 있습니다
-        onAnalyze();  // 예시로 분석 함수 호출
-      };
+        try {
+            // API 호출을 통해 데이터를 서버로 전송
+            const response = await fetchFilteredPatientData(finalData);  // fileId와 필터 데이터를 서버로 전송
+    
+            // 성공적으로 데이터를 받으면 처리
+            console.log('서버 응답:', response);
+    
+            // 응답 데이터를 화면에 반영하는 로직 추가
+            // 예시: setResultData(response.data);
+            
+        } catch (error) {
+            console.error('데이터 분석 요청 중 오류 발생:', error);
+        }
+    };
     
   return (
     <Container collapsed={collapsed}>

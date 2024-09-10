@@ -42,21 +42,3 @@ export const fetchPatientData = async (fileIds, institutionId, diseaseClass) => 
     }
 };
 
-
-
-
-// 질환 데이터를 가져오는 API 함수
-export const fetchDiseaseData = async (disease) => {
-    try {
-      const response = await axios.get(`/api/diseases/${disease}`);
-      
-      if (response && response.data) {
-        return response.data;  // 데이터를 반환
-      } else {
-        throw new Error('데이터를 가져오는 데 실패했습니다.');
-      }
-    } catch (error) {
-      console.error('질환 데이터를 가져오는 중 오류 발생:', error);
-      throw error;  // 오류 발생 시 호출자에게 오류를 던짐
-    }
-  };
