@@ -251,15 +251,15 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
                 악골골수염
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === 'C'}
-                onClick={() => handleSubMenuItemClick('C')}
+                active={activeSubMenuItem === 'D'}
+                onClick={() => handleSubMenuItemClick('D')}
               >
                 <SubMenuItemIcon src={Surface} alt="두개안면 Icon" />
                 두개안면
               </SubMenuItem>
               <SubMenuItem
-                active={activeSubMenuItem === 'D'}
-                onClick={() => handleSubMenuItemClick('D')}
+                active={activeSubMenuItem === 'C'}
+                onClick={() => handleSubMenuItemClick('C')}
               >
                 <SubMenuItemIcon src={Cancer} alt="구강암 Icon" />
                 구강암
