@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg';
 import { diseaseSpecificData } from '../utils/diseaseData';
 import { DataSelectionContext } from '../context/DataSelectionContext';
+import { useFileContext } from '../FileContext';
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
@@ -315,7 +316,9 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
         setSelectedItemsTab1(diseaseData.selectedItemsTab1);
         setSelectedItemsTab2(diseaseData.selectedItemsTab2);
       };
-    
+      
+      const { fileId } = useFileContext();
+
       const handleTabResult = (e) => {
         e.preventDefault();
 
@@ -336,9 +339,13 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                 }
             });
         });
-        resultToSendTab1['DISEASE_CLASS'] = disease;
+        const finalData = {
+          ...resultToSendTab1,
+          DISEASE_CLASS: disease,
+          fileIds: fileId,  // fileId를 전역에서 가져와 전송
+        };
         // 콘솔에 변환된 데이터를 출력
-        console.log('서버로 전송할 데이터 구성 항목 (Tab 1):', resultToSendTab1);
+        console.log('서버로 전송할 데이터 구성 항목 (Tab 1):', finalData);
     
         // 여기서 서버로 데이터를 전송할 수 있습니다
         onAnalyze();  // 예시로 분석 함수 호출
