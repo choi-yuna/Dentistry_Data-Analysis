@@ -395,14 +395,13 @@ export const diseaseSpecificData = {
         '기본 정보': [
           { label: '기관', value: 'INSTITUTION_ID' },
           { label: '촬영일자', value: 'CAPTURE_TIME' },
-          { label: '촬영장비', value: 'MAKER_INFO' },
+          { label: '촬영 종류', value: 'MAKER_SRC' },
+          //TODO: -환자별, 사진 일련번호 포함?
+
         ],
         '환자 정보': [
           { label: '성별', value: 'P_GENDER' },
           { label: '나이', value: 'P_AGE' },
-          { label: '체중', value: 'P_WEIGHT' },
-          { label: '키', value: 'P_HEIGHT' },
-          { label: '주거지역', value: 'P_RES_AREA' },
         ],
         '진단 정보': [
           { label: '발생 부위', value: 'DIS_LOC' },
@@ -413,31 +412,13 @@ export const diseaseSpecificData = {
           { label: '약물복용방법', value: 'MR_HOWTOTAKE' },
           { label: '약물복용기간', value: 'MR_HOWLONG' },
         ],
-        'Medical History': [
-          { label: 'Hypertension', value: 'HTN' },
-          { label: 'Hyperlipidemia', value: 'HLD' },
-          { label: 'Diabetes mellitus', value: 'DIA' },
-          { label: 'Taking anticoagulants', value: 'TAC' },
-          { label: 'Heart disease', value: 'HD' },
-          { label: 'Thyroid disease', value: 'TD' },
-          { label: 'Liver disease', value: 'LD' },
-          { label: 'Kidney disease', value: 'KD' },
-          { label: 'Rheumatoid arthritis', value: 'RA' },
-          { label: 'Cancer', value: 'CANCER' },
-          { label: 'Dementia', value: 'DEM' },
-          { label: 'Smoking', value: 'SMOK' },
-          { label: 'Steroids', value: 'STER' },
-          { label: 'Chemotherapy', value: 'CHEMO' },
-          { label: '그 이외의 면역관련질환', value: 'IMM_D' },
-        ],
+          
         'Local Factors': [
           { label: 'Extraction', value: 'EXTRACTION' },
           { label: 'Trauma', value: 'TRAUMA' },
           { label: 'Implant', value: 'IMPLANT' },
           { label: 'Bone surgery', value: 'BONE_SUR' },
           { label: 'Dental origin infection', value: 'ORIGIN_INF' },
-          { label: 'Vascular insufficiency', value: 'VAS_INSUF' },
-          { label: '기타소견', value: 'LF_NOTE' },
         ],
         '추가사항': [
           { label: '처음 처치법', value: 'FIRST_TREAT' },
@@ -577,26 +558,17 @@ export const diseaseSpecificData = {
         '기본 정보': [
           { label: '기관', value: 'INSTITUTION_ID' },
           { label: '촬영일자', value: 'CAPTURE_TIME' },
-          { label: '촬영장비', value: 'MAKER_INFO' },
+          { label: '촬영 종류', value: 'MAKER_SRC' },
+          //TODO: -환자별, 사진 일련번호 포함?
         ],
         '환자 정보': [
           { label: '성별', value: 'P_GENDER' },
           { label: '나이', value: 'P_AGE' },
-          { label: '체중', value: 'P_WEIGHT' },
-          { label: '키', value: 'P_HEIGHT' },
-          { label: '주거지역', value: 'P_RES_AREA' },
         ],
         '전신질환 유무': [
-          { label: '흡연', value: 'DH_SMOKE' },
-          { label: '음주', value: 'DH_ALCHO' },
-          { label: '당뇨', value: 'DH_DIAB' },
-        ],
-        '진단정보별 환자수': [
-          { label: '진단명', value: 'DI_NAME' },
-          { label: '병소부위', value: 'DI_LOC' },
-          { label: '수술명', value: 'DI_SUR' },
-          { label: '방사선 치료 유무', value: 'DI_RAD' },
-          { label: '항암치료 유무', value: 'DI_CAN' },
+          { label: '두개안면 기형 여부', value: 'DI_DISEASE' },
+          { label: '데이터 획득시기', value: 'DI_TIME' },
+          { label: '세부진단', value: 'DI_DETAIL' },
         ],
       },      
     },
@@ -610,11 +582,9 @@ export const diseaseSpecificData = {
         selectedItemsTab2: {
           '기본 정보': [],
           '환자 정보': [],
-          '진단 정보': [],
-          'MRONJ': [],
-          'Medical History' : [],
-          'Local Factors': [],
-          '추가사항': [],
+          '진단정보별 환자수': [],
+          '병리 검사': [],
+            
         },
         categoriesTab1: {
           '기본 정보(info)': [
@@ -768,18 +738,18 @@ export const diseaseSpecificData = {
             { label: '기관', value: 'INSTITUTION_ID' },
             { label: '촬영종류', value: 'IMAGE_SRC' },
             { label: '촬영일자', value: 'CAPTURE_TIME' },
-            { label: '촬영장비', value: 'MAKER_INFO' },
           ],
           '환자 정보': [
             { label: '성별', value: 'P_GENDER' },
             { label: '나이', value: 'P_AGE' },
-            { label: '체중', value: 'P_WEIGHT' },
-            { label: '키', value: 'P_HEIGHT' },
-            { label: '주거지역', value: 'P_RES_AREA' },
+
           ],
           '진단정보별 환자수': [
-            { label: '데이터 획득시기', value: 'DI_NAME' },
-            { label: '세부진단', value: 'DI_LOC' },
+            { label: '진단명', value: 'DI_NAME' },
+            { label: '병소 부위', value: 'DI_LOC' },
+          ],
+          '병리 검사' : [
+            { label: 'TNM stage', value: 'PT_TNM' },
           ],
         },      
       },
