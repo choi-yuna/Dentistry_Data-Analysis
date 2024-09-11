@@ -61,7 +61,7 @@ const ReportSection = styled.div`
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedDisease, setSelectedDisease] = useState('All'); // 선택된 질환 상태 추가
-  const { visualizationResults, setVisualizationResults } = useContext(AnalysisContext);
+  const { visualizationResults, setVisualizationResults, chartData ,tableData} = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
     setVisualizationResults(true);
@@ -86,8 +86,8 @@ const DataVisualizationView = () => {
                 <GridContainer>
                   {tablesData.map((table, index) => (
                     <React.Fragment key={index}>
-                      <TableResult collapsed={collapsed} tablesData={[table]} />
-                      <PieChartResult collapsed={collapsed} chart={table} />
+                      <TableResult collapsed={collapsed} tablesData={[{ data: tableData }]}/>
+                      <PieChartResult collapsed={collapsed} chart={{ data: chartData }}  />
                     </React.Fragment>
                   ))}
                 </GridContainer>

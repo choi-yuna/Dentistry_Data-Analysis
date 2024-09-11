@@ -13,3 +13,25 @@ export const fetchFilteredPatientData = async (filterRequest) => {
         throw error; // 에러가 발생하면 호출한 곳으로 전달
     }
 };
+
+export const fetchFilteredData = async (data) => {
+    try {
+      const response = await fetch('/api/filtered-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error('API 응답에 문제가 있습니다.');
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
+      throw error;
+    }
+  };
+  
