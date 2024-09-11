@@ -8,7 +8,7 @@ import chartIcon from '../assets/images/chart-button-black.svg';
 import { diseaseSpecificData } from '../utils/diseaseData';
 import { DataSelectionContext } from '../context/DataSelectionContext';
 import { useFileContext } from '../FileContext';
-import { fetchFilteredData } from '../api/analzeDataApi';
+import { fetchFilteredPatientData } from '../api/analzeDataApi';
 import { AnalysisContext } from '../context/AnalysisContext';
 
 const Container = styled.div`
@@ -196,6 +196,7 @@ const ChipsContainer = styled.div`
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
+    const { setTableData } = useContext(AnalysisContext);
 
     const {
       tabValue,
@@ -353,6 +354,28 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             }
         });
 
+        const processServerData = (data) => {
+
+          if (!data || data.length === 0) {
+            return {
+              headers: [],
+              rows: [],
+              total: '0'
+            };
+          }
+        
+          const headers = Object.keys(data[0]);
+      
+          const rows = data.map(item => Object.values(item));
+        
+          return {
+            headers, 
+            rows, 
+            total: rows.length.toString()
+          };
+        };
+        
+
         const finalData = {
             ...resultToSendTab1,
             DISEASE_CLASS: disease,
@@ -363,8 +386,13 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
         console.log('서버로 전송할 데이터 구성 항목:', finalData);
 
         try {
-            const response = await fetchFilteredData(finalData);
+            const response = await fetchFilteredPatientData(finalData);
             console.log('서버 응답:', response);
+
+            const processedData = processServerData(response.data);
+            setTableData(processedData);
+
+            onAnalyze();
         } catch (error) {
             console.error('데이터 분석 요청 중 오류 발생:', error);
         }
