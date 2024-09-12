@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from 'styled-components';
 import VisualizationDataTable from './VisualizationDataTable';
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
-
+import { AnalysisContext } from '../context/AnalysisContext';
 const ResultCtn = styled.div`
     width: 80%; 
     margin-top: 20px;
@@ -58,19 +58,22 @@ const handleDownload = () => {
   };
   
 
-const TableResult = ({ tablesData }) => {
+
+  const TableResult = () => {
+    const { tableData } = useContext(AnalysisContext); // 전역 상태에서 테이블 데이터를 가져옴
+
     return (
         <ResultCtn>
-            {tablesData.map((table, index) => (
+            {tableData.map((table, index) => (
                 <FormCtn key={index}>
                     <TitleBar>
-                        <SubTitle>{table.subTitle}</SubTitle>
+                        <SubTitle>{table.title}</SubTitle>
                         <IconContainer>
-                            <Icon src={DownloadIcon} alt="Download" onClick={() => table.onDownload && table.onDownload()} />
-                            <Icon src={PrintIcon} alt="Print" onClick={() => table.onPrint && table.onPrint()} />
+                            <Icon src={DownloadIcon} alt="Download" />
+                            <Icon src={PrintIcon} alt="Print" />
                         </IconContainer>
                     </TitleBar>
-                    <VisualizationDataTable tableData={table.data} />
+                    <VisualizationDataTable tableId={table.id} /> {/* 테이블 ID를 전달 */}
                 </FormCtn>
             ))}
         </ResultCtn>

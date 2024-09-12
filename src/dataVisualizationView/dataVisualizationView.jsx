@@ -5,8 +5,7 @@ import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import TableResult from './TableResult';
 import DataSelection from './dataSelection';
-import tablesData from './VisualizationDataModel';
-import PieChartResult from './PieChartResult';
+import PieChartResult from './PieChartResult'; // tablesData import 제거
 
 const AppContainer = styled.div`
   display: flex;
@@ -61,7 +60,9 @@ const ReportSection = styled.div`
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedDisease, setSelectedDisease] = useState('All'); // 선택된 질환 상태 추가
-  const { visualizationResults, setVisualizationResults, chartData ,tableData} = useContext(AnalysisContext);
+
+  // 전역 상태에서 데이터를 가져옴
+  const { visualizationResults, setVisualizationResults, chartData, tableData } = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
     setVisualizationResults(true);
@@ -84,12 +85,10 @@ const DataVisualizationView = () => {
             <>
               <ReportSection>
                 <GridContainer>
-                  {tablesData.map((table, index) => (
-                    <React.Fragment key={index}>
-                      <TableResult collapsed={collapsed} tablesData={[{ data: tableData }]}/>
-                      <PieChartResult collapsed={collapsed} chart={{ data: chartData }}  />
-                    </React.Fragment>
-                  ))}
+                  <React.Fragment>
+                    <TableResult collapsed={collapsed} /> {/* tableData는 전역에서 직접 사용 */}
+                    <PieChartResult collapsed={collapsed} /> {/* chartData는 전역에서 직접 사용 */}
+                  </React.Fragment>
                 </GridContainer>
               </ReportSection>
             </>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { AnalysisContext } from '../context/AnalysisContext';  // Context를 불러옵니다
 
 const TableContainer = styled.div`
   display: flex;
@@ -33,19 +34,33 @@ const ColSpanTd = styled.td`
   font-weight: bold;
 `;
 
-const VisualizationDataTable = ({ tableData }) => {
+const VisualizationDataTable = ({ tableId }) => {
+  const { tableData } = useContext(AnalysisContext);
+
+  // tableId에 맞는 테이블 데이터를 찾음
+  const table = tableData.find(table => table.id === tableId);
+
+  // tableData가 없거나 headers 또는 rows가 없을 경우 방어적 코딩
+  const headers = table?.headers || [];
+  const rows = table?.rows || [];
+  const total = table?.total ?? rows.length;
+
+  if (!headers.length) {
+    return <p>테이블에 필요한 데이터가 없습니다.</p>;
+  }
+
   return (
     <TableContainer>
       <Table>
         <thead>
           <tr>
-            {tableData.headers.map((header, index) => (
+            {headers.map((header, index) => (
               <Th key={index}>{header}</Th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {tableData.rows.map((row, rowIndex) => (
+          {rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Td key={cellIndex}>{cell}</Td>
@@ -53,8 +68,8 @@ const VisualizationDataTable = ({ tableData }) => {
             </tr>
           ))}
           <tr>
-            <ColSpanTd colSpan={tableData.headers.length - 1}>합계</ColSpanTd>
-            <Td>{tableData.total}</Td>
+            <ColSpanTd colSpan={headers.length - 1}>합계</ColSpanTd>
+            <Td>{total}</Td>
           </tr>
         </tbody>
       </Table>

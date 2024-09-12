@@ -1,25 +1,28 @@
-// VisualPieChart.jsx
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-//데이터 유효 검사
-const VisualPieChart = ({ chartData }) => {
-  if (!chartData || !chartData.rows) {
-    return <div>유효하지 않은 데이터입니다.</div>;
+
+const VisualPieChart = ({ chart }) => {
+  // 디버깅용 로그 추가
+  console.log("차트 데이터:", chart);
+
+  // chart 또는 chart.labels와 chart.data가 유효하지 않은 경우 처리
+  if (!chart || !Array.isArray(chart.labels) || chart.labels.length === 0 || !Array.isArray(chart.data) || chart.data.length === 0) {
+    return <div>유효하지 않은 차트 데이터입니다.</div>;
   }
 
-  const labels = chartData.rows.map(row => row[0]);
-  const dataValues = chartData.rows.map(row => parseInt(row[1], 10));
+  // 데이터 생성
+  const labels = chart.labels;  // 'labels'에서 레이블 가져오기
+  const dataValues = chart.data; // 'data'에서 데이터 값 가져오기
 
- 
   const data = {
     labels: labels,
     datasets: [
       {
-        label: chartData.subTitle,
+        label: chart.title || "차트",
         data: dataValues,
         backgroundColor: [
           '#FF6384',
@@ -37,5 +40,6 @@ const VisualPieChart = ({ chartData }) => {
 
   return <Pie data={data} />;
 };
+
 
 export default VisualPieChart;
