@@ -10,6 +10,8 @@ import { DataSelectionContext } from '../context/DataSelectionContext';
 import { useFileContext } from '../FileContext';
 import { fetchFilteredPatientData } from '../api/analzeDataApi';
 import { AnalysisContext } from '../context/AnalysisContext';
+import { processServerData } from '../utils/processServerData'; 
+import { processChartData } from '../utils/processChartData'; 
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
@@ -196,8 +198,7 @@ const ChipsContainer = styled.div`
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
-    const { setTableData } = useContext(AnalysisContext);
-
+    const { setChartData, setTableData } = useContext(AnalysisContext);
     const {
       tabValue,
       setTabValue,
@@ -304,7 +305,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             };
     };
 
-    const { categories, selectedItems } = getSelectableItems();
+    const { categories={}, selectedItems } = getSelectableItems();
     const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
 
     const handleReset = () => {
@@ -313,91 +314,94 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     };
 
     const handleTabResult = async (e) => {
-        e.preventDefault();
-
-        const resultToSendTab1 = {};
-        const headersToSendTab2 = [];
-
-        Object.keys(selectedItemsTab1).forEach((category) => {
-            const tab1Categories = diseaseSpecificData[disease]?.categoriesTab1 || {};
-            if (tab1Categories[category]) {
-                selectedItemsTab1[category].forEach((item) => {
-                    const foundOption = tab1Categories[category].find(opt => opt.label === item.label);
-                    if (foundOption && foundOption.options) {
-                        const selectedOption = foundOption.options.find(opt => opt.display === item.value);
-                        if (selectedOption) {
-                            resultToSendTab1[foundOption.value] = selectedOption.send !== undefined ? selectedOption.send : "";
-                        }
-                    } else {
-                        resultToSendTab1[item.label] = item.value !== undefined ? item.value : "";
-                    }
-                });
-            }
-        });
-
-        Object.keys(selectedItemsTab2).forEach((category) => {
-            const tab2Categories = diseaseSpecificData[disease]?.categoriesTab2 || {};
-            const items = selectedItemsTab2[category] || [];
-
-            if (tab2Categories[category]) {
-                items.forEach((item) => {
-                    const foundOption = tab2Categories[category].find(opt => opt.label === item.label);
-                    if (foundOption && foundOption.options) {
-                        const selectedOption = foundOption.options.find(opt => opt.display === item.value);
-                        if (selectedOption) {
-                            headersToSendTab2.push(selectedOption.send !== undefined ? selectedOption.send : "");
-                        }
-                    } else if (foundOption) {
-                        headersToSendTab2.push(foundOption.value !== undefined ? foundOption.value : "");
-                    }
-                });
-            }
-        });
-
-        const processServerData = (data) => {
-
-          if (!data || data.length === 0) {
-            return {
-              headers: [],
-              rows: [],
-              total: '0'
-            };
+      e.preventDefault();
+  
+      const resultToSendTab1 = {};
+      const headersToSendTab2 = [];
+  
+      // selectedItemsTab1에서 데이터 추출
+      Object.keys(selectedItemsTab1).forEach((category) => {
+          const tab1Categories = diseaseSpecificData[disease]?.categoriesTab1 || {};
+          if (tab1Categories[category]) {
+              selectedItemsTab1[category].forEach((item) => {
+                  const foundOption = tab1Categories[category].find(opt => opt.label === item.label);
+                  if (foundOption && foundOption.options) {
+                      const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+                      if (selectedOption) {
+                          resultToSendTab1[foundOption.value] = selectedOption.send !== undefined ? selectedOption.send : "";
+                      }
+                  } else {
+                      resultToSendTab1[item.label] = item.value !== undefined ? item.value : "";
+                  }
+              });
           }
-        
-          const headers = Object.keys(data[0]);
-      
-          const rows = data.map(item => Object.values(item));
-        
-          return {
-            headers, 
-            rows, 
-            total: rows.length.toString()
-          };
-        };
-        
+      });
+  
+      // selectedItemsTab2에서 데이터 추출
+      Object.keys(selectedItemsTab2).forEach((category) => {
+          const tab2Categories = diseaseSpecificData[disease]?.categoriesTab2 || {};
+          const items = selectedItemsTab2[category] || [];
+  
+          if (tab2Categories[category]) {
+              items.forEach((item) => {
+                  const foundOption = tab2Categories[category].find(opt => opt.label === item.label);
+                  if (foundOption && foundOption.options) {
+                      const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+                      if (selectedOption) {
+                          headersToSendTab2.push(selectedOption.send !== undefined ? selectedOption.send : "");
+                      }
+                  } else if (foundOption) {
+                      headersToSendTab2.push(foundOption.value !== undefined ? foundOption.value : "");
+                  }
+              });
+          }
+      });
 
-        const finalData = {
-            ...resultToSendTab1,
-            DISEASE_CLASS: disease,
-            fileIds: fileId,
-            header: headersToSendTab2,
-        };
-
-        console.log('서버로 전송할 데이터 구성 항목:', finalData);
-
-        try {
-            const response = await fetchFilteredPatientData(finalData);
-            console.log('서버 응답:', response);
-
-            const processedData = processServerData(response.data);
-            setTableData(processedData);
-
-            onAnalyze();
-        } catch (error) {
-            console.error('데이터 분석 요청 중 오류 발생:', error);
-        }
+    
+      const finalData = {
+        // 전송할 데이터 항목들
+        DISEASE_CLASS: disease,
+        fileIds: fileId,
+        header: headersToSendTab2,
     };
 
+    try {
+      const response = await fetchFilteredPatientData(finalData);
+      console.log('서버 응답:', response);
+
+
+         // 서버 응답이 올바르게 들어오는지 확인
+         if (!response || !Array.isArray(response) || response.length === 0) {
+          console.error('서버에서 데이터가 없습니다.');
+          return;
+  }
+
+      // 서버에서 받은 데이터 처리
+      const processedTableData = processServerData(response);  // 테이블 데이터 처리
+      const processedChartData = processChartData(response);   // 차트 데이터 처리
+  
+      // 전역 상태에 테이블 데이터 설정 (기존 기능)
+      if (typeof setTableData === 'function') {
+          setTableData(processedTableData);
+      } else {
+          console.error('setTableData is not a function');
+      }
+  
+      // 전역 상태에 차트 데이터 설정 (차트 데이터를 추가로 처리)
+      if (typeof setChartData === 'function') {
+          setChartData(processedChartData);
+      } else {
+          console.error('setChartData is not a function');
+      }
+  
+      onAnalyze();  // 원래 기능 호출
+  } catch (error) {
+      console.error('데이터 분석 요청 중 오류 발생:', error);
+  }
+  
+};
+
+  
     return (
         <Container collapsed={collapsed}>
           <FlexBox>

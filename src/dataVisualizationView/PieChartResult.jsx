@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from 'styled-components';
 import VisualPieChart from './VisualPieChart'; 
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
-
+import { AnalysisContext } from '../context/AnalysisContext';  // Context 불러오기
 
 const ResultCtn = styled.div`
     width: 100%; 
@@ -48,20 +48,29 @@ const Icon = styled.img`
   margin-left: 10px;
 `;
 
-const PieChartResult = ({ chart }) => {
+const PieChartResult = () => {
+    const { chartData } = useContext(AnalysisContext);  // 전역 상태에서 chartData를 가져옴
+  // chartData 유효성 검사
+  if (!chartData || chartData.length === 0) {
+    return <p>차트 데이터를 로드할 수 없습니다.</p>;
+  }
+
     return (
         <ResultCtn>
-            <FormCtn>
-                <TitleBar>
-                    <SubTitle>{chart.subTitle}</SubTitle>
-                    <IconContainer>
-                        <Icon src={DownloadIcon} alt="Download" onClick={() => chart.onDownload && chart.onDownload()} />
-                        <Icon src={PrintIcon} alt="Print" onClick={() => chart.onPrint && chart.onPrint()} />
-                    </IconContainer>
-                </TitleBar>
-                <VisualPieChart chartData={chart.data} />
-            </FormCtn>
-        </ResultCtn>
+        {chartData.map((chart, index) => (
+          <FormCtn key={index}>
+            <TitleBar>
+              <SubTitle>{chart.title || "차트 제목"}</SubTitle>
+              
+                <IconContainer>
+                <Icon src={DownloadIcon} alt="Download" />
+                <Icon src={PrintIcon} alt="Print" />
+                </IconContainer>
+            </TitleBar>
+            <VisualPieChart chart={chart} /> {/* chart 데이터를 직접 전달 */}
+          </FormCtn>
+        ))}
+      </ResultCtn>
     );
 };
 
