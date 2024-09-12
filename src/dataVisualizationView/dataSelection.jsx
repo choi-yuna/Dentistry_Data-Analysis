@@ -360,6 +360,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     
       const finalData = {
         // 전송할 데이터 항목들
+        ...resultToSendTab1,
         DISEASE_CLASS: disease,
         fileIds: fileId,
         header: headersToSendTab2,
