@@ -80,4 +80,5 @@ const handleDownload = () => {
     );
 };
 
+
 export default TableResult;

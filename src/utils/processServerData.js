@@ -4,12 +4,16 @@ export const processServerData = (data) => {
         return [];
     }
 
-    // 데이터 배열 내 각 객체를 처리
-    return data.map(table => ({
-        id: table.id,
-        title: table.title,
-        headers: table.headers,
-        rows: table.rows.map(row => [row.value, row.count]),  // value와 count를 행으로 변환
-        total: table.rows.length.toString() // 총 row 수 계산
-    }));
+    return data.map(table => {
+        const rows = table.rows.map(row => [row.value, row.count]);  
+        const totalCount = table.rows.reduce((sum, row) => sum + row.count, 0);  
+        
+        return {
+            id: table.id,
+            title: table.title,
+            headers: table.headers,
+            rows: rows,
+            total: totalCount.toString() 
+        };
+    });
 };
