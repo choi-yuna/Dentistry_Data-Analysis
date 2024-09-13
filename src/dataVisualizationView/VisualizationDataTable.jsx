@@ -45,6 +45,8 @@ const VisualizationDataTable = ({ tableId }) => {
   const rows = table?.rows || [];
   const total = table?.total ?? rows.length;
 
+  const sortedRows = [...rows].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
   if (!headers.length) {
     return <p>테이블에 필요한 데이터가 없습니다.</p>;
   }
@@ -60,7 +62,7 @@ const VisualizationDataTable = ({ tableId }) => {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIndex) => (
+          {sortedRows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Td key={cellIndex}>{cell}</Td>
