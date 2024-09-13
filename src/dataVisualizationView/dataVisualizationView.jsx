@@ -5,7 +5,7 @@ import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import TableResult from './TableResult';
 import DataSelection from './dataSelection';
-import PieChartResult from './PieChartResult'; // tablesData import 제거
+import PieChartResult from './PieChartResult'; 
 
 const AppContainer = styled.div`
   display: flex;
@@ -44,10 +44,17 @@ const ContentCtn = styled.div`
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto;
+  grid-template-columns: 1fr; /* 각 테이블과 차트를 하나의 행에 표시 */
+  gap: 20px; /* 행 사이의 간격 */
   width: 85%;
   margin-left: 5%;
+`;
+
+const SameHeightContainer = styled.div`
+  display: flex;
+  flex-direction: row; /* 테이블과 차트를 같은 행에 나란히 배치 */
+  align-items: stretch; /* 테이블과 차트의 높이를 동일하게 맞춤 */
+  gap: 20px; /* 테이블과 차트 사이의 간격 */
 `;
 
 const ReportSection = styled.div`
@@ -59,10 +66,10 @@ const ReportSection = styled.div`
 
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedDisease, setSelectedDisease] = useState('All'); // 선택된 질환 상태 추가
+  const [selectedDisease, setSelectedDisease] = useState('All');
 
   // 전역 상태에서 데이터를 가져옴
-  const { visualizationResults, setVisualizationResults, chartData, tableData } = useContext(AnalysisContext);
+  const { visualizationResults, setVisualizationResults } = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
     setVisualizationResults(true);
@@ -76,22 +83,21 @@ const DataVisualizationView = () => {
     <AppContainer>
       <TopBar />
       <MainContent>
-        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} onDiseaseSelect={handleDiseaseSelect} /> {/* 질환 선택 콜백 전달 */}
+        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} onDiseaseSelect={handleDiseaseSelect} />
         <ContentCtn collapsed={collapsed}>
           <StickyDataSelection>
-            <DataSelection disease={selectedDisease} collapsed={collapsed} onAnalyze={handleAnalyze} /> {/* 선택된 질환 전달 */}
+            <DataSelection disease={selectedDisease} collapsed={collapsed} onAnalyze={handleAnalyze} />
           </StickyDataSelection>
           {visualizationResults && (
-            <>
-              <ReportSection>
-                <GridContainer>
-                  <React.Fragment>
-                    <TableResult collapsed={collapsed} /> {/* tableData는 전역에서 직접 사용 */}
-                    <PieChartResult collapsed={collapsed} /> {/* chartData는 전역에서 직접 사용 */}
-                  </React.Fragment>
-                </GridContainer>
-              </ReportSection>
-            </>
+            <ReportSection>
+              <GridContainer>
+                <SameHeightContainer>
+
+                  <TableResult collapsed={collapsed} />
+                  <PieChartResult collapsed={collapsed} />
+                </SameHeightContainer>
+              </GridContainer>
+            </ReportSection>
           )}
         </ContentCtn>
       </MainContent>

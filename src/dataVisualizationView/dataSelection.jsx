@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { IconButton, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -12,6 +12,42 @@ import { fetchFilteredPatientData } from '../api/analzeDataApi';
 import { AnalysisContext } from '../context/AnalysisContext';
 import { processServerData } from '../utils/processServerData'; 
 import { processChartData } from '../utils/processChartData'; 
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  border: 4px solid #f3f3f3; 
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: ${spin} 1s linear infinite;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3); /* 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 화면 최상단에 위치 */
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  color: #0d4a68;
+  font-weight: bold;
+`;
 
 const Container = styled.div`
   width: ${(props) => (props.collapsed ? '95%' : '95%')};
@@ -27,6 +63,7 @@ const FlexBox = styled.div`
 const StyledTabs = styled(Tabs)`
   border: 1px solid #ccc;
   border-radius: 8px 8px 0 0;
+  
 `;
 
 const StyledTab = styled(Tab)`
@@ -35,9 +72,13 @@ const StyledTab = styled(Tab)`
   &.Mui-selected {
     color: #000000;
     font-weight: bold;
-    border: 1px solid #000;
+    border: 1px solid #ccc;  /* 선택된 탭의 테두리 */
+    border-bottom: none; /* 하단 경계선을 없애 선택된 느낌 */
+    border-radius: 8px 8px 0 0; /* 상단 모서리를 둥글게 */
     z-index: 1;
-    border-bottom: none;
+  }
+     & .MuiTabs-indicator {
+    background-color: #000; /* 원하는 색으로 밑줄 설정 */
   }
 `;
 
@@ -163,20 +204,22 @@ const TextFieldStyled = styled(TextField)`
   font-size: 0.8rem;
   height: 30px;
 `;
-
 const ButtonStyled = styled(Button)`
   padding: 8px 16px;
-  background-color: #ffffff;
-  color: black;
-  border-radius: 4px;
+  background-color: #ffffff !important;
+  color: black !important;
+  border: 1px solid #000 !important;  
+  border-radius: 4px !important;
   cursor: pointer;
   height: 36px;
   min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 10px;
+  margin-left: 1% !important;
 `;
+
+
 
 const SelectedItemsBox = styled.div`
   display: flex;
@@ -210,6 +253,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       setSelectedCategory,
     } = useContext(DataSelectionContext);
 
+    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
     const [open, setOpen] = useState(true);
     const { fileId } = useFileContext();
 
@@ -315,6 +359,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     const handleTabResult = async (e) => {
       e.preventDefault();
+      setLoading(true); // 로딩 상태 활성화
   
       const resultToSendTab1 = {};
       const headersToSendTab2 = [];
@@ -357,7 +402,6 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
           }
       });
 
-    
       const finalData = {
         // 전송할 데이터 항목들
         ...resultToSendTab1,
@@ -370,12 +414,12 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       const response = await fetchFilteredPatientData(finalData);
       console.log('서버 응답:', response);
 
-
-         // 서버 응답이 올바르게 들어오는지 확인
-         if (!response || !Array.isArray(response) || response.length === 0) {
-          console.error('서버에서 데이터가 없습니다.');
-          return;
-  }
+      // 서버 응답이 올바르게 들어오는지 확인
+      if (!response || !Array.isArray(response) || response.length === 0) {
+        console.error('서버에서 데이터가 없습니다.');
+        setLoading(false); // 로딩 상태 해제
+        return;
+      }
 
       // 서버에서 받은 데이터 처리
       const processedTableData = processServerData(response);  // 테이블 데이터 처리
@@ -394,15 +438,15 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       } else {
           console.error('setChartData is not a function');
       }
-  
-      onAnalyze();  // 원래 기능 호출
-  } catch (error) {
-      console.error('데이터 분석 요청 중 오류 발생:', error);
-  }
-  
-};
 
-  
+      onAnalyze();  // 원래 기능 호출
+    } catch (error) {
+      console.error('데이터 분석 요청 중 오류 발생:', error);
+    } finally {
+      setLoading(false); // 로딩 상태 해제
+    }
+  };
+
     return (
         <Container collapsed={collapsed}>
           <FlexBox>
@@ -542,6 +586,15 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
               초기화
             </Button>
           </SelectedItemsBox>
+
+          {loading && ( 
+            <LoadingOverlay>
+              <LoadingMessage>
+                <Spinner />
+                <p>로딩 중...</p>
+              </LoadingMessage>
+            </LoadingOverlay>
+          )}
         </Container>
     );
 };
