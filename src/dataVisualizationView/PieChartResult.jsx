@@ -12,7 +12,7 @@ const ResultCtn = styled.div`
 `;
 
 const FormCtn = styled.div`
-    padding: 30px;
+    padding: 40px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
@@ -57,7 +57,7 @@ const PieChartResult = () => {
         if (pieChartRef.current) {
             setChartHeight(pieChartRef.current.offsetHeight);
         }
-    }, [setChartHeight]);
+    }, [tableHeight, setChartHeight]); // tableHeight가 변경될 때마다 차트 높이를 다시 계산
 
     if (!chartData || chartData.length === 0) {
         return <p>차트 데이터를 로드할 수 없습니다.</p>;

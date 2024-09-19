@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import styled from 'styled-components';
 import VisualizationDataTable from './VisualizationDataTable';
 import DownloadIcon from '../assets/images/download.svg'; 
@@ -20,7 +20,8 @@ const FormCtn = styled.div`
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box;
-    height: ${(props) => props.height ? `${props.height}px` : 'auto'}; 
+    height: ${(props) => props.height ? `${props.height}px` : 'auto'};
+    overflow: auto;  /* 내용이 넘칠 경우 스크롤 추가 */
 `;
 
 const TitleBar = styled.div`
@@ -50,20 +51,20 @@ const Icon = styled.img`
 const TableResult = () => {
     const { tableData, setTableHeight, chartHeight } = useContext(AnalysisContext);
     const tableRef = useRef(null);
+    const [maxHeight, setMaxHeight] = useState(0);
 
     // 테이블 높이를 계산하고, 전역 상태에 저장
     useEffect(() => {
         if (tableRef.current) {
-            setTableHeight(tableRef.current.offsetHeight);
+            const tableHeight = tableRef.current.offsetHeight;
+            setTableHeight(tableHeight);  // 테이블 높이 저장
+            setMaxHeight(Math.max(tableHeight, chartHeight));  // 차트와 테이블 높이 비교 후 큰 값 사용
         }
-    }, [setTableHeight]);
+    }, [chartHeight, setTableHeight]); // chartHeight 변경 시 테이블 높이를 다시 계산
 
     if (!tableData || tableData.length === 0) {
         return <p>테이블 데이터를 로드할 수 없습니다.</p>;
     }
-
-    // 테이블과 차트의 최대 높이 비교
-    const maxHeight = Math.max(chartHeight, tableRef.current?.offsetHeight || 0);
 
     return (
         <ResultCtn>

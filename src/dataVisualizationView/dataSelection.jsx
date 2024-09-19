@@ -33,11 +33,11 @@ const LoadingOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.3); /* 반투명 배경 */
+  background: rgba(255, 255, 255, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* 화면 최상단에 위치 */
+  z-index: 9999;
 `;
 
 const LoadingMessage = styled.div`
@@ -72,13 +72,13 @@ const StyledTab = styled(Tab)`
   &.Mui-selected {
     color: #000000;
     font-weight: bold;
-    border: 1px solid #ccc;  /* 선택된 탭의 테두리 */
-    border-bottom: none; /* 하단 경계선을 없애 선택된 느낌 */
-    border-radius: 8px 8px 0 0; /* 상단 모서리를 둥글게 */
+    border: 1px solid #ccc; 
+    border-bottom: none;
+    border-radius: 8px 8px 0 0; 
     z-index: 1;
   }
      & .MuiTabs-indicator {
-    background-color: #000; /* 원하는 색으로 밑줄 설정 */
+    background-color: #000;
   }
 `;
 
@@ -359,6 +359,19 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     const handleTabResult = async (e) => {
       e.preventDefault();
+
+          // 파일 업로드가 안된 경우 경고창 표시
+          if (!fileId) {
+            alert('파일을 업로드 해주세요.');
+            return;
+          }
+    
+          // 질병이 선택되지 않은 경우 경고창 표시
+          if (!disease) {
+            alert('질병을 선택해주세요.');
+            return;
+          }
+          
       setLoading(true); // 로딩 상태 활성화
   
       const resultToSendTab1 = {};

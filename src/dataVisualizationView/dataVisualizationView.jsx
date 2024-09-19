@@ -53,7 +53,7 @@ const GridContainer = styled.div`
 const SameHeightContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 20px; 
+  gap: 30px; 
   align-items: stretch;
   justify-content: space-between;
 `;
@@ -68,8 +68,6 @@ const ReportSection = styled.div`
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedDisease, setSelectedDisease] = useState('All');
-  
-  // 전역 상태에서 테이블 및 차트의 높이를 관리
   const { visualizationResults, setVisualizationResults } = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
@@ -93,7 +91,6 @@ const DataVisualizationView = () => {
             <ReportSection>
               <GridContainer>
                 <SameHeightContainer>
-                  {/* 파라미터 없이 컴포넌트 렌더링 */}
                   <TableResult />
                   <PieChartResult />
                 </SameHeightContainer>
