@@ -19,8 +19,8 @@ const ModalContent = styled.div`
     background: white;
     padding: 0;
     border-radius: 8px;
-    width: 60%;
-    height: 40%;
+    width: 90%;
+    height: 75%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -37,13 +37,13 @@ const ModalHeader = styled.div`
 
 const ModalTitle = styled.h3`
     margin: 0;
-    font-size: 22px;
+    font-size: 20px;
 `;
 
 const CloseButton = styled.button`
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 22px;
     color: white;
     cursor: pointer;
 `;
@@ -73,7 +73,7 @@ const ExcelRow = styled.tr`
 `;
 
 const ExcelHeaderCell = styled.th`
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
     text-align: left;
     background-color: #f2f2f2;
@@ -81,7 +81,7 @@ const ExcelHeaderCell = styled.th`
 `;
 
 const ExcelCell = styled.td`
-    padding: 8px;
+    padding: 4px;
     border: 1px solid #ddd;
     text-align: left;
     background-color: ${({ isNull }) => (isNull ? 'yellow' : 'white')};
