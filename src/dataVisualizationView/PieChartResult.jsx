@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import styled from 'styled-components';
 import VisualPieChart from './VisualPieChart'; 
 import DownloadIcon from '../assets/images/download.svg'; 
@@ -18,7 +18,7 @@ const FormCtn = styled.div`
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: auto;
+    height: ${(props) => props.height ? `${props.height}px` : 'auto'};
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
@@ -49,28 +49,38 @@ const Icon = styled.img`
 `;
 
 const PieChartResult = () => {
-    const { chartData } = useContext(AnalysisContext);  // 전역 상태에서 chartData를 가져옴
-  // chartData 유효성 검사
-  if (!chartData || chartData.length === 0) {
-    return <p>차트 데이터를 로드할 수 없습니다.</p>;
-  }
+    const { chartData, setChartHeight, tableHeight } = useContext(AnalysisContext);
+    const pieChartRef = useRef(null);
+
+    // 차트 높이를 계산하고, 전역 상태에 저장
+    useEffect(() => {
+        if (pieChartRef.current) {
+            setChartHeight(pieChartRef.current.offsetHeight);
+        }
+    }, [setChartHeight]);
+
+    if (!chartData || chartData.length === 0) {
+        return <p>차트 데이터를 로드할 수 없습니다.</p>;
+    }
+
+    // 테이블과 차트의 최대 높이 비교
+    const maxHeight = Math.max(tableHeight, pieChartRef.current?.offsetHeight || 0);
 
     return (
         <ResultCtn>
-        {chartData.map((chart, index) => (
-          <FormCtn key={index}>
-            <TitleBar>
-              <SubTitle>{chart.title || "차트 제목"}</SubTitle>
-              
-                <IconContainer>
-                <Icon src={DownloadIcon} alt="Download" />
-                <Icon src={PrintIcon} alt="Print" />
-                </IconContainer>
-            </TitleBar>
-            <VisualPieChart chart={chart} /> {/* chart 데이터를 직접 전달 */}
-          </FormCtn>
-        ))}
-      </ResultCtn>
+            {chartData.map((chart, index) => (
+                <FormCtn key={index} ref={pieChartRef} height={maxHeight}>
+                    <TitleBar>
+                        <SubTitle>{chart.title || "차트 제목"}</SubTitle>
+                        <IconContainer>
+                            <Icon src={DownloadIcon} alt="Download" />
+                            <Icon src={PrintIcon} alt="Print" />
+                        </IconContainer>
+                    </TitleBar>
+                    <VisualPieChart chart={chart} />
+                </FormCtn>
+            ))}
+        </ResultCtn>
     );
 };
 

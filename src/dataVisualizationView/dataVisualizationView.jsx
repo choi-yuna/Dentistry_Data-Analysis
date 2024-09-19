@@ -44,31 +44,32 @@ const ContentCtn = styled.div`
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr; /* 각 테이블과 차트를 하나의 행에 표시 */
-  gap: 20px; /* 행 사이의 간격 */
+  grid-template-columns: 1fr;
+  gap: 20px;
   width: 85%;
   margin-left: 5%;
 `;
 
 const SameHeightContainer = styled.div`
   display: flex;
-  flex-direction: row; /* 테이블과 차트를 같은 행에 나란히 배치 */
-  align-items: stretch; /* 테이블과 차트의 높이를 동일하게 맞춤 */
-  gap: 20px; /* 테이블과 차트 사이의 간격 */
+  flex-direction: row;
+  gap: 20px; 
+  align-items: stretch;
+  justify-content: space-between;
 `;
 
 const ReportSection = styled.div`
   width: 100%;
   height: calc(100vh - 200px);
-  overflow-y: auto; 
+  overflow-y: auto;
   overflow-x: hidden;
 `;
 
 const DataVisualizationView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedDisease, setSelectedDisease] = useState('All');
-
-  // 전역 상태에서 데이터를 가져옴
+  
+  // 전역 상태에서 테이블 및 차트의 높이를 관리
   const { visualizationResults, setVisualizationResults } = useContext(AnalysisContext);
 
   const handleAnalyze = () => {
@@ -92,9 +93,9 @@ const DataVisualizationView = () => {
             <ReportSection>
               <GridContainer>
                 <SameHeightContainer>
-
-                  <TableResult collapsed={collapsed} />
-                  <PieChartResult collapsed={collapsed} />
+                  {/* 파라미터 없이 컴포넌트 렌더링 */}
+                  <TableResult />
+                  <PieChartResult />
                 </SameHeightContainer>
               </GridContainer>
             </ReportSection>

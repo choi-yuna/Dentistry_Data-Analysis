@@ -7,18 +7,25 @@ export const AnalysisContext = createContext();
 export const AnalysisProvider = ({ children }) => {
     const [dataQualityResults, setDataQualityResults] = useState(false);
     const [visualizationResults, setVisualizationResults] = useState(false);
-    const [tableData, setTableData] = useState(null); // tableData 상태 추가
+    const [tableData, setTableData] = useState(null); 
     const [chartData, setChartData] = useState(null); 
+    const [tableHeight, setTableHeight] = useState(0); 
+    const [chartHeight, setChartHeight] = useState(0); 
+
     return (
         <AnalysisContext.Provider value={{ 
             dataQualityResults, 
             setDataQualityResults, 
             visualizationResults, 
             setVisualizationResults,
-            tableData,        // tableData를 Provider에 포함
+            tableData,        
             setTableData,
             chartData,
             setChartData,
+            tableHeight, 
+            setTableHeight,
+            chartHeight, 
+            setChartHeight,
         }}>
             {children}
         </AnalysisContext.Provider>
