@@ -44,12 +44,12 @@ export const diseaseSpecificData = {
                     { display: '24년', send: 24 },
                 ]
             },
-            { label: '촬영장비', 
-              value: 'MAKER_INFO',
+            { label: '촬영 종류', 
+              value: 'IMAGE_SRC',
               options: [
-                  { display: 'Carestream CS9000', send: 'Carestream CS9000' },
-                  { display: 'Tusuula OP-100', send: 'Tusuula OP-100' },
-                  { display: 'Ray Rayscan alpha', send: 'Ray Rayscan alpha' },
+                  { display: '파노라마', send: '1' },
+                  { display: 'CBCT', send: '2' },
+                  { display: 'MDCT', send: '3' },
               ]
           },
           ],
@@ -162,6 +162,7 @@ export const diseaseSpecificData = {
             { label: '기관', value: 'INSTITUTION_ID' },
             { label: '촬영일자', value: 'CAPTURE_TIME' },
             { label: '촬영장비', value: 'MAKER_INFO' },
+            { label: '촬영종류', value: 'IMAGE_SRC' },
           ],
           '환자 정보': [
             { label: '성별', value: 'P_GENDER' },
@@ -214,11 +215,12 @@ export const diseaseSpecificData = {
               { display: '보라매병원', send: '7' },
             ] 
           },
-
-          { label: '촬영장비', 
-            value: 'MAKER_INFO',
+          { label: '촬영 종류', 
+            value: 'IMAGE_SRC',
             options: [
-                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+                { display: '파노라마', send: '1' },
+                { display: 'CBCT', send: '2' },
+                { display: 'MDCT', send: '3' },
             ]
         },
         ],
@@ -243,6 +245,7 @@ export const diseaseSpecificData = {
           { label: '기관', value: 'INSTITUTION_ID' },
           { label: '촬영일자', value: 'CAPTURE_TIME' },
           { label: '촬영장비', value: 'MAKER_INFO' },
+          { label: '촬영종류', value: 'IMAGE_SRC' },
         ],
         '환자 정보': [
           { label: '성별', value: 'P_GENDER' },
@@ -304,10 +307,12 @@ export const diseaseSpecificData = {
             ] 
           },
 
-          { label: '촬영장비', 
-            value: 'MAKER_INFO',
+          { label: '촬영 종류', 
+            value: 'IMAGE_SRC',
             options: [
-                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+                { display: '파노라마', send: '1' },
+                { display: 'CBCT', send: '2' },
+                { display: 'MDCT', send: '3' },
             ]
         },
 
@@ -395,7 +400,7 @@ export const diseaseSpecificData = {
         '기본 정보': [
           { label: '기관', value: 'INSTITUTION_ID' },
           { label: '촬영일자', value: 'CAPTURE_TIME' },
-          { label: '촬영 종류', value: 'MAKER_SRC' },
+          { label: '촬영 종류', value: 'IMAGE_SRC' },
           //TODO: -환자별, 사진 일련번호 포함?
 
         ],
@@ -468,13 +473,14 @@ export const diseaseSpecificData = {
             ]
           },
 
-          { label: '촬영장비', 
-            value: 'MAKER_INFO',
+          { label: '촬영 종류', 
+            value: 'IMAGE_SRC',
             options: [
-                { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+                { display: '파노라마', send: '1' },
+                { display: 'CBCT', send: '2' },
+                { display: 'MDCT', send: '3' },
             ]
         },
-
         { 
           label: '촬영일자',  
           value: 'CAPTURE_TIME',
@@ -558,7 +564,7 @@ export const diseaseSpecificData = {
         '기본 정보': [
           { label: '기관', value: 'INSTITUTION_ID' },
           { label: '촬영일자', value: 'CAPTURE_TIME' },
-          { label: '촬영 종류', value: 'MAKER_SRC' },
+          { label: '촬영 종류', value: 'IMAGE_SRC' },
           //TODO: -환자별, 사진 일련번호 포함?
         ],
         '환자 정보': [
@@ -612,10 +618,12 @@ export const diseaseSpecificData = {
               ]
             },
   
-            { label: '촬영장비', 
-              value: 'MAKER_INFO',
+            { label: '촬영 종류', 
+              value: 'IMAGE_SRC',
               options: [
-                  { display: 'Carestream CS9000', send: 'Carestream CS9000' },
+                  { display: '파노라마', send: '1' },
+                  { display: 'CBCT', send: '2' },
+                  { display: 'MDCT', send: '3' },
               ]
           },
   
