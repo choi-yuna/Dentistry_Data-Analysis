@@ -134,7 +134,7 @@ const ToggleIcon = styled.img`
 
 const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const [activeSubMenuItem, setActiveSubMenuItem] = useState(null);
+  const [activeSubMenuItem, setActiveSubMenuItem] = useState('All');
   const [activeQuality, setActiveQuality] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -151,6 +151,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
       setShowSubMenu(false);
     }
   }, [location]);
+
 
   const handleToggle = () => {
     setCollapsed(!collapsed);
