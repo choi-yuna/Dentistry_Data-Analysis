@@ -9,7 +9,6 @@ import { fetchPatientData } from '../api/fileUploadApi';
 import { useFileContext } from '../FileContext'; 
 import { DataContext } from '../context/DataContext';
 
-// 로딩 스피너 애니메이션 정의
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -152,9 +151,24 @@ const Button = styled.button`
     }
 `;
 
+
+const ErrorMessage = styled.div`
+    position: fixed;
+    bottom: 20px;
+    margin-bottom: 34%;
+    left: 50%;
+    transform: translateX(-30%);
+    color: black;
+    border-radius: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 1000;
+`;
+
 const FormComponent = ({ collapsed, onAnalyze }) => {
-    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
-    const { institution, setInstitution, disease, setDisease, setAnalyzedData,setOriginalPatientData } = useContext(DataContext);
+    const [loading, setLoading] = useState(false); 
+    const [noData, setNoData] = useState(false);    // 데이터 없음 상태
+    const { institution, setInstitution, disease, setDisease, setAnalyzedData, setOriginalPatientData } = useContext(DataContext);
     const { fileId } = useFileContext();
 
     const handleInstitutionChange = (e) => {
@@ -167,7 +181,8 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);  // 로딩 상태를 true로 설정
+        setLoading(true);  
+        setNoData(false);  
 
         try {
             if (!fileId) {
@@ -185,9 +200,11 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
             if (!patientData || patientData.length === 0) {
                 console.warn("서버에서 데이터를 받지 못했습니다.");
+                setNoData(true);  // 데이터 없음 상태 설정
                 setLoading(false);
                 return;
             }
+
             setOriginalPatientData(patientData);
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
@@ -273,6 +290,12 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                         <p>로딩 중...</p>
                     </LoadingMessage>
                 </LoadingOverlay>
+            )}
+
+            {noData && (  // 데이터가 없을 때 에러 메시지 출력
+                <ErrorMessage>
+                    분석할 데이터가 없습니다.
+                </ErrorMessage>
             )}
         </PageContainer>
     );
