@@ -40,16 +40,13 @@ const VisualizationDataTable = ({ tableId }) => {
   // tableId에 맞는 테이블 데이터를 찾음
   const table = tableData.find(table => table.id === tableId);
 
-  // tableData가 없거나 headers 또는 rows가 없을 경우 방어적 코딩
   const headers = table?.headers || [];
   const rows = table?.rows || [];
   const total = table?.total ?? rows.length;
 
-  const sortedRows = [...rows].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
-
-  if (!headers.length) {
-    return <p>테이블에 필요한 데이터가 없습니다.</p>;
-  }
+  if (!tableData || !Array.isArray(tableData) || tableData.every(item => !item.rows || item.rows.length === 0)) {
+    return <p>테이블 데이터를 로드할 수 없습니다.</p>;
+}
 
   return (
     <TableContainer>
@@ -62,7 +59,7 @@ const VisualizationDataTable = ({ tableId }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedRows.map((row, rowIndex) => (
+          {rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Td key={cellIndex}>{cell}</Td>
