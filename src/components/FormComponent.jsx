@@ -151,13 +151,12 @@ const Button = styled.button`
     }
 `;
 
-
 const ErrorMessage = styled.div`
     position: fixed;
     bottom: 20px;
     margin-bottom: 34%;
     left: 50%;
-    transform: translateX(-30%);
+    transform: translateX(-50%);
     color: black;
     border-radius: 4px;
     font-size: 20px;
@@ -167,7 +166,7 @@ const ErrorMessage = styled.div`
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
     const [loading, setLoading] = useState(false); 
-    const [noData, setNoData] = useState(false);    // 데이터 없음 상태
+
     const { institution, setInstitution, disease, setDisease, setAnalyzedData, setOriginalPatientData } = useContext(DataContext);
     const { fileId } = useFileContext();
 
@@ -182,7 +181,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);  
-        setNoData(false);  
+        setAnalyzedData(null); 
 
         try {
             if (!fileId) {
@@ -200,7 +199,6 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
             if (!patientData || patientData.length === 0) {
                 console.warn("서버에서 데이터를 받지 못했습니다.");
-                setNoData(true);  // 데이터 없음 상태 설정
                 setLoading(false);
                 return;
             }
@@ -292,11 +290,6 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 </LoadingOverlay>
             )}
 
-            {noData && (  // 데이터가 없을 때 에러 메시지 출력
-                <ErrorMessage>
-                    분석할 데이터가 없습니다.
-                </ErrorMessage>
-            )}
         </PageContainer>
     );
 };
