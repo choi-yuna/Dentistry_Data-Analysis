@@ -252,10 +252,13 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                             <Label htmlFor="institution">기관 :</Label>
                             <Select id="institution" value={institution} onChange={handleInstitutionChange}>
                                 <option value="">선택하세요</option>
+                                <option value="0">ALL</option>
                                 <option value="1">원광대</option>
                                 <option value="2">고려대</option>
                                 <option value="3">서울대</option>
+                                <option value="4">국립암센터</option>
                                 <option value="5">단국대</option>
+                                <option value="6">조선대</option>
                                 <option value="7">보라매병원</option>
                             </Select>
                         </LabelSelectGroup>
@@ -265,6 +268,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                             <Label htmlFor="disease">질환 :</Label>
                             <Select id="disease" value={disease} onChange={handleDiseaseChange}>
                                 <option value="">선택하세요</option>
+                                <option value="0">ALL</option>
                                 <option value="A">치주질환</option>
                                 <option value="B">골수염</option>
                                 <option value="C">두개안면</option>

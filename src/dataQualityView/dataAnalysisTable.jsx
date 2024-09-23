@@ -82,17 +82,17 @@ const MyTable = ({analyzedData}) => {
 
               <tr>
                 <ColSpanTd>완전성</ColSpanTd>
-                <Td>{analyzedData.totalPatients || 0}</Td>
+                <Td>{analyzedData.nullCount || 0}</Td>
                 <Td>{analyzedData.completenessRatio?.toFixed(2) || '0.00'}%</Td>
-                <Td>{analyzedData.totalItems || 0}</Td>
+                <Td>{analyzedData.nullCount || 0}</Td>
                 <Td>{analyzedData.itemCompletenessRatio?.toFixed(2) || '0.00'}%</Td>
               </tr>
 
               <tr>
                 <ColSpanTd>유효성</ColSpanTd>
-                <Td>{analyzedData.totalPatients || 0}</Td>
+                <Td>{analyzedData.invalidCount || 0}</Td>
                 <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
-                <Td>{analyzedData.totalItems || 0}</Td>
+                <Td>{analyzedData.invalidCount || 0}</Td>
                 <Td>{analyzedData.itemValidityRatio?.toFixed(2) || '0.00'}%</Td>
               </tr>
             </tbody>
