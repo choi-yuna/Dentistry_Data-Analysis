@@ -1,12 +1,12 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels'; 
 
-ChartJS.register(ArcElement, Tooltip, Legend);
-
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const VisualPieChart = ({ chart }) => {
-  // 디버깅용 로그 추가
+  // 디버깅용 로그
   console.log("차트 데이터:", chart);
 
   // chart 또는 chart.labels와 chart.data가 유효하지 않은 경우 처리
@@ -15,8 +15,9 @@ const VisualPieChart = ({ chart }) => {
   }
 
   // 데이터 생성
-  const labels = chart.labels;  // 'labels'에서 레이블 가져오기
-  const dataValues = chart.data; // 'data'에서 데이터 값 가져오기
+  const labels = chart.labels;  
+  const dataValues = chart.data; 
+  const total = dataValues.reduce((acc, value) => acc + value, 0); 
 
   const data = {
     labels: labels,
@@ -38,8 +39,31 @@ const VisualPieChart = ({ chart }) => {
     ],
   };
 
-  return <Pie data={data} />;
-};
+  const options = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            const value = dataValues[tooltipItem.dataIndex];
+            const percentage = ((value / total) * 100).toFixed(0); 
+            return `${tooltipItem.label}: ${value} (${percentage}%)`;
+          }
+        }
+      },
+      datalabels: {
+        color: 'black', 
+        formatter: (value, ctx) => {
+          const percentage = ((value / total) * 100).toFixed(0);
+          return `${value} (${percentage}%)`; 
+        },
+        anchor: 'end', // 라벨 위치 설정
+        align: 'start', // 라벨 정렬 설정
+        offset: 30, // 라벨과 그래프 간격 설정
+      },
+    },
+  };
 
+  return <Pie data={data} options={options} />;
+};
 
 export default VisualPieChart;
