@@ -61,7 +61,7 @@ const VisualizationDataTable = ({ tableId }) => {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIndex) => (
+          {sortedRows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Td key={cellIndex}>{cell}</Td>
