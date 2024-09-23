@@ -365,12 +365,14 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             alert('파일을 업로드 해주세요.');
             return;
           }
-    
-          // 질병이 선택되지 않은 경우 경고창 표시
-          if (!disease) {
-            alert('질병을 선택해주세요.');
+
+          // selectedItemsTab2가 비어있을 경우 경고창 표시
+          if (!selectedItemsTab2 || Object.keys(selectedItemsTab2).length === 0) {
+            alert('리포트 항목을 선택해 주세요.');
+            setLoading(false); 
             return;
           }
+
           
       setLoading(true); // 로딩 상태 활성화
   
