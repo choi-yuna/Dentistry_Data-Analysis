@@ -44,6 +44,8 @@ const VisualizationDataTable = ({ tableId }) => {
   const rows = table?.rows || [];
   const total = table?.total ?? rows.length;
 
+  const sortedRows = [...rows].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
   if (!tableData || !Array.isArray(tableData) || tableData.every(item => !item.rows || item.rows.length === 0)) {
     return <p>테이블 데이터를 로드할 수 없습니다.</p>;
 }
