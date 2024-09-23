@@ -67,32 +67,32 @@ const MyTable = ({analyzedData}) => {
               <tr>
                 <ColSpanTd>전체 데이터</ColSpanTd>
                 <Td>{analyzedData.totalPatients || 0}</Td>
-                <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
+                <Td>{ 100}%</Td>
                 <Td>{analyzedData.totalItems || 0}</Td>
-                <Td>{analyzedData.itemQualityRate?.toFixed(2) || '0.00'}%</Td>
+                <Td>{ 100}%</Td>
               </tr>
 
               <tr>
                 <ColSpanTd>임상 데이터 품질율</ColSpanTd>
-                <Td>{analyzedData.validPatientCount || 0}</Td>
-                <Td>{analyzedData.patientQualityRate?.toFixed(2) || '0.00'}%</Td>
-                <Td>{analyzedData.validItemCount || 0}</Td>
-                <Td>{analyzedData.itemQualityRate?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.totalPatients - analyzedData.invalidCount || 0}</Td>
+                <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
+                <Td>{analyzedData.totalItems- analyzedData.invalidItemCount || 0}</Td>
+                <Td>{analyzedData.itemValidityRatio?.toFixed(2) || '0.00'}%</Td>
               </tr>
 
               <tr>
                 <ColSpanTd>완전성</ColSpanTd>
-                <Td>{analyzedData.nullCount || 0}</Td>
+                <Td>{analyzedData.totalPatients - analyzedData.nullCount || 0}</Td>
                 <Td>{analyzedData.completenessRatio?.toFixed(2) || '0.00'}%</Td>
-                <Td>{analyzedData.nullCount || 0}</Td>
+                <Td>{analyzedData.totalItems - analyzedData.missingItemCount || 0}</Td>
                 <Td>{analyzedData.itemCompletenessRatio?.toFixed(2) || '0.00'}%</Td>
               </tr>
 
               <tr>
                 <ColSpanTd>유효성</ColSpanTd>
-                <Td>{analyzedData.invalidCount || 0}</Td>
+                <Td>{analyzedData.totalPatients - analyzedData.invalidCount || 0}</Td>
                 <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
-                <Td>{analyzedData.invalidCount || 0}</Td>
+                <Td>{analyzedData.totalItems- analyzedData.invalidItemCount || 0}</Td>
                 <Td>{analyzedData.itemValidityRatio?.toFixed(2) || '0.00'}%</Td>
               </tr>
             </tbody>

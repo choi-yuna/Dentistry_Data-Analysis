@@ -3,41 +3,128 @@ export const analyzeItems = (data) => {
         return { totalItems: 0, missingItemCount: 0, invalidItemCount: 0, completenessRatio: 0, validityRatio: 0 };
     }
 
-    // 전체 항목 수
-    const totalItems = Object.keys(data[0]).length;
+    // 데이터의 헤더 수 (첫 번째 데이터 항목의 키 수)
+    const headerCount = Object.keys(data[0]).length;
+
+    // 전체 항목 수 = 헤더의 수 * 행의 갯수
+    const totalItems = headerCount * data.length;
 
     let missingItemCount = 0;
     let invalidItemCount = 0;
 
-    Object.keys(data[0]).forEach(key => {
-        let hasMissingValue = false;
-        let hasInvalidValue = false;
-
-        data.forEach(entry => {
-            const value = entry[key];
-
+    // 각 데이터 항목 검사
+    data.forEach((entry, rowIndex) => {
+        // 각 항목에 대해 누락 데이터 및 유효성 검사
+        Object.entries(entry).forEach(([key, value]) => {
             // 누락된 항목 검사
             if (value === "" || value === null) {
-                hasMissingValue = true;
-            }
+                missingItemCount++;
+                invalidItemCount++;
 
-            // 유효성 검사
-            if (key === "P_GENDER" && value !== "1" && value !== "2") {
-                hasInvalidValue = true;
-            }
-            if (key === "P_AGE" && (isNaN(value) || value === "" || value <= 0)) {
-                hasInvalidValue = true;
+            } else {
+                // 유효성 검사 (누락된 값은 제외하고 진행)
+                if (key === "P_GENDER" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid P_GENDER at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "P_AGE" && (isNaN(Number(value)) || Number(value) <= 0)) {
+                    invalidItemCount++;
+                    console.log(`Invalid P_AGE at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "INSTITUTION_ID" && value !== "1" && value !== "2" && value !== "3" && value !== "4" && value !== "5" && value !== "6" && value !== "7") {
+                    invalidItemCount++;
+                    console.log(`Invalid INSTITUTION_ID at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "PATIENT_NO" && (isNaN(Number(value)) || Number(value) < 1 || Number(value) > 9999)) {
+                    invalidItemCount++;
+                    console.log(`Invalid PATIENT_NO at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "IMAGE_NO" && (isNaN(Number(value)) || Number(value) < 1 || Number(value) > 9999)) {
+                    invalidItemCount++;
+                    console.log(`Invalid IMAGE_NO at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "IMAGE_SRC" && value !== "1" && value !== "2" && value !== "3") {
+                    invalidItemCount++;
+                    console.log(`Invalid IMAGE_SRC at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "CAPTURE_TIME" && (value.length !== 4 || isNaN(Number(value)))) {
+                    invalidItemCount++;
+                    console.log(`Invalid CAPTURE_TIME at row ${rowIndex + 1}:`, value);
+                }
+
+                // 질환별 유효성 검사
+                if (key === "DIA_PERIO" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid DIA_PERIO at row ${rowIndex + 1}:`, value);
+                }
+
+                if (key.startsWith("Tooth_") && value !== "1" && value !== "2" && value !== "3" && value !== "4" && value !== "5" && value !== "6") {
+                    invalidItemCount++;
+                    console.log(`Invalid ${key} at row ${rowIndex + 1}:`, value);
+                }
+
+                if (key === "DIS_LOC" && value !== "1" && value !== "2" && value !== "3") {
+                    invalidItemCount++;
+                    console.log(`Invalid DIS_LOC at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "DIS_CLASS" && value !== "1" && value !== "2" && value !== "3" && value !== "4" && value !== "5") {
+                    invalidItemCount++;
+                    console.log(`Invalid DIS_CLASS at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "EXTRACTION" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid EXTRACTION at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "TRAUMA" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid TRAUMA at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "IMPLANT" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid IMPLANT at row ${rowIndex + 1}:`, value);
+                }
+
+                if (key === "DI_NAME" && value !== "1" && value !== "2" && value !== "3") {
+                    invalidItemCount++;
+                    console.log(`Invalid DI_NAME at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "DI_LOC" && !["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"].includes(value)) {
+                    invalidItemCount++;
+                    console.log(`Invalid DI_LOC at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "CAN_NUM" && (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 3)) {
+                    invalidItemCount++;
+                    console.log(`Invalid CAN_NUM at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "LYM_NUM" && (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 3)) {
+                    invalidItemCount++;
+                    console.log(`Invalid LYM_NUM at row ${rowIndex + 1}:`, value);
+                }
+
+                if (key === "DI_DISEASE" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid DI_DISEASE at row ${rowIndex + 1}:`, value);
+                }
+                if (key === "DI_TIME" && value !== "1" && value !== "2") {
+                    invalidItemCount++;
+                    console.log(`Invalid DI_TIME at row ${rowIndex + 1}:`, value);
+                }
+
+                if (key === "DI_DETAIL" && entry.DI_DETAIL !== "") {
+                    const diDetailValues = entry.DI_DETAIL.split(",").map(value => value.trim());
+                    const validDiDetailValues = ["1", "2", "3", "4", "5", "6", "7"];
+                    diDetailValues.forEach(value => {
+                        if (!validDiDetailValues.includes(value)) {
+                            invalidItemCount++;
+                            console.log(`Invalid DI_DETAIL at row ${rowIndex + 1}:`, value);
+                        }
+                    });
+                }
             }
         });
-
-        if (hasMissingValue) {
-            missingItemCount++;
-        }
-        if (hasInvalidValue) {
-            invalidItemCount++;
-        }
     });
 
+    // 비율 계산
     const completenessRatio = ((totalItems - missingItemCount) / totalItems) * 100;
     const validityRatio = ((totalItems - invalidItemCount) / totalItems) * 100;
 
