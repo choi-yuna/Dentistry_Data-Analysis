@@ -1,4 +1,3 @@
-
 const headerMapping = {
     "DISEASE_CLASS": "질병 분류",
     "INSTITUTION_ID": "기관 ID",
@@ -8,6 +7,37 @@ const headerMapping = {
     "CAPTURE_TIME": "촬영 시간",
     "IMAGE_ID": "이미지 ID",
     "P_AGE": "환자 나이",
+    "P_WEIGHT": "환자 체중",
+    "P_HEIGHT": "환자 키",
+    "P_GENDER": "성별",
+    "LS_SMOKE": "흡연력",
+    "LS_ALCHOLE": "음주",
+    "MH_DIABETES": "당뇨",
+    "MH_HIGHBLOOD": "고혈압",
+    "MH_OSTEOPROSIS": "골다공증",
+    "CARDIOVASCULAR_DISEASE": "심혈관 질환",
+    "DIA_PERIO": "치주질환 여부",
+    "DIA_NOTE": "진단 소견",
+    "DIA_MISSTEETH_A": "결손치 수",
+    "DIA_MISSTEETH_B": "치주질환 원인이 아닌 결손치 수",
+    "DIA_MISSTEETH_C": "치주염으로 인한 결손치 수",
+    "DIS_LOC": "발생 부위",
+    "DIS_CLASS": "골수염 종류",
+    "MR_STAGE": "Stage",
+    "MR_HOWTOTAKE": "약물 복용 방법",
+    "MR_HOWLONG": "약물 복용 기간",
+    "RECUR": "재발",
+    "DI_DISEASE": "두개안면 기형 여부",
+    "DI_TIME": "데이터 획득 시기",
+    "DI_DETAIL": "세부 진단",
+    "DI_NAME": "진단명",
+    "DI_LOC": "병소 부위",
+    "PT_TNM": "TNM stage",
+    "MAKER_INFO": "촬영 장비",
+    "P_RES_AREA": "주거 지역",
+    "CAN_NUM": "구강암 개수",
+    "LYM_NUM": "임파절 전이 개수",
+    "OST_NUM": "골수염 개수"
 };
 
 export default headerMapping;

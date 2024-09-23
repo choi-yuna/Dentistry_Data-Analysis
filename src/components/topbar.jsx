@@ -65,7 +65,7 @@ const TopBar = () => {
     const [files, setFiles] = useState([]);
     const { setFileId } = useFileContext();
 
-    // 폴더 내 파일들이 변경될 때 호출되는 핸들러
+    // 파일이 선택될 때 호출되는 핸들러
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         const excelFiles = selectedFiles.filter((file) => file.name.endsWith('.xlsx')); // 엑셀 파일만 필터링
@@ -73,7 +73,7 @@ const TopBar = () => {
             setFiles(excelFiles); // 엑셀 파일만 상태에 저장
             handleUpload(excelFiles); // 엑셀 파일만 업로드
         } else {
-            alert('선택한 폴더에 엑셀 파일이 없습니다.');
+            alert('선택한 파일 중 엑셀 파일이 없습니다.');
         }
     };
 
@@ -84,10 +84,10 @@ const TopBar = () => {
             const fileIds = await uploadExcelFiles(files); // 다중 파일 업로드 API 호출
             console.log('Uploaded file IDs:', fileIds);
             setFileId(fileIds); // 업로드된 파일 ID 배열 저장
-            alert('All Excel files uploaded successfully!');
+            alert('파일 업로드 성공');
         } catch (error) {
             console.error('File upload failed:', error);
-            alert('File upload failed. Please try again.');
+            alert('다시 시도해주세요');
         }
     };
 
@@ -108,13 +108,13 @@ const TopBar = () => {
                 {/* 파일 업로드 아이콘 클릭 시 파일 선택 창 열기 */}
                 <Icon src={fileUploadIcon} alt="Upload" onClick={handleIconClick} />
 
-                {/* 숨겨진 폴더 입력 필드 */}
+                {/* 숨겨진 파일 입력 필드 (다중 파일 선택 가능) */}
                 <HiddenFileInput
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
-                    webkitdirectory="true" // 폴더 선택을 가능하게 함
-                    multiple // 다중 파일 선택을 가능하게 함
+                    accept=".xlsx" // 엑셀 파일만 선택 가능
+                    multiple // 다중 파일 선택 가능
                 />
 
                 <Icon src={userIcon} alt="User" />
