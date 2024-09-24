@@ -204,19 +204,36 @@ const TextFieldStyled = styled(TextField)`
   font-size: 0.8rem;
   height: 30px;
 `;
-const ButtonStyled = styled(Button)`
-  padding: 8px 16px;
-  background-color: #ffffff !important;
-  color: black !important;
-  border: 1px solid #000 !important;  
-  border-radius: 4px !important;
-  cursor: pointer;
-  height: 36px;
-  min-width: 100px;
+const ButtonStyled = styled.button`
   display: flex;
   align-items: center;
+  margin-left : 5px;
   justify-content: center;
-  margin-left: 1% !important;
+  padding: 8px 16px; /* 크기 줄임 */
+  background-color: white; /* 배경 흰색 */
+  color: black; /* 글자 색 검은색 */
+  font-size: 14px; /* 크기 줄임 */
+  font-weight: bold;
+  border: 1px solid black; /* 테두리 검은색 */
+  border-radius: 8px; /* 둥근 모서리 */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 약하게 수정 */
+
+  &:hover {
+    background-color: #f2f2f2; /* 호버 시 배경색 약간 회색 */
+    transform: translateY(-1px); /* 호버 시 살짝 올라가는 효과 */
+  }
+
+  &:active {
+    transform: translateY(0); /* 클릭 시 원래 위치로 */
+  }
+
+  img {
+    margin-left: 6px; /* 아이콘과 텍스트 간격 줄임 */
+    width: 18px;      /* 아이콘 크기 줄임 */
+    height: 18px;
+  }
 `;
 
 
