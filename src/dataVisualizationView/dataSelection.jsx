@@ -63,19 +63,30 @@ const FlexBox = styled.div`
 const StyledTabs = styled(Tabs)`
   border: 1px solid #ccc;
   border-radius: 8px 8px 0 0;
-  
+  min-height: 40px !important;  /* 전체 탭 높이 줄임 */
+  font-size : 13px !important;
+  height: 32px;  
+  min-height: 40px !important; /* 전체 탭 높이 */
+  font-size: 13px !important; /* 글자 크기 */
+  height: 40px !important; /* 탭 높이 */
+  font-weight: bold !important; /* 폰트를 진하게 설정 */
 `;
 
 const StyledTab = styled(Tab)`
   flex-grow: 1;
   min-width: 0;
+  padding: 8px 12px !important; /* 상하 패딩(8px), 좌우 패딩(12px) */
+  font-size: 13px !important; /* 글자 크기 */
+  min-height: 40px !important; /* 탭의 최소 높이 */
+  font-weight: bold !important;
   &.Mui-selected {
     color: #000000;
-    font-weight: bold;
+    font-weight: bold ;
     border: 1px solid #ccc; 
     border-bottom: none;
     border-radius: 8px 8px 0 0; 
     z-index: 1;
+    font-weight: 700 !important;
   }
      & .MuiTabs-indicator {
     background-color: #000;
@@ -88,10 +99,11 @@ const ListContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 0 0 8px 8px;
   padding: 8px;
+  padding-bottom: 1px;
   background-color: #fff;
 `;
 
-const LabelContainer = styled.div`
+const LabelContainer = styled.div`  
   display: flex;
   align-items: center;
   margin-bottom: 8px;
@@ -136,7 +148,7 @@ const StyledButtonItem = styled.button`
   border-radius: 4px;
   margin-right: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   transition: background-color 0.3s, color 0.3s;
 
   &:hover {
@@ -161,12 +173,12 @@ const SubListItem = styled(StyledButtonItem)`
 const SelectWrapper = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 5px;
   margin-top: 4px;
 `;
 
 const Label = styled.label`
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   margin-right: 8px;
 `;
@@ -174,7 +186,7 @@ const Label = styled.label`
 const SelectField = styled(Select)`
   min-width: 100px;
   font-size: 0.8rem;
-  height: 30px;
+  height: 25px;
   margin-right: 8px;
   margin-bottom: 8px;
 
@@ -242,7 +254,7 @@ const SelectedItemsBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px;
+  padding: 3px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -254,6 +266,25 @@ const ChipsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+`;
+
+const SmallChip = styled(Chip)`
+  font-size: 0.7rem !important;          /* 텍스트 크기 */
+  height: 24px !important;               /* 전체 높이 조정 */
+  padding: 0px 4px !important;           /* 내부 패딩 조정 */
+  border-radius: 12px !important;        /* 모서리 둥글기 */
+
+  /* Chip의 텍스트 스타일 */
+  .MuiChip-label {
+    padding: 0px 8px !important;         /* 텍스트 패딩 조정 */
+    font-size: 0.7rem !important;        /* 텍스트 크기 */
+  }
+
+  /* 삭제 아이콘 크기 조정 */
+  .MuiChip-deleteIcon {
+    width: 13px !important;              /* 삭제 아이콘 크기 축소 */
+    height: 13px !important;
+  }
 `;
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
@@ -601,7 +632,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                     )) : [];
                   } else if (tabValue === 1) {
                     return Array.isArray(items) ? items.map((item, index) => (
-                      <Chip
+                      <SmallChip
                         key={`${category}-${item.label}-${index}`}
                         label={item.label ? `${item.label}` : item}
                         onDelete={() => handleDelete(item, category)}

@@ -11,7 +11,7 @@ const ReportContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
   padding: 20px;
   margin-left: ${(props) => (props.collapsed ? '9%' : '20%')};
-  height: 400px;
+  height: 370px;
   width: ${(props) => (props.collapsed ? '87%' : '75%')};
   transition: width 0.3s ease, height 0.3s ease;
 `;
