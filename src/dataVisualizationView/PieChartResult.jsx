@@ -18,11 +18,10 @@ const FormCtn = styled.div`
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: 60vh; /* 화면 높이의 35%로 고정 */
+    height: 80vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
-    overflow: auto; /* 필요 시 스크롤 추가 */
 `;
 
 const TitleBar = styled.div`
@@ -49,7 +48,6 @@ const Icon = styled.img`
   margin-left: 10px;
 `;
 
-// 차트 데이터가 없을 때 고정된 높이를 위한 스타일 컴포넌트
 const EmptyChartMessage = styled.div`
     display: flex;
     justify-content: center;
@@ -64,7 +62,7 @@ const PieChartResult = () => {
     if (!chartData || chartData.length === 0) {
         return (
             <ResultCtn>
-                <FormCtn> {/* 항상 화면의 35% 높이로 설정 */}
+                <FormCtn> 
                     <EmptyChartMessage>차트 데이터를 로드할 수 없습니다.</EmptyChartMessage>
                 </FormCtn>
             </ResultCtn>

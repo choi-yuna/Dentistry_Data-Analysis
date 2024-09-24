@@ -18,7 +18,7 @@ const FormCtn = styled.div`
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: 60vh; /* 화면 높이의 35%로 고정 */
+    height: 80vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
