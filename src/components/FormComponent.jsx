@@ -271,8 +271,8 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                                 <option value="0">ALL</option>
                                 <option value="A">치주질환</option>
                                 <option value="B">골수염</option>
-                                <option value="C">두개안면</option>
-                                <option value="D">구강암</option>
+                                <option value="C">구강암</option>
+                                <option value="D">두개안면</option>
                             </Select>
                         </LabelSelectGroup>
                     </FormGroup>

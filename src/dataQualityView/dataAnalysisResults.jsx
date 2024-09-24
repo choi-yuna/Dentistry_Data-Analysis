@@ -1,9 +1,8 @@
-import React, { useState, useContext,useEffect } from 'react'; 
+import React, { useState, useContext, useEffect } from 'react'; 
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
 import { DataContext } from '../context/DataContext'; 
-
 
 const ResultCtn = styled.div`
     width: ${(props) => (props.$collapsed ? '60%' : '38%')};
@@ -43,12 +42,12 @@ const DetailButton = styled.button`
     padding: 10px 10px;
     border: none;
     border-radius: 10px;
-    background-color: #2176A8;
+    background-color: ${(props) => (props.disabled ? '#cccccc' : '#2176A8')};
     color: white;
     font-weight: 900;
-    cursor: pointer;
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     &:hover {
-        background-color: #0056b3;
+        background-color: ${(props) => (props.disabled ? '#cccccc' : '#0056b3')};
     }
 `;
 
@@ -58,46 +57,44 @@ const DataAnalysisResults = ({ collapsed }) => {
     const { originalPatientData } = useContext(DataContext);
     const [excelData, setExcelData] = useState([]);
 
-    // useEffect를 사용해 originalPatientData가 변경될 때 excelData를 동적으로 업데이트
     useEffect(() => {
         if (originalPatientData && originalPatientData.length > 0) {
-            // originalPatientData의 첫 번째 객체의 키를 사용하여 헤더 생성
             const headers = Object.keys(originalPatientData[0]);
-
-            // 각 객체의 값을 배열로 변환하여 데이터 생성
             const rows = originalPatientData.map(item => Object.values(item));
-
-            // headers와 rows를 결합하여 excelData로 설정
             setExcelData([headers, ...rows]);
         }
     }, [originalPatientData]);
 
     const handleDetailButtonClick = () => {
-        setModalOpen(true);
+        if (analyzedData && Object.keys(analyzedData).length > 0) {
+            setModalOpen(true);
+        }
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
     };
-    console.log('DataAnalysisResults 컴포넌트에서 받은 데이터:', analyzedData);
-    console.log('컴포넌트에서 받은 데이터:', originalPatientData);
 
-    // analyzedData가 null이거나 undefined인 경우 DataAnalysisTable을 렌더링하지 않음
+    const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
+
     return (
         <ResultCtn $collapsed={collapsed}>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
-                    <DetailButton onClick={handleDetailButtonClick}>품질 이상 항목 세부보기</DetailButton>
+                    <DetailButton onClick={handleDetailButtonClick} disabled={!isDataAvailable}>
+                        품질 이상 항목 세부보기
+                    </DetailButton>
                 </TitleBar>
-                {/* analyzedData가 유효한 객체일 때만 렌더링 */}
-                {analyzedData && Object.keys(analyzedData).length > 0 ? (
+                {isDataAvailable ? (
                     <DataAnalysisTable analyzedData={analyzedData} />
                 ) : (
                     <p>분석할 데이터가 없습니다.</p>
                 )}
             </FormCtn>
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
+            {isDataAvailable && (
+                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
+            )}
         </ResultCtn>
     );
 };
