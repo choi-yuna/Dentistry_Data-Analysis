@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useEffect, useState } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import styled from 'styled-components';
-import VisualizationDataTable from './VisualizationDataTable';
+import VisualizationDataTable from './VisualizationDataTable'; 
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
 import { AnalysisContext } from '../context/AnalysisContext';
 
 const ResultCtn = styled.div`
-    width: 80%; 
+    width: 100%; 
     margin-top: 20px;
+    transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const FormCtn = styled.div`
@@ -16,12 +17,12 @@ const FormCtn = styled.div`
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 90%;
+    height: 60vh; /* 화면 높이의 35%로 고정 */
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
-    box-sizing: border-box;
-    height: ${(props) => props.height ? `${props.height}px` : 'auto'};
-    overflow: auto;  /* 내용이 넘칠 경우 스크롤 추가 */
+    box-sizing: border-box; 
+    overflow: auto; /* 필요 시 스크롤 추가 */
 `;
 
 const TitleBar = styled.div`
@@ -48,30 +49,34 @@ const Icon = styled.img`
   margin-left: 10px;
 `;
 
-const TableResult = () => {
-    const { tableData, setTableHeight, chartHeight } = useContext(AnalysisContext);
-    const tableRef = useRef(null);
-    const [maxHeight, setMaxHeight] = useState(0);
+// 테이블 데이터가 없을 때 고정된 높이를 위한 스타일 컴포넌트
+const EmptyTableMessage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #333;
+`;
 
-    // 테이블 높이를 계산하고, 전역 상태에 저장
-    useEffect(() => {
-        if (tableRef.current) {
-            const tableHeight = tableRef.current.offsetHeight;
-            setTableHeight(tableHeight);  // 테이블 높이 저장
-            setMaxHeight(Math.max(tableHeight, chartHeight));  // 차트와 테이블 높이 비교 후 큰 값 사용
-        }
-    }, [chartHeight, setTableHeight]); // chartHeight 변경 시 테이블 높이를 다시 계산
+const TableResult = () => {
+    const { tableData } = useContext(AnalysisContext);
 
     if (!tableData || tableData.length === 0) {
-        return <p>테이블 데이터를 로드할 수 없습니다.</p>;
+        return (
+            <ResultCtn>
+                <FormCtn> {/* 항상 화면의 35% 높이로 설정 */}
+                    <EmptyTableMessage>테이블 데이터를 로드할 수 없습니다.</EmptyTableMessage>
+                </FormCtn>
+            </ResultCtn>
+        );
     }
 
     return (
         <ResultCtn>
             {tableData.map((table, index) => (
-                <FormCtn key={index} ref={tableRef} height={maxHeight}>
+                <FormCtn key={index}>
                     <TitleBar>
-                        <SubTitle>{table.title}</SubTitle>
+                        <SubTitle>{table.title || "테이블 제목"}</SubTitle>
                         <IconContainer>
                             <Icon src={DownloadIcon} alt="Download" />
                             <Icon src={PrintIcon} alt="Print" />

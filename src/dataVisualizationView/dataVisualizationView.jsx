@@ -45,15 +45,15 @@ const ContentCtn = styled.div`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
-  width: 85%;
+  gap: 30px;
+  width: 95%;
   margin-left: 5%;
 `;
 
 const SameHeightContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 30px; 
+  gap: 10px; 
   align-items: stretch;
   justify-content: space-between;
 `;
