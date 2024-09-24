@@ -73,7 +73,7 @@ const MyTable = ({analyzedData}) => {
               </tr>
 
               <tr>
-                <ColSpanTd>임상 데이터 품질율</ColSpanTd>
+                <ColSpanTd>임상 데이터 <br />품질율</ColSpanTd>
                 <Td>{analyzedData.totalPatients - analyzedData.invalidCount || 0}</Td>
                 <Td>{analyzedData.validityRatio?.toFixed(2) || '0.00'}%</Td>
                 <Td>{analyzedData.totalItems- analyzedData.invalidItemCount || 0}</Td>
