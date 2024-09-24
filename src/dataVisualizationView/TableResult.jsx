@@ -12,13 +12,13 @@ const ResultCtn = styled.div`
 `;
 
 const FormCtn = styled.div`
-    padding: 30px;
+    padding: 50px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 90%;
-    height: 80vh; 
+    width: 85%;
+    height: 70vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
