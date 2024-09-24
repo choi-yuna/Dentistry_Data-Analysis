@@ -22,11 +22,16 @@ export const analyzeData = (data) => {
                 if (key === "INSTITUTION_ID" && value !== "1" && value !== "2" && value !== "3" && value !== "4" && value !== "5" && value !== "6" && value !== "7") {
                     hasInvalidData = true;
                 }
-                if (key === "PATIENT_NO" && (isNaN(Number(value)) || Number(value) < 1 || Number(value) > 9999)) {
-                    hasInvalidData = true;
+                if (key === "PATIENT_NO") {
+                    const patientNo = Number(value.trim());
+                    if (isNaN(patientNo) || patientNo < 1 || patientNo > Number.MAX_SAFE_INTEGER) {
+                        hasInvalidData = true;                    }
                 }
-                if (key === "IMAGE_NO" && (isNaN(Number(value)) || Number(value) < 1 || Number(value) > 99)) {
-                    hasInvalidData = true;
+                if (key === "IMAGE_NO") {
+                    const imageNo = Number(value.trim());
+                    if (isNaN(imageNo) || imageNo < 1 || imageNo > Number.MAX_SAFE_INTEGER) {
+                        hasInvalidData = true;
+                    }
                 }
                 if (key === "IMAGE_SRC" && value !== "1" && value !== "2" && value !== "3") {
                     hasInvalidData = true;
@@ -74,8 +79,14 @@ export const analyzeData = (data) => {
                             if (key === "DI_NAME" && value !== "1" && value !== "2" && value !== "3") {
                                 hasInvalidData = true;
                             }
-                            if (key === "DI_LOC" && !["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"].includes(value)) {
-                                hasInvalidData = true;
+                            if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
+                                const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                    }
+                                });
                             }
                             if (key === "CAN_NUM" && (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 3)) {
                                 hasInvalidData = true;

@@ -368,11 +368,14 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     const { categories={}, selectedItems } = getSelectableItems();
     const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
-
+    
     const handleReset = () => {
-        setSelectedItemsTab1(diseaseData.selectedItemsTab1);
-        setSelectedItemsTab2(diseaseData.selectedItemsTab2);
+      setSelectedItemsTab1({});
+      setSelectedItemsTab2({});
+      sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify({}));
+      sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify({}));
     };
+    
 
     const handleTabResult = async (e) => {
       e.preventDefault();
@@ -473,7 +476,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
       onAnalyze();  // 원래 기능 호출
     } catch (error) {
-      console.error('데이터 분석 요청 중 오류 발생:', error);
+      alert('파일을 찾을 수 없습니다. 파일을 다시 업로드 해주세요.');
     } finally {
       setLoading(false); // 로딩 상태 해제
     }
