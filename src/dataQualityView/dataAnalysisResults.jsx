@@ -34,7 +34,7 @@ const TitleBar = styled.div`
 
 const Title = styled.h2`
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 900; 
 `;
 

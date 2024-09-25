@@ -23,7 +23,7 @@ const ReportHeader = styled.div`
 `;
 
 const ReportTitle = styled.h2`
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 0px;
   margin-top: 0px;
   padding: 10px 0;
@@ -36,8 +36,8 @@ const IconContainer = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
 `;
 
@@ -74,24 +74,6 @@ const DataReport = ({ collapsed }) => {
   // 차트 데이터 생성
   const chartsData = [
     {
-      title: '데이터 품질 이상 항목',
-      data: {
-        labels: ['데이터 품질 이상 항목', '정상 항목'],
-        datasets: [
-          {
-            label: '데이터 품질 이상 항목',
-            data: [
-              Number(analyzedData.invalidItemCount) || 0,
-              Number(analyzedData.totalItems) - Number(analyzedData.invalidItemCount) || 0,
-            ],
-            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
-            borderWidth: 1,
-          },
-        ],
-      },
-    },
-    {
       title: '데이터 품질 이상 환자',
       data: {
         labels: ['데이터 품질 이상 환자', '정상 환자'],
@@ -110,18 +92,18 @@ const DataReport = ({ collapsed }) => {
       },
     },
     {
-      title: '누락 항목',
+      title: '데이터 품질 이상 항목',
       data: {
-        labels: ['누락 항목', '정상 항목'],
+        labels: ['데이터 품질 이상 항목', '정상 항목'],
         datasets: [
           {
-            label: '누락 항목',
+            label: '데이터 품질 이상 항목',
             data: [
-              Number(analyzedData.missingItemCount) || 0,
-              Number(analyzedData.totalItems) - Number(analyzedData.missingItemCount) || 0,
+              Number(analyzedData.invalidItemCount) || 0,
+              Number(analyzedData.totalItems) - Number(analyzedData.invalidItemCount) || 0,
             ],
-            backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-            borderColor: ['rgba(255, 206, 86, 1)', 'rgba(153, 102, 255, 1)'],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
             borderWidth: 1,
           },
         ],
@@ -140,6 +122,24 @@ const DataReport = ({ collapsed }) => {
             ],
             backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)'],
             borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+            borderWidth: 1,
+          },
+        ],
+      },
+    },
+    {
+      title: '누락 항목',
+      data: {
+        labels: ['누락 항목', '정상 항목'],
+        datasets: [
+          {
+            label: '누락 항목',
+            data: [
+              Number(analyzedData.missingItemCount) || 0,
+              Number(analyzedData.totalItems) - Number(analyzedData.missingItemCount) || 0,
+            ],
+            backgroundColor: ['rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+            borderColor: ['rgba(255, 206, 86, 1)', 'rgba(153, 102, 255, 1)'],
             borderWidth: 1,
           },
         ],
