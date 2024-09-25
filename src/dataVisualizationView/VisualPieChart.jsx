@@ -32,7 +32,12 @@ const VisualPieChart = ({ chart }) => {
           '#4BC0C0',
           '#9966FF',
           '#FF9F40',
-          '#E7E9ED'
+          '#E7E9ED',
+          '#8DD3C7',
+          '#FDB462',
+          '#B3DE69',
+          '#FCCDE5',
+          '#D9D9D9'
         ],
         hoverOffset: 4,
       },
