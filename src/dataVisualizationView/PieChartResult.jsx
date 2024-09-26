@@ -1,6 +1,8 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from 'styled-components';
 import VisualPieChart from './VisualPieChart'; 
+import VisualLineChart from './VisualLineChart'; // VisualLineChart 임포트
+import VisualBarChart from './VisualBarChart'; // 새로운 VisualBarChart 컴포넌트 임포트
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
 import { AnalysisContext } from '../context/AnalysisContext'; 
@@ -57,7 +59,7 @@ const EmptyChartMessage = styled.div`
 `;
 
 const PieChartResult = () => {
-    const { chartData } = useContext(AnalysisContext);
+    const { chartData, tableData } = useContext(AnalysisContext); // tableData도 함께 가져옴
 
     if (!chartData || chartData.length === 0) {
         return (
@@ -69,16 +71,70 @@ const PieChartResult = () => {
         );
     }
 
+    // 특정 id 값에 따라 차트 유형을 결정하는 함수
+    const getChartType = (id) => {
+        const barChartIds = ["P_AGE", "P_WEIGHT", "P_HEIGHT"]; // 막대 그래프를 보여줄 id 목록
+        const lineChartIds = ["CAPTURE_TIME"]; // 선 그래프를 보여줄 id 목록
+
+        if (barChartIds.includes(id)) {
+            return 'bar'; // 막대 그래프
+        } else if (lineChartIds.includes(id)) {
+            return 'line'; // 선 그래프
+        }
+        return 'pie'; // 기본 파이 차트
+    };
+
+    // 테이블 데이터에서 헤더를 찾는 함수
+    const getTableHeaders = (id) => {
+        const table = tableData.find(table => table.id === id);
+        return table ? table.headers : ['X축', 'Y축']; // 헤더가 없으면 기본값 제공
+    };
+
+    // 숫자 기반 차트 데이터를 정렬하는 함수
+    const sortChartData = (chart) => {
+        if (["P_AGE", "P_WEIGHT", "P_HEIGHT","CAPTURE_TIME"].includes(chart.id)) {
+            const labelDataPairs = chart.labels.map((label, index) => {
+                const number = parseInt(label.match(/\d+/)); // 숫자 추출
+                return { label, value: chart.data[index], number };
+            });
+
+            labelDataPairs.sort((a, b) => a.number - b.number); // 숫자 순으로 정렬
+
+            return {
+                ...chart,
+                labels: labelDataPairs.map(pair => pair.label),
+                data: labelDataPairs.map(pair => pair.value),
+            };
+        }
+        return chart; // 숫자 기반이 아니면 원래 데이터 유지
+    };
+
     return (
         <ResultCtn>
-            {chartData.map((chart, index) => (
-                <FormCtn key={index}>
-                    <TitleBar>
-                        <SubTitle>{chart.title || "차트 제목"}</SubTitle>
-                    </TitleBar>
-                    <VisualPieChart chart={chart} />
-                </FormCtn>
-            ))}
+            {chartData.map((chart, index) => {
+                const sortedChart = sortChartData(chart); // 차트 데이터 정렬
+                const headers = getTableHeaders(chart.id); // 해당 차트의 id로 헤더 찾기
+
+                return (
+                    <FormCtn key={index}>
+                        <TitleBar>
+                            <SubTitle>{sortedChart.title || "차트 제목"}</SubTitle>
+                            <IconContainer>
+                                <Icon src={DownloadIcon} alt="Download" />
+                                <Icon src={PrintIcon} alt="Print" />
+                            </IconContainer>
+                        </TitleBar>
+                        
+                        {getChartType(sortedChart.id) === 'line' ? (
+                            <VisualLineChart chart={sortedChart} headers={headers} />
+                        ) : getChartType(sortedChart.id) === 'bar' ? (
+                            <VisualBarChart chart={sortedChart} headers={headers} />  
+                        ) : (
+                            <VisualPieChart chart={sortedChart} headers={headers} />   
+                        )}
+                    </FormCtn>
+                );
+            })}
         </ResultCtn>
     );
 };
