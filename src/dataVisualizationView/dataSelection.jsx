@@ -624,7 +624,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                 .flatMap(([category, items]) => {
                   if (tabValue === 0) {
                     return Array.isArray(items) ? items.map((item, index) => (
-                      <Chip
+                      <SmallChip
                         key={`${category}-${item.label || item}-${index}`}
                         label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
                         onDelete={() => handleDelete(item, category)}

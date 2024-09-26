@@ -13,11 +13,7 @@ const VisualBarChart = ({ chart, headers }) => {
     // 데이터 생성
     const labels = chart.labels;
     const dataValues = chart.data;
-  
-    // 테이블에서 넘어온 headers로 X축과 Y축 레이블 설정
-    const xLabel = headers[0] || 'X Axis Label';  // X축 레이블
-    const yLabel = headers[1] || 'Y Axis Label';  // Y축 레이블
-  
+    
     const data = {
       labels: labels,  // X축 데이터 (예: 나이, 체중, 키 등)
       datasets: [
@@ -53,13 +49,11 @@ const VisualBarChart = ({ chart, headers }) => {
           type: 'category',
           title: {
             display: true,
-            text: xLabel,  // 테이블에서 넘어온 X축 레이블
           },
         },
         y: {
           title: {
             display: true,
-            text: yLabel,  // 테이블에서 넘어온 Y축 레이블
           },
           beginAtZero: true,  // Y축을 0에서 시작
         },
