@@ -59,7 +59,7 @@ const EmptyChartMessage = styled.div`
 `;
 
 const PieChartResult = () => {
-    const { chartData, tableData } = useContext(AnalysisContext); // tableData도 함께 가져옴
+    const { chartData } = useContext(AnalysisContext); // tableData도 함께 가져옴
 
     if (!chartData || chartData.length === 0) {
         return (
@@ -82,12 +82,6 @@ const PieChartResult = () => {
             return 'line'; // 선 그래프
         }
         return 'pie'; // 기본 파이 차트
-    };
-
-    // 테이블 데이터에서 헤더를 찾는 함수
-    const getTableHeaders = (id) => {
-        const table = tableData.find(table => table.id === id);
-        return table ? table.headers : ['X축', 'Y축']; // 헤더가 없으면 기본값 제공
     };
 
     // 숫자 기반 차트 데이터를 정렬하는 함수
@@ -113,24 +107,21 @@ const PieChartResult = () => {
         <ResultCtn>
             {chartData.map((chart, index) => {
                 const sortedChart = sortChartData(chart); // 차트 데이터 정렬
-                const headers = getTableHeaders(chart.id); // 해당 차트의 id로 헤더 찾기
 
                 return (
                     <FormCtn key={index}>
                         <TitleBar>
                             <SubTitle>{sortedChart.title || "차트 제목"}</SubTitle>
                             <IconContainer>
-                                <Icon src={DownloadIcon} alt="Download" />
-                                <Icon src={PrintIcon} alt="Print" />
                             </IconContainer>
                         </TitleBar>
                         
                         {getChartType(sortedChart.id) === 'line' ? (
-                            <VisualLineChart chart={sortedChart} headers={headers} />
+                            <VisualLineChart chart={sortedChart}/>
                         ) : getChartType(sortedChart.id) === 'bar' ? (
-                            <VisualBarChart chart={sortedChart} headers={headers} />  
+                            <VisualBarChart chart={sortedChart}  />  
                         ) : (
-                            <VisualPieChart chart={sortedChart} headers={headers} />   
+                            <VisualPieChart chart={sortedChart} />   
                         )}
                     </FormCtn>
                 );
