@@ -12,13 +12,13 @@ const ResultCtn = styled.div`
 `;
 
 const FormCtn = styled.div`
-    padding: 50px;
+    padding: 30px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 85%;
-    height: 70vh; 
+    width: 80%;
+    height: 36vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
@@ -28,7 +28,7 @@ const TitleBar = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 `;
 
 const SubTitle = styled.h3`
@@ -75,10 +75,6 @@ const PieChartResult = () => {
                 <FormCtn key={index}>
                     <TitleBar>
                         <SubTitle>{chart.title || "차트 제목"}</SubTitle>
-                        <IconContainer>
-                            <Icon src={DownloadIcon} alt="Download" />
-                            <Icon src={PrintIcon} alt="Print" />
-                        </IconContainer>
                     </TitleBar>
                     <VisualPieChart chart={chart} />
                 </FormCtn>
