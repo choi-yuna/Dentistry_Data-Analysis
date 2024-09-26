@@ -45,7 +45,7 @@ const ContentCtn = styled.div`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 30px;
+  gap: 20px;
   width: 95%;
   margin-left: 5%;
 `;
@@ -53,7 +53,7 @@ const GridContainer = styled.div`
 const SameHeightContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 10px; 
+  gap: 0px; 
   align-items: stretch;
   justify-content: space-between;
 `;

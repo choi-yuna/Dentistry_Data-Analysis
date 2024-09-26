@@ -45,7 +45,22 @@ const VisualPieChart = ({ chart }) => {
   };
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        right: 10,
+      },
+    },
     plugins: {
+      legend: {
+        display: true,
+        position: 'right',
+        labels: {
+          boxWidth: 25, 
+          padding: 10, 
+        },
+      },
       tooltip: {
         callbacks: {
           label: function(tooltipItem) {
@@ -68,7 +83,11 @@ const VisualPieChart = ({ chart }) => {
     },
   };
 
-  return <Pie data={data} options={options} />;
+  return (
+    <div style={{ width: '90%', height: '70%', position: 'relative' }}>
+      <Pie data={data} options={options} />
+    </div>
+  );
 };
 
 export default VisualPieChart;
