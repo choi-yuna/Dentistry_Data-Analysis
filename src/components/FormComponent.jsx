@@ -49,13 +49,13 @@ const FormContainer = styled.div`
     padding: 10px 60px;
     border-radius: 5px;
     display: flex;
-    width: ${(props) => (props.collapsed ? '90%' : '70%')};
+    width: ${(props) => (props.collapsed ? '90%' : '78%')};
     background: #E7ECEE;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     gap: 15px;
     box-sizing: border-box;
     transition: width 0.3s ease, height 0.3s ease;
-    margin-left: 3%;
+    margin-left: 10%;
 `;
 
 const PageContainer = styled.div`
@@ -64,6 +64,7 @@ const PageContainer = styled.div`
     justify-content: center;
     align-items: center;
     padding: 50px;
+    padding-bottom : 20px;
 `;
 
 const FormInline = styled.form`
@@ -207,7 +208,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
             const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
-            const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio } = analyzeItems(patientData);
+            const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio, qualityRatio } = analyzeItems(patientData);
             const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
             const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
 
@@ -221,6 +222,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 invalidItemCount,
                 itemCompletenessRatio,
                 itemValidityRatio,
+                qualityRatio,
                 totalPatients,
                 validPatientCount,
                 patientQualityRate,

@@ -1,6 +1,6 @@
 export const analyzeItems = (data) => {
     if (data.length === 0) {
-        return { totalItems: 0, missingItemCount: 0, invalidItemCount: 0, completenessRatio: 0, validityRatio: 0 };
+        return { totalItems: 0, missingItemCount: 0, invalidItemCount: 0, completenessRatio: 0, validityRatio: 0, qualityRatio: 0 };
     }
 
     // 데이터의 헤더 수 (첫 번째 데이터 항목의 키 수)
@@ -19,8 +19,6 @@ export const analyzeItems = (data) => {
             // 누락된 항목 검사
             if (value === "" || value === null) {
                 missingItemCount++;
-                invalidItemCount++;
-
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
                 if (key === "P_GENDER" && value !== "1" && value !== "2") {
@@ -126,7 +124,6 @@ export const analyzeItems = (data) => {
                     diDetailValues.forEach(value => {
                         if (!validDiDetailValues.includes(value)) {
                             invalidItemCount++;
-                            console.log(`Invalid DI_DETAIL at row ${rowIndex + 1}:`, value);
                         }
                     });
                 }
@@ -137,6 +134,7 @@ export const analyzeItems = (data) => {
     // 비율 계산
     const completenessRatio = ((totalItems - missingItemCount) / totalItems) * 100;
     const validityRatio = ((totalItems - invalidItemCount) / totalItems) * 100;
+    const qualityRatio = ((totalItems - (invalidItemCount+missingItemCount)) / totalItems) *100;
 
-    return { totalItems, missingItemCount, invalidItemCount, completenessRatio, validityRatio };
+    return { totalItems, missingItemCount, invalidItemCount, completenessRatio, validityRatio,qualityRatio };
 };
