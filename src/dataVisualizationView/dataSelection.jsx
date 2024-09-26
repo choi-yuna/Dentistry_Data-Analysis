@@ -301,7 +301,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       setSelectedCategory,
     } = useContext(DataSelectionContext);
 
-    const [loading, setLoading] = useState(false);  // 로딩 상태 추가
+    const [loading, setLoading] = useState(false);  
     const [open, setOpen] = useState(true);
     const { fileId } = useFileContext();
 
@@ -470,7 +470,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
       const finalData = {
         // 전송할 데이터 항목들
-        ...resultToSendTab1,
+        ...resultToSendTab1, 
         DISEASE_CLASS: disease,
         fileIds: fileId,
         header: headersToSendTab2,

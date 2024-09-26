@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import VisualPieChart from './VisualPieChart'; 
 import DownloadIcon from '../assets/images/download.svg'; 
 import PrintIcon from '../assets/images/printer.svg'; 
-import { AnalysisContext } from '../context/AnalysisContext';  // Context 불러오기
+import { AnalysisContext } from '../context/AnalysisContext'; 
 
 const ResultCtn = styled.div`
     width: 100%; 

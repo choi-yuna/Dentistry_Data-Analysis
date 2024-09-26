@@ -6,26 +6,48 @@ import styled from 'styled-components';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-const PieChart = ({ title, data }) => {  // analyzedData 제거
+const PieChart = ({ title, data }) => {
+  const total = data.datasets[0].data.reduce((acc, value) => acc + value, 0); // 데이터 총합 계산
+
   const options = {
     plugins: {
       legend: {
         display: true,
         position: 'right',
         labels: {
-          boxWidth: 5,
-          padding: 5,
+          boxWidth: 20,
+          boxHeight: 10,
+          padding: 10, 
+          generateLabels: (chart) => {
+            const data = chart.data;
+            return data.labels.map((label, i) => {
+              const value = data.datasets[0].data[i];
+              const percentage = ((value / total) * 100).toFixed(2); // 퍼센트 계산
+              return {
+                text: `${label} (${percentage}%)`, // 퍼센트 추가
+                fillStyle: data.datasets[0].backgroundColor[i], // 사각형 색상 유지
+              };
+            });
+          },
         },
       },
       datalabels: {
         formatter: (value, context) => {
-          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-          const percentage = ((value / total) * 100).toFixed(0);
-          return `${value}\n(${percentage}%)`;
+          const percentage = ((value / total) * 100).toFixed(0); // 퍼센트 계산
+          return `${value}\n(${percentage}%)`; // 값과 퍼센트 표시
         },
         color: '#000',
         font: {
           weight: 'bold',
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw;
+            const percent = ((value / total) * 100).toFixed(2); // 퍼센트 계산
+            return `${tooltipItem.label}: ${value} (${percent}%)`; // 툴팁에 퍼센트 표시
+          },
         },
       },
     },
@@ -37,7 +59,7 @@ const PieChart = ({ title, data }) => {  // analyzedData 제거
     datasets: data.datasets.map((dataset) => ({
       ...dataset,
       backgroundColor: [
-        '#FF6384',
+        '#FF6384', // 색상 설정
         '#36A2EB',
         '#FFCE56',
         '#4BC0C0',
@@ -67,7 +89,7 @@ const ChartContainer = styled.div`
   width: 400px;  
   padding: 10px;
   background-color: #ffffff;
-  margin: auto; 
+  margin: auto;
 `;
 
 const ChartWrapper = styled.div`

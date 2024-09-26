@@ -61,9 +61,9 @@ const VisualPieChart = ({ chart }) => {
           const percentage = ((value / total) * 100).toFixed(0);
           return `${value} (${percentage}%)`; 
         },
-        anchor: 'end', // 라벨 위치 설정
-        align: 'start', // 라벨 정렬 설정
-        offset: 30, // 라벨과 그래프 간격 설정
+        anchor: 'end',
+        align: 'start', 
+        offset: 30,
       },
     },
   };
