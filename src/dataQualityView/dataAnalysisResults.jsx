@@ -5,15 +5,16 @@ import Modal from './Modal';
 import { DataContext } from '../context/DataContext'; 
 
 const ResultCtn = styled.div`
-    width: ${(props) => (props.$collapsed ? '60%' : '38%')};
-    height: 45%; 
-    margin-left: ${(props) => (props.$collapsed ? '9%' : '20%')};
-    margin-top: -30px;
+    width: 75%;  /* 가로로 100% 확장 */
+    max-width: 1200px; /* 필요에 따라 최대 너비 설정 */
+    height: auto; 
+    margin-left: 20%;
+    margin-right: auto; /* 가운데 정렬 */
     transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const FormCtn = styled.div`
-    padding: 20px;
+    padding: 10px 20px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -21,7 +22,6 @@ const FormCtn = styled.div`
     height: auto;
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
-    box-sizing: border-box;
     position: relative;
 `;
 
@@ -78,12 +78,12 @@ const DataAnalysisResults = ({ collapsed }) => {
     const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
 
     return (
-        <ResultCtn $collapsed={collapsed}>
+        <ResultCtn>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
                     <DetailButton onClick={handleDetailButtonClick} disabled={!isDataAvailable}>
-                        품질 이상 항목 세부보기
+                        데이터 상세 보기
                     </DetailButton>
                 </TitleBar>
                 {isDataAvailable ? (
