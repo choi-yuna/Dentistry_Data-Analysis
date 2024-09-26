@@ -30,6 +30,19 @@ const ContentCtn = styled.div`
   display: block; 
 `;
 
+// DataAnalysisResults에 상단 여백을 없애는 방식
+const DataAnalysisResultsContainer = styled.div`
+  margin-top: 0px;  /* 상단 여백 제거 */
+  padding-top: 0px;  /* 패딩이 있을 경우 제거 */
+  margin-bottom : 20px;
+`;
+
+// FormComponent와 DataAnalysisResults 사이에 여백을 없애기 위해 추가 패딩 제거
+const FormComponentContainer = styled.div`
+  margin-bottom: 10px; /* FormComponent 아래의 마진 최소화 */
+`;
+
+
 const DataQualityView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { dataQualityResults, setDataQualityResults } = useContext(AnalysisContext);
@@ -50,12 +63,12 @@ const DataQualityView = () => {
         <MainContent>
           <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
           <ContentCtn collapsed={collapsed}>
-            {/* 분석 버튼 클릭 시 handleAnalyze 호출 */}
             <FormComponent collapsed={collapsed} onAnalyze={handleAnalyze}/>
             {dataQualityResults && (
               <>
-                {/* 분석된 데이터를 DataAnalysisResults에 전달 */}
-                <DataAnalysisResults collapsed={collapsed}/>
+              <DataAnalysisResultsContainer>
+                <DataAnalysisResults collapsed={collapsed} />
+              </DataAnalysisResultsContainer>
                 <DataReport collapsed={collapsed}  />
               </>
             )}
