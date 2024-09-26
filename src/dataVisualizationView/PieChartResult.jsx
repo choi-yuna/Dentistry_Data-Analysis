@@ -14,13 +14,13 @@ const ResultCtn = styled.div`
 `;
 
 const FormCtn = styled.div`
-    padding: 50px;
+    padding: 30px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 85%;
-    height: 70vh; 
+    width: 80%;
+    height: 36vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
     box-sizing: border-box; 
@@ -30,7 +30,7 @@ const TitleBar = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 `;
 
 const SubTitle = styled.h3`
@@ -59,7 +59,7 @@ const EmptyChartMessage = styled.div`
 `;
 
 const PieChartResult = () => {
-    const { chartData } = useContext(AnalysisContext);
+    const { chartData, tableData } = useContext(AnalysisContext); // tableData도 함께 가져옴
 
     if (!chartData || chartData.length === 0) {
         return (
@@ -84,9 +84,15 @@ const PieChartResult = () => {
         return 'pie'; // 기본 파이 차트
     };
 
+    // 테이블 데이터에서 헤더를 찾는 함수
+    const getTableHeaders = (id) => {
+        const table = tableData.find(table => table.id === id);
+        return table ? table.headers : ['X축', 'Y축']; // 헤더가 없으면 기본값 제공
+    };
+
     // 숫자 기반 차트 데이터를 정렬하는 함수
     const sortChartData = (chart) => {
-        if (["P_AGE", "P_WEIGHT", "P_HEIGHT"].includes(chart.id)) {
+        if (["P_AGE", "P_WEIGHT", "P_HEIGHT","CAPTURE_TIME"].includes(chart.id)) {
             const labelDataPairs = chart.labels.map((label, index) => {
                 const number = parseInt(label.match(/\d+/)); // 숫자 추출
                 return { label, value: chart.data[index], number };
@@ -107,6 +113,7 @@ const PieChartResult = () => {
         <ResultCtn>
             {chartData.map((chart, index) => {
                 const sortedChart = sortChartData(chart); // 차트 데이터 정렬
+                const headers = getTableHeaders(chart.id); // 해당 차트의 id로 헤더 찾기
 
                 return (
                     <FormCtn key={index}>
@@ -119,11 +126,11 @@ const PieChartResult = () => {
                         </TitleBar>
                         
                         {getChartType(sortedChart.id) === 'line' ? (
-                            <VisualLineChart chart={sortedChart} />
+                            <VisualLineChart chart={sortedChart} headers={headers} />
                         ) : getChartType(sortedChart.id) === 'bar' ? (
-                            <VisualBarChart chart={sortedChart} />  
+                            <VisualBarChart chart={sortedChart} headers={headers} />  
                         ) : (
-                            <VisualPieChart chart={sortedChart} />  
+                            <VisualPieChart chart={sortedChart} headers={headers} />   
                         )}
                     </FormCtn>
                 );
