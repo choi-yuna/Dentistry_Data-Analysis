@@ -62,7 +62,7 @@ const VisualLineChart = ({ chart }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '400px' }}> {/* 차트 크기 조정 */}
+    <div style={{ width: '100%', height: '90%' }}> {/* 차트 크기 조정 */}
       <Line data={data} options={options} />
     </div>
   );
