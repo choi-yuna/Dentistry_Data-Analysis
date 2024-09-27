@@ -219,18 +219,18 @@ const TextFieldStyled = styled(TextField)`
 const ButtonStyled = styled.button`
   display: flex;
   align-items: center;
-  margin-left : 5px;
+  margin-left : 65%;
   justify-content: center;
-  padding: 8px 16px; /* 크기 줄임 */
-  background-color: white; /* 배경 흰색 */
-  color: black; /* 글자 색 검은색 */
-  font-size: 14px; /* 크기 줄임 */
+  padding: 6px 16px;
+  background-color: #F5FBFF; 
+  color: #203086;
+  font-size: 14px; 
   font-weight: bold;
-  border: 1px solid black; /* 테두리 검은색 */
-  border-radius: 8px; /* 둥근 모서리 */
+  border: 1px solid #203086; 
+  border-radius: 8px; 
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 약하게 수정 */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
 
   &:hover {
     background-color: #f2f2f2; /* 호버 시 배경색 약간 회색 */
