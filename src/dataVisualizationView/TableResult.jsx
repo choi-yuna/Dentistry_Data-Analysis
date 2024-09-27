@@ -1,23 +1,21 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from 'styled-components';
 import VisualizationDataTable from './VisualizationDataTable'; 
-import DownloadIcon from '../assets/images/download.svg'; 
-import PrintIcon from '../assets/images/printer.svg'; 
 import { AnalysisContext } from '../context/AnalysisContext';
 
 const ResultCtn = styled.div`
-    width: 100%; 
-    margin-top: 20px;
+    width: 60%; 
+    margin-top: 5px;
     transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const FormCtn = styled.div`
-    padding: 30px;
+    padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 95%;
     height: 36vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
@@ -25,25 +23,29 @@ const FormCtn = styled.div`
     overflow: auto; 
 `;
 
+const TableCtn = styled.div`
+    display: flex;
+    justify-content: center; /* 테이블을 수평 중앙 정렬 */
+    align-items: center; /* 테이블을 수직 중앙 정렬 (필요할 경우) */
+`;
+
 const TitleBar = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
 `;
 
 const SubTitle = styled.h3`
     margin: 2px;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold; 
 `;
-
 
 const EmptyTableMessage = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 15px;
     color: #333;
 `;
 
@@ -67,7 +69,9 @@ const TableResult = () => {
                     <TitleBar>
                         <SubTitle>{table.title || "테이블 제목"}</SubTitle>
                     </TitleBar>
-                    <VisualizationDataTable tableId={table.id} />
+                    <TableCtn>
+                        <VisualizationDataTable tableId={table.id} />
+                    </TableCtn>
                 </FormCtn>
             ))}
         </ResultCtn>

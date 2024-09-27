@@ -76,15 +76,21 @@ const VisualPieChart = ({ chart }) => {
           const percentage = ((value / total) * 100).toFixed(0);
           return `${value} (${percentage}%)`; 
         },
-        anchor: 'end',
-        align: 'start', 
-        offset: 30,
-      },
+        anchor: 'start', // 레이블을 차트 외부에 배치
+            align: 'end', // 외부로 정렬
+            offset: 40, // 레이블과 차트 간의 간격
+            borderWidth: 2, // 라인 두께
+            borderRadius: 4, // 라인 끝부분 둥글게 처리
+            leaderLine: {
+                color: '#000000', // 라인 색상
+                width: 1, // 라인 두께
+            },
+        },
     },
   };
 
   return (
-    <div style={{ width: '90%', height: '70%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '90%', position: 'relative' }}> {/* 차트 크기 조정 */}
       <Pie data={data} options={options} />
     </div>
   );
