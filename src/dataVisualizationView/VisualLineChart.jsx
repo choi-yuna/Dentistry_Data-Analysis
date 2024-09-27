@@ -13,6 +13,9 @@ const VisualLineChart = ({ chart }) => {
   const labels = chart.labels;
   const dataValues = chart.data;
 
+  // 전체 합 계산
+  const total = dataValues.reduce((acc, curr) => acc + curr, 0);
+
   const data = {
     labels: labels,
     datasets: [
@@ -51,10 +54,11 @@ const VisualLineChart = ({ chart }) => {
         offset: -5,     // 포인트에서 레이블까지의 거리
         rotation: 0,    // 레이블 회전 각도
         font: {
-          size: 10,     // 레이블 폰트 크기 (여기서 폰트 크기 조절)
+          size: 10,     // 레이블 폰트 크기
         },
         formatter: function(value) {
-          return value; // 레이블 값 설정
+          const percentage = ((value / total) * 100).toFixed(1);  // 퍼센트 계산
+          return `${value} (${percentage}%)`;  // 값과 퍼센트 함께 표시
         },
       },
     },

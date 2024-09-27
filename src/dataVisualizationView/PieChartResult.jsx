@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import styled from 'styled-components';
 import VisualPieChart from './VisualPieChart'; 
-import VisualLineChart from './VisualLineChart'; // VisualLineChart 임포트
-import VisualBarChart from './VisualBarChart'; // 새로운 VisualBarChart 컴포넌트 임포트
-import DownloadIcon from '../assets/images/download.svg'; 
-import PrintIcon from '../assets/images/printer.svg'; 
+import VisualLineChart from './VisualLineChart'; 
+import VisualBarChart from './VisualBarChart'; 
+import VisualMapChart from './VisualMapChart'; // 지도 시각화 컴포넌트 추가
 import { AnalysisContext } from '../context/AnalysisContext'; 
 
 const ResultCtn = styled.div`
@@ -39,17 +38,6 @@ const SubTitle = styled.h3`
     font-weight: bold; 
 `;
 
-const IconContainer = styled.div`
-  display: flex; 
-`;
-
-const Icon = styled.img`
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  margin-left: 10px;
-`;
-
 const EmptyChartMessage = styled.div`
     display: flex;
     justify-content: center;
@@ -59,7 +47,7 @@ const EmptyChartMessage = styled.div`
 `;
 
 const PieChartResult = () => {
-    const { chartData } = useContext(AnalysisContext); // tableData도 함께 가져옴
+    const { chartData } = useContext(AnalysisContext);
 
     if (!chartData || chartData.length === 0) {
         return (
@@ -71,28 +59,29 @@ const PieChartResult = () => {
         );
     }
 
-    // 특정 id 값에 따라 차트 유형을 결정하는 함수
     const getChartType = (id) => {
-        const barChartIds = ["P_AGE", "P_WEIGHT", "P_HEIGHT"]; // 막대 그래프를 보여줄 id 목록
-        const lineChartIds = ["CAPTURE_TIME"]; // 선 그래프를 보여줄 id 목록
+        const barChartIds = ["P_AGE", "P_WEIGHT", "P_HEIGHT"];
+        const lineChartIds = ["CAPTURE_TIME"];
+        const mapChartIds = ["P_RES_AREA"]; // 거주 지역 차트 추가
 
         if (barChartIds.includes(id)) {
-            return 'bar'; // 막대 그래프
+            return 'bar';
         } else if (lineChartIds.includes(id)) {
-            return 'line'; // 선 그래프
+            return 'line';
+        } else if (mapChartIds.includes(id)) {
+            return 'map'; // 지도형 차트로
         }
-        return 'pie'; // 기본 파이 차트
+        return 'pie';
     };
 
-    // 숫자 기반 차트 데이터를 정렬하는 함수
     const sortChartData = (chart) => {
         if (["P_AGE", "P_WEIGHT", "P_HEIGHT","CAPTURE_TIME"].includes(chart.id)) {
             const labelDataPairs = chart.labels.map((label, index) => {
-                const number = parseInt(label.match(/\d+/)); // 숫자 추출
+                const number = parseInt(label.match(/\d+/));
                 return { label, value: chart.data[index], number };
             });
 
-            labelDataPairs.sort((a, b) => a.number - b.number); // 숫자 순으로 정렬
+            labelDataPairs.sort((a, b) => a.number - b.number);
 
             return {
                 ...chart,
@@ -100,28 +89,28 @@ const PieChartResult = () => {
                 data: labelDataPairs.map(pair => pair.value),
             };
         }
-        return chart; // 숫자 기반이 아니면 원래 데이터 유지
+        return chart;
     };
 
     return (
         <ResultCtn>
             {chartData.map((chart, index) => {
-                const sortedChart = sortChartData(chart); // 차트 데이터 정렬
+                const sortedChart = sortChartData(chart);
 
                 return (
                     <FormCtn key={index}>
                         <TitleBar>
                             <SubTitle>{sortedChart.title || "차트 제목"}</SubTitle>
-                            <IconContainer>
-                            </IconContainer>
                         </TitleBar>
                         
                         {getChartType(sortedChart.id) === 'line' ? (
-                            <VisualLineChart chart={sortedChart}/>
+                            <VisualLineChart chart={sortedChart} />
                         ) : getChartType(sortedChart.id) === 'bar' ? (
-                            <VisualBarChart chart={sortedChart}  />  
+                            <VisualBarChart chart={sortedChart} />
+                        ) : getChartType(sortedChart.id) === 'map' ? (
+                            <VisualMapChart chart={sortedChart} />  // 지도형 차트 사용
                         ) : (
-                            <VisualPieChart chart={sortedChart} />   
+                            <VisualPieChart chart={sortedChart} />
                         )}
                     </FormCtn>
                 );
