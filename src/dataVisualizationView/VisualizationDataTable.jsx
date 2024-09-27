@@ -4,7 +4,7 @@ import { AnalysisContext } from '../context/AnalysisContext';  // Context를 불
 
 const TableContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 80%;  // 전체 크기를 줄였습니다 (필요에 따라 % 조정)
   margin-top: 20px;
 `;
 
@@ -14,24 +14,27 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  border: 2px solid black;
-  padding: 10px;
+  border: 1px solid black;  // 두께를 줄임
+  padding: 6px;  // 패딩을 줄여서 셀 크기 감소
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
+  font-size: 0.9rem;  // 폰트 크기 조정
 `;
 
 const Td = styled.td`
-  border: 2px solid black;
-  padding: 10px;
+  border: 1px solid black;  // 두께를 줄임
+  padding: 6px;  // 패딩을 줄여서 셀 크기 감소
   text-align: center;
+  font-size: 0.9rem;  // 폰트 크기 조정
 `;
 
 const ColSpanTd = styled.td`
-  border: 2px solid black;
-  padding: 10px;
+  border: 1px solid black;
+  padding: 6px;
   text-align: center;
   font-weight: bold;
+  font-size: 0.9rem;
 `;
 
 const VisualizationDataTable = ({ tableId }) => {
@@ -48,7 +51,7 @@ const VisualizationDataTable = ({ tableId }) => {
 
   if (!tableData || !Array.isArray(tableData) || tableData.every(item => !item.rows || item.rows.length === 0)) {
     return <p>테이블 데이터를 로드할 수 없습니다.</p>;
-}
+  }
 
   return (
     <TableContainer>

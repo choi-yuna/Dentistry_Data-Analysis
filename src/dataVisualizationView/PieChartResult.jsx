@@ -9,17 +9,17 @@ import { AnalysisContext } from '../context/AnalysisContext';
 
 const ResultCtn = styled.div`
     width: 100%; 
-    margin-top: 20px;
+    margin-top: 5px;
     transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const FormCtn = styled.div`
-    padding: 30px;
+    padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 90%;
     height: 36vh; 
     background: #FAF8F8;
     box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
@@ -35,7 +35,7 @@ const TitleBar = styled.div`
 
 const SubTitle = styled.h3`
     margin: 2px;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold; 
 `;
 
