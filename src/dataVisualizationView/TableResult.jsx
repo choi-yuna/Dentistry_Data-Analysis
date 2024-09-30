@@ -1,8 +1,5 @@
-import React, { useContext, useRef, useEffect } from "react";
+import React, { useContext } from "react";
 import styled from 'styled-components';
-import VisualizationDataTable from './VisualizationDataTable'; 
-import DownloadIcon from '../assets/images/download.svg'; 
-import PrintIcon from '../assets/images/printer.svg'; 
 import { AnalysisContext } from '../context/AnalysisContext';
 
 const ResultCtn = styled.div`
@@ -38,7 +35,6 @@ const SubTitle = styled.h3`
     font-weight: bold; 
 `;
 
-
 const EmptyTableMessage = styled.div`
     display: flex;
     justify-content: center;
@@ -47,9 +43,32 @@ const EmptyTableMessage = styled.div`
     color: #333;
 `;
 
+const DataTable = styled.table`
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+`;
+
+const TableHeader = styled.th`
+    padding: 8px;
+    background-color: #f2f2f2;
+`;
+
+const TableRow = styled.tr`
+    &:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+`;
+
+const TableCell = styled.td`
+    padding: 8px;
+    border: 1px solid #ddd;
+`;
+
 const TableResult = () => {
     const { tableData } = useContext(AnalysisContext);
 
+    // tableData가 없을 때 처리
     if (!tableData || tableData.length === 0) {
         return (
             <ResultCtn>
@@ -67,7 +86,27 @@ const TableResult = () => {
                     <TitleBar>
                         <SubTitle>{table.title || "테이블 제목"}</SubTitle>
                     </TitleBar>
-                    <VisualizationDataTable tableId={table.id} />
+                    <DataTable>
+                        <thead>
+                            <tr>
+                                {/* 서버에서 받은 headers를 테이블의 헤더로 표시 */}
+                                {table.headers && table.headers.map((header, i) => (
+                                    <TableHeader key={i}>{header}</TableHeader>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* labels와 data를 테이블 행으로 표시 */}
+                            {table.labels && table.labels.map((label, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>{label}</TableCell>
+                                    <TableCell>
+                                        {table.data[i]} ({table.percentages[i]}%)
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </tbody>
+                    </DataTable>
                 </FormCtn>
             ))}
         </ResultCtn>

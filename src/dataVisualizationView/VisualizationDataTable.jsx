@@ -37,7 +37,6 @@ const ColSpanTd = styled.td`
 const VisualizationDataTable = ({ tableId }) => {
   const { tableData } = useContext(AnalysisContext);
 
-  // tableId에 맞는 테이블 데이터를 찾음
   const table = tableData.find(table => table.id === tableId);
 
   const headers = table?.headers || [];
