@@ -69,7 +69,6 @@ const DataQualityView = () => {
               <DataAnalysisResultsContainer>
                 <DataAnalysisResults collapsed={collapsed} />
               </DataAnalysisResultsContainer>
-                <DataReport collapsed={collapsed}  />
               </>
             )}
           </ContentCtn>

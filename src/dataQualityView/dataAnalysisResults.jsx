@@ -42,9 +42,10 @@ const DetailButton = styled.button`
     padding: 10px 10px;
     border: none;
     border-radius: 10px;
+    margin-right: 35px;
     background-color: ${(props) => (props.disabled ? '#cccccc' : '#2176A8')};
     color: white;
-    font-weight: 900;
+    font-weight: 600;
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     &:hover {
         background-color: ${(props) => (props.disabled ? '#cccccc' : '#0056b3')};
@@ -93,7 +94,7 @@ const DataAnalysisResults = ({ collapsed }) => {
                 )}
             </FormCtn>
             {isDataAvailable && (
-                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
+                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData}  invalidItems={analyzedData.invalidItems}/>
             )}
         </ResultCtn>
     );

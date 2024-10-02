@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import  { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';  // 헤더 매핑 가져오기
+import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';  // 헤더 매핑 가져오기
 
 const ModalOverlay = styled.div`
     position: fixed;
@@ -84,7 +84,9 @@ const ExcelCell = styled.td`
     padding: 4px;
     border: 1px solid #ddd;
     text-align: left;
-    background-color: ${({ isNull }) => (isNull ? 'yellow' : 'white')};
+    background-color: ${({ isNull, isInvalid }) => (isNull ? 'yellow' : isInvalid ? 'red' : 'white')};
+    color: black;
+    font-weight: ${({ isInvalid }) => (isInvalid ? 'bold' : 'normal')};
 `;
 
 const Label = styled.label`
@@ -114,12 +116,31 @@ const SelectContainer = styled.div`
     padding: 3px 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #ddd;
+    justify-content: space-between; /* 선택박스와 설명이 나란히 위치하도록 정렬 */
 `;
 
+const ColorBox = styled.span`
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-color: ${({ color }) => color};
+    margin-right: 5px;
+    border: 1px solid #ccc;
+`;
 
-const Modal = ({ isOpen, onClose, excelData }) => {
+const Explanation = styled.div`
+    font-size: 14px;
+    color: #555;
+    margin-left: 10px; /* 셀렉트 박스와 설명 사이의 간격 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+    display: flex;
+    align-items: center;
+`;
+
+const Modal = ({ isOpen, onClose, excelData, invalidItems = [] }) => {  // invalidItems 추가
     const [selectedDisease, setSelectedDisease] = useState('');
     const [diseaseOptions, setDiseaseOptions] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
 
     useEffect(() => {
         if (isOpen) {
@@ -129,13 +150,22 @@ const Modal = ({ isOpen, onClose, excelData }) => {
         }
     }, [isOpen, excelData]);
 
+    useEffect(() => {
+        if (selectedDisease) {
+            const dataWithOriginalIndices = excelData.slice(1).map((row, index) => ({ row, originalIndex: index + 1 }));
+            const filtered = dataWithOriginalIndices.filter(rowObj => rowObj.row[0] === selectedDisease);
+            setFilteredData(filtered);
+        }
+    }, [selectedDisease, excelData]);
+
     if (!isOpen) return null;
 
-    const filteredData = selectedDisease
-        ? excelData.filter(row => row[0] === selectedDisease)
-        : excelData.slice(1);
-
     const headers = selectedDisease ? diseaseHeaderMapping[selectedDisease] : excelData[0];
+
+    // 유효성 검사에서 실패한 항목을 확인하는 함수
+    const isInvalidCell = (originalRowIndex, column) => {
+        return invalidItems.some(item => item.row === originalRowIndex && item.column === column);  // 실패한 항목인지 확인
+    };
 
     return (
         <ModalOverlay onClick={onClose}>
@@ -146,14 +176,22 @@ const Modal = ({ isOpen, onClose, excelData }) => {
                 </ModalHeader>
 
                 <SelectContainer>
-                    <Label>질병 선택:</Label>
-                    <Select value={selectedDisease} onChange={e => setSelectedDisease(e.target.value)}>
-                        {diseaseOptions.map((disease, index) => (
-                            <option key={index} value={disease}>
-                                {diseaseNameMapping[disease]}
-                            </option>
-                        ))}
-                    </Select>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Label>질병 선택:</Label>
+                        <Select value={selectedDisease} onChange={e => setSelectedDisease(e.target.value)}>
+                            {diseaseOptions.map((disease, index) => (
+                                <option key={index} value={disease}>
+                                    {diseaseNameMapping[disease]}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
+
+                    {/* 설명 텍스트 추가 */}
+                    <Explanation>
+                        <ColorBox color="yellow" /> 누락된 값
+                        <ColorBox color="red" style={{ marginLeft: '15px' }} /> 수정이 필요한 항목
+                    </Explanation>
                 </SelectContainer>
 
                 <TableContainer>
@@ -168,10 +206,14 @@ const Modal = ({ isOpen, onClose, excelData }) => {
                             </ExcelHeaderRow>
                         </thead>
                         <tbody>
-                            {filteredData.map((row, rowIndex) => (
+                            {filteredData.map(({ row, originalIndex }, rowIndex) => (
                                 <ExcelRow key={rowIndex}>
                                     {row.map((cell, cellIndex) => (
-                                        <ExcelCell key={cellIndex} isNull={cell === null || cell === ''}>
+                                        <ExcelCell
+                                            key={cellIndex}
+                                            isNull={cell === null || cell === ''}
+                                            isInvalid={isInvalidCell(originalIndex, headers[cellIndex])}  // 원래의 인덱스로 검사
+                                        >
                                             {cell !== null && cell !== '' ? cell : 'N/A'}
                                         </ExcelCell>
                                     ))}

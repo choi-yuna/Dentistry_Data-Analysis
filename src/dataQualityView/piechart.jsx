@@ -58,9 +58,9 @@ const PieChart = ({ title, data }) => {
     ...data,
     datasets: data.datasets.map((dataset) => ({
       ...dataset,
-      backgroundColor: [
-        '#FF6384', // 색상 설정
+      backgroundColor: [ // 색상 설정
         '#36A2EB',
+        '#FF6384',
         '#FFCE56',
         '#4BC0C0',
         '#9966FF',
@@ -85,9 +85,8 @@ const ChartContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 250px; 
-  width: 400px;  
-  padding: 10px;
+  height: 240px; 
+  width: 300px;  
   background-color: #ffffff;
   margin: auto;
 `;
@@ -103,6 +102,7 @@ const ChartWrapper = styled.div`
 
 const ChartTitle = styled.h3`
   margin-bottom: 20px;
+  font-size: 15px;
   text-align: center;
   font-weight: bold;
 `;
