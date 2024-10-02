@@ -5,13 +5,13 @@ import Modal from './Modal';
 import { DataContext } from '../context/DataContext'; 
 
 const ResultCtn = styled.div`
-    width: 75%;  /* 가로로 100% 확장 */
-    max-width: 1200px; /* 필요에 따라 최대 너비 설정 */
+    width: ${(props) => (props.collapsed ? '100%' : '75%')};  /* collapsed에 따라 너비 조정 */
+    max-width: 85%; /* 필요에 따라 최대 너비 설정 */
     height: auto; 
-    margin-left: 20%;
-    margin-right: auto; /* 가운데 정렬 */
-    transition: width 0.3s ease, height 0.3s ease;
+    margin-left: ${(props) => (props.collapsed ? '10%' : '20%')}; /* collapsed 상태에 따라 왼쪽 여백 조정 */
+    transition: width 0.3s ease, margin-left 0.3s ease, height 0.3s ease;
 `;
+
 
 const FormCtn = styled.div`
     padding: 10px 20px;
@@ -42,9 +42,10 @@ const DetailButton = styled.button`
     padding: 10px 10px;
     border: none;
     border-radius: 10px;
+    margin-right: 35px;
     background-color: ${(props) => (props.disabled ? '#cccccc' : '#2176A8')};
     color: white;
-    font-weight: 900;
+    font-weight: 600;
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     &:hover {
         background-color: ${(props) => (props.disabled ? '#cccccc' : '#0056b3')};
@@ -78,7 +79,7 @@ const DataAnalysisResults = ({ collapsed }) => {
     const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
 
     return (
-        <ResultCtn>
+        <ResultCtn collapsed={collapsed}> {/* collapsed 값을 전달 */}
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
@@ -93,7 +94,7 @@ const DataAnalysisResults = ({ collapsed }) => {
                 )}
             </FormCtn>
             {isDataAvailable && (
-                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} />
+                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems} />
             )}
         </ResultCtn>
     );
