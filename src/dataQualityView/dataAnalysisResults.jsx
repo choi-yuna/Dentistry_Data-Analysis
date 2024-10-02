@@ -12,7 +12,6 @@ const ResultCtn = styled.div`
     transition: width 0.3s ease, margin-left 0.3s ease, height 0.3s ease;
 `;
 
-
 const FormCtn = styled.div`
     padding: 10px 20px;
     border-radius: 5px;
