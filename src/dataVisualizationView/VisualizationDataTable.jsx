@@ -1,32 +1,32 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { AnalysisContext } from '../context/AnalysisContext';  // Context를 불러옵니다
+import { AnalysisContext } from '../context/AnalysisContext';
 
 const TableContainer = styled.div`
   display: flex;
-  width: 80%;  // 전체 크기를 줄였습니다 (필요에 따라 % 조정)
+  width: 90%;
   margin-top: 20px;
 `;
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 100%;
+  width: 90%;
 `;
 
 const Th = styled.th`
-  border: 1px solid black;  // 두께를 줄임
-  padding: 6px;  // 패딩을 줄여서 셀 크기 감소
+  border: 1px solid black;
+  padding: 6px;
   background-color: #C4C4C4;
   text-align: center;
   font-weight: bold;
-  font-size: 0.9rem;  // 폰트 크기 조정
+  font-size: 0.9rem;
 `;
 
 const Td = styled.td`
-  border: 1px solid black;  // 두께를 줄임
-  padding: 6px;  // 패딩을 줄여서 셀 크기 감소
+  border: 1px solid black;
+  padding: 6px;
   text-align: center;
-  font-size: 0.9rem;  // 폰트 크기 조정
+  font-size: 0.9rem;
 `;
 
 const ColSpanTd = styled.td`
@@ -41,16 +41,27 @@ const VisualizationDataTable = ({ tableId }) => {
   const { tableData } = useContext(AnalysisContext);
 
   const table = tableData.find(table => table.id === tableId);
+  console.log("진짜 뭔데 이거...",table);
 
-  const headers = table?.headers || [];
-  const rows = table?.rows || [];
-  const total = table?.total ?? rows.length;
 
-  const sortedRows = [...rows].sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
-
-  if (!tableData || !Array.isArray(tableData) || tableData.every(item => !item.rows || item.rows.length === 0)) {
+  if (!table) {
     return <p>테이블 데이터를 로드할 수 없습니다.</p>;
   }
+
+  console.log("table.headers:", table.headers); 
+
+  // headers, labels, data, percentages가 있는지 각각 확인
+  const headers = table.headers || [];
+  const labels = table.labels || [];
+  const data = table.data || [];
+  const percentages = table.percentages || [];
+
+  const rows = labels.map((label, index) => [
+    label,
+    `${data[index]} (${percentages[index] ? `${percentages[index]}%` : 'N/A'})`
+  ]);
+
+  const total = data.length ? data.reduce((sum, current) => sum + current, 0) : 0;
 
   return (
     <TableContainer>
@@ -63,7 +74,7 @@ const VisualizationDataTable = ({ tableId }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedRows.map((row, rowIndex) => (
+          {rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
                 <Td key={cellIndex}>{cell}</Td>

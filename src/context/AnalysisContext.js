@@ -11,6 +11,8 @@ export const AnalysisProvider = ({ children }) => {
     const [chartData, setChartData] = useState(null); 
     const [tableHeight, setTableHeight] = useState(0); 
     const [chartHeight, setChartHeight] = useState(0); 
+    const [percentages, setPercentages] = useState([]);  
+    
 
     return (
         <AnalysisContext.Provider value={{ 
@@ -26,6 +28,8 @@ export const AnalysisProvider = ({ children }) => {
             setTableHeight,
             chartHeight, 
             setChartHeight,
+            percentages, 
+            setPercentages,
         }}>
             {children}
         </AnalysisContext.Provider>
