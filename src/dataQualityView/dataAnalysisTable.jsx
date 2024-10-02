@@ -61,6 +61,7 @@ const ChartContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
+  height: 100%;
   max-height: 293px; /* 컨테이너의 최대 높이 설정 */
   overflow-y: auto; /* 스크롤이 생기도록 설정 */
   padding: 5px;

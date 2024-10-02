@@ -55,7 +55,7 @@ const FormContainer = styled.div`
     gap: 15px;
     box-sizing: border-box;
     transition: width 0.3s ease, height 0.3s ease;
-    margin-left: 11%;
+    margin-left: ${(props) => (props.collapsed ? '20px' : '160px')};
 `;
 
 const PageContainer = styled.div`
