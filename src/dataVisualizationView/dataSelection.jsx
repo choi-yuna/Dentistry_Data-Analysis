@@ -65,7 +65,7 @@ const StyledTabs = styled(Tabs)`
   border-radius: 8px 8px 0 0;
   min-height: 40px !important;  /* 전체 탭 높이 줄임 */
   font-size : 13px !important;
-  height: 35px; !important; 
+  height: 35px !important; 
   min-height: 35px !important; /* 전체 탭 높이 */
   font-size: 13px !important; /* 글자 크기 */
   height: 30px !important; /* 탭 높이 */
