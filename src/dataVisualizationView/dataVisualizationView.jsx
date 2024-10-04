@@ -26,7 +26,8 @@ const StickyDataSelection = styled.div`
   position: shrink;
   top: 100px;
   background-color: white;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 5px;
 `;
 
 const ContentCtn = styled.div`

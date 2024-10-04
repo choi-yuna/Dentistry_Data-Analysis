@@ -42,9 +42,9 @@ const VisualMapChart = ({ chart }) => {
   ];
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '61%'}}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '70%'}}>
       {/* 차트 */}
-      <div style={{ width: '35%', height: '430%', margin: '-250px 50px'}}>
+      <div style={{ width: '30%', height: '430%', margin: '-250px 50px'}}>
         {mapData.length > 0 ? (
           <SimpleSouthKoreaMapChart
             setColorByCount={setColorByCount}

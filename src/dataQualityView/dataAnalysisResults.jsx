@@ -20,7 +20,7 @@ const FormCtn = styled.div`
     width: 100%;
     height: auto;
     background: #FAF8F8;
-    box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
+    box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.20);
     position: relative;
 `;
 
