@@ -10,15 +10,15 @@ const ResultCtn = styled.div`
 `;
 
 const FormCtn = styled.div`
-    padding: 30px;
+    padding: 18px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     width: 95%;
-    height: 36vh; 
+    height: 32vh;  
     background: #FAF8F8;
-    box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.40);
+    box-shadow: 0px 4px 4px rgba(12, 12, 13, 0.20);
     box-sizing: border-box; 
     overflow: auto; 
 `;
@@ -37,7 +37,7 @@ const TitleBar = styled.div`
 
 const SubTitle = styled.h3`
     margin: 2px;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold; 
 `;
 

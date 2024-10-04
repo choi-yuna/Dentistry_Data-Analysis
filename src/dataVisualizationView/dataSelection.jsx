@@ -65,19 +65,19 @@ const StyledTabs = styled(Tabs)`
   border-radius: 8px 8px 0 0;
   min-height: 40px !important;  /* 전체 탭 높이 줄임 */
   font-size : 13px !important;
-  height: 32px;  
-  min-height: 40px !important; /* 전체 탭 높이 */
+  height: 35px; !important; 
+  min-height: 35px !important; /* 전체 탭 높이 */
   font-size: 13px !important; /* 글자 크기 */
-  height: 40px !important; /* 탭 높이 */
+  height: 30px !important; /* 탭 높이 */
   font-weight: bold !important; /* 폰트를 진하게 설정 */
 `;
 
 const StyledTab = styled(Tab)`
   flex-grow: 1;
   min-width: 0;
-  padding: 8px 12px !important; /* 상하 패딩(8px), 좌우 패딩(12px) */
-  font-size: 13px !important; /* 글자 크기 */
-  min-height: 40px !important; /* 탭의 최소 높이 */
+  padding: 8px 10px !important; /* 상하 패딩(8px), 좌우 패딩(12px) */
+  font-size: 11px !important; /* 글자 크기 */
+  min-height: 35px !important; /* 탭의 최소 높이 */
   font-weight: bold !important;
   &.Mui-selected {
     color: #000000;
@@ -141,14 +141,14 @@ const SubList = styled.div`
 `;
 
 const StyledButtonItem = styled.button`
-  padding: 6px 8px;
+  padding: 5px 8px;
   background-color: ${({ selected }) => (selected ? '#DD7610' : '#f0f0f0')};
   color: ${({ selected }) => (selected ? '#ffffff' : '#000000')};
   border: 1px solid ${({ selected }) => (selected ? '#DD7610' : '#ccc')};
   border-radius: 4px;
   margin-right: 8px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   transition: background-color 0.3s, color 0.3s;
 
   &:hover {
@@ -178,7 +178,7 @@ const SelectWrapper = styled.div`
 `;
 
 const Label = styled.label`
-  font-size: 13px;
+  font-size: 11px;
   font-weight: bold;
   margin-right: 8px;
 `;
@@ -186,9 +186,9 @@ const Label = styled.label`
 const SelectField = styled(Select)`
   min-width: 100px;
   font-size: 0.8rem;
-  height: 25px;
+  height: 20px;
   margin-right: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 
   .MuiSelect-select {
     padding: 7px;
@@ -226,9 +226,9 @@ const ButtonStyled = styled.button`
   padding: 6px 16px;
   background-color: #F5FBFF; 
   color: #203086;
-  font-size: 14px; 
+  font-size: 12px; 
   font-weight: bold;
-  border: 1px solid #203086; 
+  border: 1px solid #cccccc; 
   border-radius: 8px; 
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -267,19 +267,19 @@ const SelectedItemsBox = styled.div`
 const ChipsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
 `;
 
 const SmallChip = styled(Chip)`
   font-size: 0.7rem !important;          /* 텍스트 크기 */
-  height: 24px !important;               /* 전체 높이 조정 */
+  height: 22px !important;               /* 전체 높이 조정 */
   padding: 0px 4px !important;           /* 내부 패딩 조정 */
   border-radius: 12px !important;        /* 모서리 둥글기 */
 
   /* Chip의 텍스트 스타일 */
   .MuiChip-label {
     padding: 0px 8px !important;         /* 텍스트 패딩 조정 */
-    font-size: 0.7rem !important;        /* 텍스트 크기 */
+    font-size: 0.6rem !important;        /* 텍스트 크기 */
   }
 
   /* 삭제 아이콘 크기 조정 */
@@ -605,7 +605,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                           <span
                             style={{
                               color: isSelected ? '#DD7610' : 'black',
-                              fontSize: '12px',
+                              fontSize: '10px',
                             }}
                           >
                             {subItem.label || subItem}
@@ -626,7 +626,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
                 .flatMap(([category, items]) => {
                   if (tabValue === 0) {
                     return Array.isArray(items) ? items.map((item, index) => (
-                      <Chip
+                      <SmallChip
                         key={`${category}-${item.label || item}-${index}`}
                         label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
                         onDelete={() => handleDelete(item, category)}
@@ -650,6 +650,11 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
               size="small"
               startIcon={<RefreshIcon />}
               onClick={handleReset}
+              sx={{
+                padding: '2px 6px',  // 상하, 좌우 패딩 조절
+                fontSize: '0.7rem',   // 글자 크기 조절
+                minWidth: 'auto',     // 버튼의 최소 너비 설정
+              }}
             >
               초기화
             </Button>

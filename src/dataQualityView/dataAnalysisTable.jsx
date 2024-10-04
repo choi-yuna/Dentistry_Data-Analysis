@@ -46,9 +46,9 @@ const DescriptionText = styled.td`
   font-size: 10px; /* 글씨 크기 약간 키움 */
   line-height: 1.6;
   color: #333;
-  padding: 10px;
+  padding: 6px;
   text-align: left;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 `;
 
 // 그 외 기존 코드
@@ -62,7 +62,7 @@ const Container = styled.div`
 
 const TableContainer = styled.div`
   width: 94%;
-  margin: 15px 0; /* 설명과 표 사이 간격 추가 */
+  margin: 9px 0; /* 설명과 표 사이 간격 추가 */
   padding: 10px;
   background-color: #fff;
   border-radius: 8px;
@@ -95,7 +95,7 @@ const TableCell = styled.td`
 
 const Header = styled.div`
   width: 100%;
-  background-color: #f9f9f9;
+  background-color: #FAF8F8;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
