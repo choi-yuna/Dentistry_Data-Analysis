@@ -14,7 +14,7 @@ function App() {
       <DataProvider>
         <DataSelectionProvider>
           <AnalysisProvider> {/* AnalysisProvider로 감싸기 */}
-            <Router>
+            <Router basename="/data-analysis"> {/* basename 설정 추가 */}
               <div className="App">
                 <Routes>
                   <Route path="/" element={<DataQualityView />} />
