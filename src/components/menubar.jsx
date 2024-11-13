@@ -136,11 +136,15 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [activeSubMenuItem, setActiveSubMenuItem] = useState('All');
   const [activeQuality, setActiveQuality] = useState(false);
+  const [activeCompositon, setActiveComposition] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location.pathname === '/') {
+      setActiveComposition(true);
+      setActiveSubMenuItem(null);
+  }   else if (location.pathname === '/dataQuality') {
       setActiveQuality(true);
       setActiveSubMenuItem(null);
     } else if (location.pathname === '/dataVisualization') {
@@ -156,12 +160,19 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const handleToggle = () => {
     setCollapsed(!collapsed);
   };
+  const handleDataCompositionViewMenuClick = () => {
+    setActiveQuality(true);
+    setShowSubMenu(false);
+    setActiveSubMenuItem(null);
+    navigate('/');
+  };
+
 
   const handleQualityMenuClick = () => {
     setActiveQuality(true);
     setShowSubMenu(false);
     setActiveSubMenuItem(null);
-    navigate('/');
+    navigate('/dataQuality');
   };
 
   const handleVisualizationMenuClick = () => {
@@ -211,6 +222,10 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
         <ToggleIcon src={collapsed ? Close : Open} alt="Toggle Icon" />
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
+      <QualityMenuBtn active={activeCompositon} onClick={handleDataCompositionViewMenuClick}>
+          데이터 구성 현황
+          <Icon src={ClosedIcon} alt="Close Icon" />
+        </QualityMenuBtn>
         <QualityMenuBtn active={activeQuality} onClick={handleQualityMenuClick}>
           데이터 품질 평가
           <Icon src={ClosedIcon} alt="Close Icon" />
