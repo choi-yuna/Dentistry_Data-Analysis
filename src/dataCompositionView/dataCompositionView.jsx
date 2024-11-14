@@ -1,4 +1,3 @@
-// DataCompositionView.jsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
@@ -9,13 +8,34 @@ import TopSection from './TopSection';
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('질환별 보기');
-
-  // TotalFileStatus 전달 더미데이터
-  const background = '#F4F4FF'; 
-  const totalFiles = '총파일 수';
-  const uploadDate = '2023-11-14';
-  const fileCount = 3400;
-  const color = '#051C91';
+  
+  //테스트용 더미데이터
+  const fileStatuses = [
+    { 
+      background: '#F4F4FF', 
+      totalFiles: '총파일 수', 
+      uploadDate: '2023-11-14', 
+      fileCount: 3400, 
+      totalFilesCount: 5000, 
+      showGraph: false 
+    },
+    { 
+      background: '#FFF0EE', 
+      totalFiles: '오류 파일 수', 
+      uploadDate: '2023-11-14', 
+      fileCount: 400, 
+      totalFilesCount: 5000, 
+      showGraph: false 
+    },
+    { 
+      totalFiles: '구축율', 
+      uploadDate: '2023-11-14', 
+      fileCount: 1000, 
+      totalFilesCount: 2000, 
+      showGraph: true 
+    }
+  ];
+  
 
   return (
     <AppContainer>
@@ -23,22 +43,16 @@ const DataCompositionView = () => {
       <MainContent>
         <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <ContentCtn collapsed={collapsed}>
-          <TotalFileCtn>
-            <TotalFileStatus 
-              background={background}
-              totalFiles={totalFiles}
-              uploadDate={uploadDate}
-              fileCount={fileCount}
-              color = {color}
-            />
-            <TotalFileStatus 
-              background={'#FFF0EE'}
-              totalFiles={'오류 파일 수'}
-              uploadDate={uploadDate}
-              fileCount={400}
-              color = {'#FF1500'}
-            />
-          </TotalFileCtn>
+          <TopCtn>
+            <TitleCtn>
+              <Title>데이터 구축 현황</Title>
+            </TitleCtn>
+            <TotalFileCtn>
+              {fileStatuses.map((status, index) => (
+                <TotalFileStatus key={index} {...status} />
+              ))}
+            </TotalFileCtn>
+          </TopCtn>
           <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
         </ContentCtn>
       </MainContent>
@@ -53,7 +67,7 @@ const AppContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-   background-color: #F7F7F7;
+  background-color: #F7F7F7;
   transition: width 0.3s ease, height 0.3s ease;
 `;
 
@@ -73,6 +87,7 @@ const ContentCtn = styled.div`
   margin-top: 30px;
   margin-left: ${(props) => (props.collapsed ? '5%' : '20%')};
   height: calc(100vh - 80px); 
+  width: 100vh;
   overflow: hidden;
 `;
 
@@ -83,4 +98,28 @@ const TotalFileCtn = styled.div`
   flex: 1;
   margin-top: 3%;
   gap: 20px;
+  margin-left: 5%;
 `;
+
+const TitleCtn = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex: 1;
+  align-items: center;
+`
+
+const TopCtn = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex: 1;
+`
+
+
+const Title = styled.div`
+  text-align: center;
+  color: black;
+  font-size: 20px;
+  font-weight: 800;
+`
