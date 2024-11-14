@@ -1,110 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const TopSectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 0 20px;
-`;
-
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #F7F7F7;
-  padding: 10px;
-  border-bottom: 1px solid #959595;
-`;
-
-const TabsContainer = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const TabButton = styled.button`
-  background-color: ${(props) => (props.active ? '#B5B5B5' : '#E7E7E9')};
-  border: none;
-  border-radius: 20px;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: bold;
-  font-family: 'Roboto', sans-serif;
-  color: #333;
-  box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
-
-  &:hover {
-    background-color: #B5B5B5;
-  }
-`;
-
-const HeaderCell = styled.div`
-  flex: 1;
-  min-width: 100px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
-  color: #000;
-`;
-
-const SectionContainer = styled.div`
-  background-color: #FFFFFF;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #E7E7E9;
-  padding: 15px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-`;
-
-const TotalRow = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  font-weight: bold;
-  font-size: 13px;
-  color: #333;
-  background-color: #F7F7F7;
-`;
-
-const Cell = styled.div`
-  flex: 1;
-  min-width: 100px;
-  text-align: center;
-  font-size: 13px;
-  color: #333;
-`;
-
-const SubRowContainer = styled.div`
-  display: ${(props) => (props.expanded ? 'block' : 'none')};
-  background-color: #FFFFFF;
-`;
-
-const SubRow = styled.div`
-  display: flex;
-  padding: 5px 0;
-  border-top: 1px solid #E0E0E0;
-`;
-
-const SubCell = styled.div`
-  flex: 1;
-  min-width: 100px;
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-`;
-
 const Section = ({ title, totalData, subData }) => {
   const [expanded, setExpanded] = useState(true);
 
@@ -218,3 +114,109 @@ const TopSection = () => {
 };
 
 export default TopSection;
+
+
+const TopSectionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+   margin-top: 20px;
+  padding: 0 20px;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #F7F7F7;
+  padding: 10px;
+  border-bottom: 1px solid #959595;
+`;
+
+const TabsContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const TabButton = styled.button`
+  background-color: ${(props) => (props.active ? '#B5B5B5' : '#E7E7E9')};
+  border: none;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
+
+  &:hover {
+    background-color: #B5B5B5;
+  }
+`;
+
+const HeaderCell = styled.div`
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  color: #000;
+`;
+
+const SectionContainer = styled.div`
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #E7E7E9;
+  padding: 15px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+`;
+
+const TotalRow = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #333;
+  background-color: #F7F7F7;
+`;
+
+const Cell = styled.div`
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  font-size: 13px;
+  color: #333;
+`;
+
+const SubRowContainer = styled.div`
+  display: ${(props) => (props.expanded ? 'block' : 'none')};
+  background-color: #FFFFFF;
+`;
+
+const SubRow = styled.div`
+  display: flex;
+  padding: 5px 0;
+  border-top: 1px solid #E0E0E0;
+`;
+
+const SubCell = styled.div`
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+`;

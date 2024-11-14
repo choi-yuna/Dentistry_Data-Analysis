@@ -1,17 +1,60 @@
-import React, { useState, useContext } from 'react';
+// DataCompositionView.jsx
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
+import TotalFileStatus from '../components/TotalFileStatus';
 import TopSection from './TopSection';
 
+const DataCompositionView = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState('질환별 보기');
+
+  // TotalFileStatus 전달 더미데이터
+  const background = '#F4F4FF'; 
+  const totalFiles = '총파일 수';
+  const uploadDate = '2023-11-14';
+  const fileCount = 3400;
+  const color = '#051C91';
+
+  return (
+    <AppContainer>
+      <TopBar />
+      <MainContent>
+        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <ContentCtn collapsed={collapsed}>
+          <TotalFileCtn>
+            <TotalFileStatus 
+              background={background}
+              totalFiles={totalFiles}
+              uploadDate={uploadDate}
+              fileCount={fileCount}
+              color = {color}
+            />
+            <TotalFileStatus 
+              background={'#FFF0EE'}
+              totalFiles={'오류 파일 수'}
+              uploadDate={uploadDate}
+              fileCount={400}
+              color = {'#FF1500'}
+            />
+          </TotalFileCtn>
+          <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
+        </ContentCtn>
+      </MainContent>
+    </AppContainer>
+  );
+};
+
+export default DataCompositionView;
 
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+   background-color: #F7F7F7;
   transition: width 0.3s ease, height 0.3s ease;
-  background-color: #F7F7F7;
 `;
 
 const MainContent = styled.div`
@@ -33,22 +76,11 @@ const ContentCtn = styled.div`
   overflow: hidden;
 `;
 
-
-const DataCompositionView = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('질환별 보기');
- 
-  return (
-    <AppContainer>
-      <TopBar />
-      <MainContent>
-        <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
-        <ContentCtn collapsed={collapsed}>
-        <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
-        </ContentCtn>
-      </MainContent>
-    </AppContainer>
-  );
-};
-
-export default DataCompositionView;
+const TotalFileCtn = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex: 1;
+  margin-top: 3%;
+  gap: 20px;
+`;
