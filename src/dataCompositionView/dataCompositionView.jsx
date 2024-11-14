@@ -112,6 +112,8 @@ const TitleCtn = styled.div`
 
 const TopCtn = styled.div`
   display: flex;
+  width: 95%;
+  height: calc(100vh - 80px); 
   flex-direction: row;
   justify-content: flex-start;
   flex: 1;
