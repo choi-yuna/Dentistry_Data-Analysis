@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
+import TopSection from './TopSection';
+
 
 const AppContainer = styled.div`
   display: flex;
@@ -9,6 +11,7 @@ const AppContainer = styled.div`
   height: 100vh;
   overflow: hidden;
   transition: width 0.3s ease, height 0.3s ease;
+  background-color: #F7F7F7;
 `;
 
 const MainContent = styled.div`
@@ -33,6 +36,7 @@ const ContentCtn = styled.div`
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState('질환별 보기');
  
   return (
     <AppContainer>
@@ -40,6 +44,7 @@ const DataCompositionView = () => {
       <MainContent>
         <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <ContentCtn collapsed={collapsed}>
+        <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
         </ContentCtn>
       </MainContent>
     </AppContainer>
