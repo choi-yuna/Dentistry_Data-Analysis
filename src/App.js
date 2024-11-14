@@ -7,6 +7,7 @@ import { AnalysisProvider } from './context/AnalysisContext'; // AnalysisProvide
 import DataQualityView from './dataQualityView/dataQuality';
 import DataCompositionView from './dataCompositionView/dataCompositionView';
 import DataVisualization from './dataVisualizationView/dataVisualizationView';
+
 import './App.css'; 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         </DataSelectionProvider>
       </DataProvider>
     </FileProvider>
+
   );
 }
 

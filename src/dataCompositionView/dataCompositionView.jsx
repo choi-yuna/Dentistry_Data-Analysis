@@ -4,9 +4,11 @@ import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import TotalFileStatus from '../components/TotalFileStatus';
+import TopSection from './TopSection';
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState('질환별 보기');
 
   // TotalFileStatus 전달 더미데이터
   const background = '#F4F4FF'; 
@@ -37,6 +39,7 @@ const DataCompositionView = () => {
               color = {'#FF1500'}
             />
           </TotalFileCtn>
+          <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
         </ContentCtn>
       </MainContent>
     </AppContainer>
@@ -50,6 +53,7 @@ const AppContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+   background-color: #F7F7F7;
   transition: width 0.3s ease, height 0.3s ease;
 `;
 
