@@ -39,7 +39,9 @@ const DataCompositionView = () => {
               color = {'#FF1500'}
             />
           </TotalFileCtn>
+          <SectionContainer>
           <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
+          </SectionContainer>
         </ContentCtn>
       </MainContent>
     </AppContainer>
@@ -55,6 +57,7 @@ const AppContainer = styled.div`
   overflow: hidden;
    background-color: #F7F7F7;
   transition: width 0.3s ease, height 0.3s ease;
+  
 `;
 
 const MainContent = styled.div`
@@ -80,7 +83,12 @@ const TotalFileCtn = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  flex: 1;
+  flex: none; /* 빈 공간 차지를 막기 위해 flex 제거 */
   margin-top: 3%;
   gap: 20px;
+`;
+
+const SectionContainer = styled.div`
+width: 100%;
+margin-top: 1%;
 `;
