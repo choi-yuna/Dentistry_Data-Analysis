@@ -96,7 +96,8 @@ const TotalFileCtn = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  flex: none; /* 빈 공간 차지를 막기 위해 flex 제거 */
+  flex: none;
+  height: 80px;
   margin-top: 3%;
   gap: 20px;
   margin-left: 5%;
@@ -104,19 +105,18 @@ const TotalFileCtn = styled.div`
 
 const TitleCtn = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex: 1;
+  height: 160px;
+  width: 300px;
   align-items: center;
 `
 
 const TopCtn = styled.div`
   display: flex;
-  width: 95%;
-  height: calc(100vh - 80px); 
   flex-direction: row;
-  justify-content: flex-start;
-  flex: 1;
+  width: 97%;
+  justify-content: space-between;
+  flex: none;
+  gap: 5%;
 `
 
 
