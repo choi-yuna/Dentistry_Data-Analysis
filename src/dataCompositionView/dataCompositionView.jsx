@@ -53,7 +53,9 @@ const DataCompositionView = () => {
               ))}
             </TotalFileCtn>
           </TopCtn>
+          <TopSectionCtn>
           <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
+          </TopSectionCtn>
         </ContentCtn>
       </MainContent>
     </AppContainer>
@@ -96,7 +98,7 @@ const TotalFileCtn = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  flex: none; /* 빈 공간 차지를 막기 위해 flex 제거 */
+  flex: none;
   margin-top: 3%;
   gap: 20px;
   margin-left: 5%;
@@ -118,6 +120,15 @@ const TopCtn = styled.div`
   justify-content: flex-start;
   flex: 1;
 `
+const TopSectionCtn = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 200px);  /* 200px는 다른 요소들의 높이에 맞춰 조정 필요 */
+  overflow-y: auto; /* 세로 스크롤 추가 */
+    overflow-x: hidden;
+  width: 100%;
+  margin-top: 2%;
+`;
 
 
 const Title = styled.div`
