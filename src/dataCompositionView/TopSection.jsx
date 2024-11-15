@@ -144,7 +144,7 @@ const TopSection = () => {
         <HeaderCell>2차검수</HeaderCell>
         <HeaderCell>구축율(%)</HeaderCell>
       </HeaderRow>
-
+        
       {sections.map((section, index) => (
         <Section
           key={index}
@@ -187,7 +187,13 @@ const HeaderRow = styled.div`
   padding: 10px 0;
   border-bottom: 1px solid #959595;
   width: 95%;
+  
+  position: sticky;  /* 화면에 고정 */
+  top: 0;            /* 상단 고정 */
+  z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
+  background-color: #F7F7F7;  /* 고정된 헤더 부분 배경색 설정 */
 `;
+
 
 const TabsContainer = styled.div`
   display: flex;
@@ -295,6 +301,7 @@ const SubCell = styled.div`
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: #FFFFFF;
+  
 `;
 
 const SubRow = styled.div`
