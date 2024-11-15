@@ -106,19 +106,18 @@ const TotalFileCtn = styled.div`
 
 const TitleCtn = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex: 1;
+  height: 160px;
+  width: 300px;
   align-items: center;
 `
 
 const TopCtn = styled.div`
   display: flex;
-  width: 95%;
-  height: calc(100vh - 80px); 
   flex-direction: row;
-  justify-content: flex-start;
-  flex: 1;
+  width: 97%;
+  justify-content: space-between;
+  flex: none;
+  gap: 5%;
 `
 const TopSectionCtn = styled.div`
   display: flex;
