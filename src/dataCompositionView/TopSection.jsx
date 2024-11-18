@@ -6,16 +6,18 @@ const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
   const { data, loading, error } = useDiseaseData(); // Context에서 데이터 가져오기
 
-  console.log('TopSection에서 받은 Context 데이터:', { data, loading, error }); 
-  
+  console.log('TopSection에서 받은 Context 데이터:', { data, loading, error });
+
   if (loading) return <LoadingContainer>로딩 중...</LoadingContainer>;
   if (error) return <ErrorContainer>{error}</ErrorContainer>;
-  if (!data || !data['질환별'] || data['질환별'].length === 0) {
+
+  // 중첩된 data 처리
+  const nestedData = data?.data || {}; // 중첩된 데이터 가져오기
+  const sections = activeTab === '질환별 보기' ? nestedData['질환별'] || [] : nestedData['기관별'] || [];
+
+  if (sections.length === 0) {
     return <ErrorContainer>데이터가 없습니다.</ErrorContainer>;
   }
-
-  // 현재 탭에 따라 데이터를 필터링
-  const sections = activeTab === '질환별 보기' ? data['질환별'] : [];
 
   return (
     <TopSectionContainer>
@@ -69,8 +71,7 @@ const Section = ({ title, totalData, subData }) => {
         {subData.map((row, rowIndex) => (
           <SubRow key={rowIndex}>
             <EmptyCell />
-            <SubCell>{row[0]}</SubCell>
-            {row.slice(1).map((cell, cellIndex) => (
+            {row.map((cell, cellIndex) => (
               <SubCell key={cellIndex}>{cell}</SubCell>
             ))}
           </SubRow>
@@ -82,8 +83,7 @@ const Section = ({ title, totalData, subData }) => {
 
 export default TopSection;
 
-
-// 스타일 정의
+// 스타일 정의 (기존 스타일 그대로 사용)
 const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
