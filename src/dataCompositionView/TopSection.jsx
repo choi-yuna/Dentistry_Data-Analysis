@@ -1,6 +1,55 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useDiseaseData } from '../context/DiseaseDataContext';
 
+const TopSection = () => {
+  const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
+  const { data, loading, error } = useDiseaseData(); // Context에서 데이터 가져오기
+
+  console.log('TopSection에서 받은 Context 데이터:', { data, loading, error }); 
+  
+  if (loading) return <LoadingContainer>로딩 중...</LoadingContainer>;
+  if (error) return <ErrorContainer>{error}</ErrorContainer>;
+  if (!data || !data['질환별'] || data['질환별'].length === 0) {
+    return <ErrorContainer>데이터가 없습니다.</ErrorContainer>;
+  }
+
+  // 현재 탭에 따라 데이터를 필터링
+  const sections = activeTab === '질환별 보기' ? data['질환별'] : [];
+
+  return (
+    <TopSectionContainer>
+      <HeaderRow>
+        <TabsContainer>
+          <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
+            질환별 보기
+          </TabButton>
+          <TabButton active={activeTab === '기관별 보기'} onClick={() => setActiveTab('기관별 보기')}>
+            기관별 보기
+          </TabButton>
+        </TabsContainer>
+        <HeaderCell>수집처</HeaderCell>
+        <HeaderCell>목표 건수</HeaderCell>
+        <HeaderCell>라벨링 건수</HeaderCell>
+        <HeaderCell>1차검수</HeaderCell>
+        <HeaderCell>데이터 구성 검수</HeaderCell>
+        <HeaderCell>2차검수</HeaderCell>
+        <HeaderCell>구축율(%)</HeaderCell>
+      </HeaderRow>
+
+      {sections.map((section, index) => (
+        <Section
+          key={index}
+          title={section.title}
+          totalData={section.totalData}
+          subData={section.subData}
+        />
+      ))}
+    </TopSectionContainer>
+  );
+};
+
+// Section 컴포넌트
 const Section = ({ title, totalData, subData }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -31,6 +80,7 @@ const Section = ({ title, totalData, subData }) => {
   );
 };
 
+<<<<<<< Updated upstream
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기');
 
@@ -157,20 +207,12 @@ const TopSection = () => {
   );
 };
 
+=======
+>>>>>>> Stashed changes
 export default TopSection;
 
+
 // 스타일 정의
-
-const ContentContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #EFEFEF;
-  border-radius: 10px;
-  flex: 8;
-  padding: 10px 0;
-  margin-left: 0; /* 왼쪽 마진 제거 */
-`;
-
 const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -183,10 +225,16 @@ const TopSectionContainer = styled.div`
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   padding: 10px 0;
   border-bottom: 1px solid #959595;
   width: 95%;
+<<<<<<< Updated upstream
+=======
+  position: sticky;
+  top: 0;
+  z-index: 100;
+>>>>>>> Stashed changes
 `;
 
 const TabsContainer = styled.div`
@@ -202,12 +250,11 @@ const TabButton = styled.button`
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
-  font-family: 'Roboto', sans-serif;
   color: #333;
   box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
 
   &:hover {
-    background-color: #B5B5B5;
+    background-color: #b5b5b5;
   }
 `;
 
@@ -216,12 +263,11 @@ const HeaderCell = styled.div`
   text-align: center;
   font-weight: bold;
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
   color: #000;
-  border-right: 1px solid #D9D8D8; /* 세로선 추가 */
+  border-right: 1px solid #d9d8d8;
 
   &:last-child {
-    border-right: none; /* 마지막 셀에는 세로선 제거 */
+    border-right: none;
   }
 `;
 
@@ -256,41 +302,27 @@ const MergedCell = styled.div`
   padding-left: 15px;
 `;
 
+const ContentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #EFEFEF;
+  border-radius: 10px;
+  flex: 8;
+  padding: 10px 0;
+`;
+
 const ContentCell = styled.div`
   flex: 1;
   text-align: center;
   font-size: 13px;
   color: #000;
   font-weight: bold;
-  border-right: 1px solid #D9D8D8; /* 기존 오른쪽 세로선 */
-  border-left: 1px solid #D9D8D8; /* 왼쪽 세로선 추가 */
+  border-right: 1px solid #D9D8D8;
 
-  &:first-child {
-    border-left: none; /* 첫 번째 셀에는 왼쪽 테두리 제거 */
-  }
   &:last-child {
-    border-right: none; /* 마지막 셀에는 오른쪽 테두리 제거 */
-  }
-    
-`;
-
-const SubCell = styled.div`
-  flex: 1;
-  text-align: center;
-  font-size: 12px;
-  color: #000;
-  border-right: 1px solid #D9D8D8; /* 기존 오른쪽 세로선 */
-  border-bottom: 1px solid #D9D8D8; /* 왼쪽 세로선 추가 */
-  padding-bottom:5px;
-
-  &:first-child {
-    border-left: none; /* 첫 번째 셀에는 왼쪽 테두리 제거 */
-  }
-  &:last-child {
-    border-right: none; /* 마지막 셀에는 오른쪽 테두리 제거 */
+    border-right: none;
   }
 `;
-
 
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
@@ -305,4 +337,32 @@ const SubRow = styled.div`
 const EmptyCell = styled.div`
   flex: 1.5;
   background-color: #FFFFFF;
+`;
+
+const SubCell = styled.div`
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+  border-right: 1px solid #D9D8D8;
+
+  &:last-child {
+    border-right: none;
+  }
+`;
+
+const LoadingContainer = styled.div`
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 20px;
+  color: #333;
+`;
+
+const ErrorContainer = styled.div`
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 20px;
+  color: red;
 `;
