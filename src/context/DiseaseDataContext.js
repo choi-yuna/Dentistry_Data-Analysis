@@ -17,8 +17,8 @@ export const DiseaseDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-          const response = await axios.get('/api/dashboard');
-          console.log('API 응답 전체:', response); // 전체 응답을 로그로 출력
+          const response = await axios.post('http://localhost:8080/api/dashboard');
+          console.log('API 응답 전체:', response); 
           setData(response.data);
         } catch (err) {
           console.error('API 호출 실패:', err);
