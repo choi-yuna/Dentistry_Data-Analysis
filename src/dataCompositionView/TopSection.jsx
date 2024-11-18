@@ -180,7 +180,7 @@ const ContentContainer = styled.div`
 `;
 
 const ContentCell = styled.div`
-  flex: 1;
+  flex: 2;
   text-align: center;
   font-size: 13px;
   color: #000;
@@ -203,7 +203,7 @@ const SubRow = styled.div`
 `;
 
 const EmptyCell = styled.div`
-  flex: 1.5;
+  flex: 1.45;
   background-color: #FFFFFF;
 `;
 
