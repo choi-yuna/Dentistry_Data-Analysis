@@ -1,129 +1,23 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-const Section = ({ title, totalData, subData }) => {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <SectionContainer>
-      <TitleRow onClick={() => setExpanded(!expanded)}>
-        <MergedCell>{title} {expanded ? '▲' : '▼'}</MergedCell>
-        <ContentContainer>
-          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
-          {totalData.map((item, index) => (
-            <ContentCell key={index}>{item}</ContentCell>
-          ))}
-        </ContentContainer>
-      </TitleRow>
-
-      <SubRowContainer expanded={expanded}>
-        {subData.map((row, rowIndex) => (
-          <SubRow key={rowIndex}>
-            <EmptyCell />
-            <SubCell>{row[0]}</SubCell>
-            {row.slice(1).map((cell, cellIndex) => (
-              <SubCell key={cellIndex}>{cell}</SubCell>
-            ))}
-          </SubRow>
-        ))}
-      </SubRowContainer>
-    </SectionContainer>
-  );
-};
+import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const TopSection = () => {
-  const [activeTab, setActiveTab] = useState('질환별 보기');
+  const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
+  const { data, loading, error } = useDiseaseData(); // Context에서 데이터 가져오기
 
-  const sections = activeTab === '질환별 보기' 
-    ? [
-        {
-          title: '질환 ALL',
-          totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-          subData: [
-            ['조선대학교병원', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-            ['고려대학교병원', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-            ['보라매병원', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-          ],
-        },
-        {
-            title: '치주',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['조선대학교병원', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['고려대학교병원', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['보라매병원', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '골수염',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['조선대학교병원', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['고려대학교병원', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['보라매병원', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '구강암',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['조선대학교병원', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['고려대학교병원', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['보라매병원', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '두개안면',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['조선대학교병원', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['고려대학교병원', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['보라매병원', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-      ]
-    : [
-        {
-            title: '조선대학교',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['치주질환', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['골수염', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['구강암', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-              ['두개안면', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '원광대학교',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['치주질환', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['골수염', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['구강암', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-              ['두개안면', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '고려대학교',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['치주질환', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['골수염', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['구강암', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-              ['두개안면', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-          {
-            title: '보라매병원',
-            totalData: ['6,500', '6,500', '6,500', '6,500', '6,500', '43%'],
-            subData: [
-              ['치주질환', '1,000', '1,000', '1,000', '1,000', '1,000', '43%'],
-              ['골수염', '1,500', '1,500', '1,500', '1,500', '1,500', '43%'],
-              ['구강암', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-              ['두개안면', '2,000', '2,000', '2,000', '2,000', '2,000', '43%'],
-            ],
-          },
-      ];
+  console.log('TopSection에서 받은 Context 데이터:', { data, loading, error });
+
+  if (loading) return <LoadingContainer>로딩 중...</LoadingContainer>;
+  if (error) return <ErrorContainer>{error}</ErrorContainer>;
+
+  // 중첩된 data 처리
+  const nestedData = data?.data || {}; // 중첩된 데이터 가져오기
+  const sections = activeTab === '질환별 보기' ? nestedData['질환별'] || [] : nestedData['기관별'] || [];
+
+  if (sections.length === 0) {
+    return <ErrorContainer>데이터가 없습니다.</ErrorContainer>;
+  }
 
   return (
     <TopSectionContainer>
@@ -157,20 +51,39 @@ const TopSection = () => {
   );
 };
 
+// Section 컴포넌트
+const Section = ({ title, totalData, subData }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <SectionContainer>
+      <TitleRow onClick={() => setExpanded(!expanded)}>
+        <MergedCell>{title} {expanded ? '▲' : '▼'}</MergedCell>
+        <ContentContainer>
+          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+          {totalData.map((item, index) => (
+            <ContentCell key={index}>{item}</ContentCell>
+          ))}
+        </ContentContainer>
+      </TitleRow>
+
+      <SubRowContainer expanded={expanded}>
+        {subData.map((row, rowIndex) => (
+          <SubRow key={rowIndex}>
+            <EmptyCell />
+            {row.map((cell, cellIndex) => (
+              <SubCell key={cellIndex}>{cell}</SubCell>
+            ))}
+          </SubRow>
+        ))}
+      </SubRowContainer>
+    </SectionContainer>
+  );
+};
+
 export default TopSection;
 
-// 스타일 정의
-
-const ContentContainer = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #EFEFEF;
-  border-radius: 10px;
-  flex: 8;
-  padding: 10px 0;
-  margin-left: 0; /* 왼쪽 마진 제거 */
-`;
-
+// 스타일 정의 (기존 스타일 그대로 사용)
 const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -183,11 +96,10 @@ const TopSectionContainer = styled.div`
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   padding: 10px 0;
   border-bottom: 1px solid #959595;
   width: 95%;
-  
   position: sticky;  /* 화면에 고정 */
   top: 0;            /* 상단 고정 */
   z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
@@ -208,12 +120,11 @@ const TabButton = styled.button`
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
-  font-family: 'Roboto', sans-serif;
   color: #333;
   box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
 
   &:hover {
-    background-color: #B5B5B5;
+    background-color: #b5b5b5;
   }
 `;
 
@@ -222,12 +133,11 @@ const HeaderCell = styled.div`
   text-align: center;
   font-weight: bold;
   font-size: 12px;
-  font-family: 'Montserrat', sans-serif;
   color: #000;
-  border-right: 1px solid #D9D8D8; /* 세로선 추가 */
+  border-right: 1px solid #d9d8d8;
 
   &:last-child {
-    border-right: none; /* 마지막 셀에는 세로선 제거 */
+    border-right: none;
   }
 `;
 
@@ -262,41 +172,27 @@ const MergedCell = styled.div`
   padding-left: 15px;
 `;
 
+const ContentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #EFEFEF;
+  border-radius: 10px;
+  flex: 8;
+  padding: 10px 0;
+`;
+
 const ContentCell = styled.div`
-  flex: 1;
+  flex: 2;
   text-align: center;
   font-size: 13px;
   color: #000;
   font-weight: bold;
-  border-right: 1px solid #D9D8D8; /* 기존 오른쪽 세로선 */
-  border-left: 1px solid #D9D8D8; /* 왼쪽 세로선 추가 */
+  border-right: 1px solid #D9D8D8;
 
-  &:first-child {
-    border-left: none; /* 첫 번째 셀에는 왼쪽 테두리 제거 */
-  }
   &:last-child {
-    border-right: none; /* 마지막 셀에는 오른쪽 테두리 제거 */
-  }
-    
-`;
-
-const SubCell = styled.div`
-  flex: 1;
-  text-align: center;
-  font-size: 12px;
-  color: #000;
-  border-right: 1px solid #D9D8D8; /* 기존 오른쪽 세로선 */
-  border-bottom: 1px solid #D9D8D8; /* 왼쪽 세로선 추가 */
-  padding-bottom:5px;
-
-  &:first-child {
-    border-left: none; /* 첫 번째 셀에는 왼쪽 테두리 제거 */
-  }
-  &:last-child {
-    border-right: none; /* 마지막 셀에는 오른쪽 테두리 제거 */
+    border-right: none;
   }
 `;
-
 
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
@@ -310,6 +206,34 @@ const SubRow = styled.div`
 `;
 
 const EmptyCell = styled.div`
-  flex: 1.5;
+  flex: 1.45;
   background-color: #FFFFFF;
+`;
+
+const SubCell = styled.div`
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+  border-right: 1px solid #D9D8D8;
+
+  &:last-child {
+    border-right: none;
+  }
+`;
+
+const LoadingContainer = styled.div`
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 20px;
+  color: #333;
+`;
+
+const ErrorContainer = styled.div`
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 20px;
+  color: red;
 `;

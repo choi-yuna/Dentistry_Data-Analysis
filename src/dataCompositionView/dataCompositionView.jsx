@@ -12,15 +12,13 @@ const DataCompositionView = () => {
   //테스트용 더미데이터
   const fileStatuses = [
     { 
-      background: '#F4F4FF', 
       totalFiles: '총파일 수', 
       uploadDate: '2023-11-14', 
       fileCount: 3400, 
       totalFilesCount: 5000, 
       showGraph: false 
     },
-    { 
-      background: '#FFF0EE', 
+    {
       totalFiles: '오류 파일 수', 
       uploadDate: '2023-11-14', 
       fileCount: 400, 
