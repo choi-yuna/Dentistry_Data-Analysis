@@ -18,7 +18,7 @@ const DataCompositionView = () => {
   console.log('[DEBUG] DataCompositionView: Error State:', error);
 
   // Context에서 받은 데이터를 활용하여 렌더링
-  const fileStatuses = data?.대시보드?.statuses || [];  // 서버에서 받은 상태 데이터
+  const fileStatuses = data && data.data ? data.data.대시보드?.statuses : []; 
 
   console.log('[DEBUG] DataCompositionView: Parsed FileStatuses:', fileStatuses);
 
