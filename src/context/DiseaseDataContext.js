@@ -16,17 +16,21 @@ export const DiseaseDataProvider = ({ children }) => {
   // 데이터 Fetch 함수
   useEffect(() => {
     const fetchData = async () => {
-        try {
-          const response = await axios.post('http://localhost:8080/api/dashboard');
-          console.log('API 응답 전체:', response); 
-          setData(response.data);
-        } catch (err) {
-          console.error('API 호출 실패:', err);
-          setError('데이터를 가져오는 중 오류가 발생했습니다.');
-        } finally {
-          setLoading(false);
-        }
-      };
+      try {
+        console.log('[DEBUG] 데이터 요청 시작'); // 요청 시작 시점
+        setLoading(true);
+        const response = await axios.post('http://localhost:8080/api/dashboard'); // 서버 요청
+        console.log('[DEBUG] 서버 응답 데이터:', response.data); // 서버 응답 데이터 확인
+        setData(response.data); // 데이터 저장
+      } catch (err) {
+        console.error('[ERROR] 서버 요청 실패:', err.message || err); // 에러 메시지 확인
+        setError('데이터를 가져오는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+        console.log('[DEBUG] 데이터 요청 완료'); // 요청 완료
+      }
+    };
+
     fetchData();
   }, []);
 

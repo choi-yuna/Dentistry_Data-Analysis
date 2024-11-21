@@ -4,16 +4,17 @@ import PropTypes from 'prop-types';
 import RedIcon from '../assets/images/red-icon.svg';
 import GreenIcon from '../assets/images/green-icon.svg';
 
-const TotalFileStatus = ({ background, totalFiles, uploadDate, fileCount, totalFilesCount, showGraph }) => {
-
+const TotalFileStatus = ({ totalFiles, uploadDate, fileCount, totalFilesCount }) => {
+  const showGraph = totalFiles === '구축율';
   const fillPercentage = totalFilesCount > 0 ? (fileCount / totalFilesCount) * 100 : 0;
   const iconSrc = fillPercentage >= 50 ? GreenIcon : RedIcon;
 
+  console.log('[DEBUG] TotalFileStatus: Props Received:', { totalFiles, uploadDate, fileCount, totalFilesCount, showGraph });
+
   return (
     <TotalFileStatusContainer 
-      background={background} 
-      fillPercentage={fillPercentage} 
-      showGraph={showGraph} 
+      fillPercentage={fillPercentage}
+      showGraph={showGraph}
       totalFiles={totalFiles}
     >
       <ContentCtn>
@@ -35,7 +36,7 @@ const TotalFileStatus = ({ background, totalFiles, uploadDate, fileCount, totalF
 
         {showGraph && (
           <GraphContainer>
-            <GraphBackground totalFiles={totalFiles} fillPercentage={fillPercentage}>
+            <GraphBackground fillPercentage={fillPercentage}>
               <GraphFill fillPercentage={fillPercentage} />
             </GraphBackground>
           </GraphContainer>
@@ -46,26 +47,15 @@ const TotalFileStatus = ({ background, totalFiles, uploadDate, fileCount, totalF
 };
 
 TotalFileStatus.propTypes = {
-  background: PropTypes.string,
-  totalFiles: PropTypes.string,
-  uploadDate: PropTypes.string,
-  fileCount: PropTypes.number,
-  color: PropTypes.string,
-  totalFilesCount: PropTypes.number,
-  showGraph: PropTypes.bool,
-};
-
-TotalFileStatus.defaultProps = {
-  background: '#F4F4FF',
-  totalFiles: '총파일 수',
-  uploadDate: '날짜',
-  fileCount: 0,
-  totalFilesCount: 1000,
-  showGraph: false,
+  totalFiles: PropTypes.string.isRequired,
+  uploadDate: PropTypes.string.isRequired,
+  fileCount: PropTypes.number.isRequired,
+  totalFilesCount: PropTypes.number.isRequired,
 };
 
 export default TotalFileStatus;
 
+// Styled Components
 const TotalFileStatusContainer = styled.div`
   width: 238px;
   height: 92px;
@@ -77,14 +67,14 @@ const TotalFileStatusContainer = styled.div`
     } else if (props.totalFiles === '구축율') {
       return props.fillPercentage < 50 ? '#FFF3F3' : '#F2FFF8'; 
     }
-    return props.background || '#FFF3F3'; 
+    return '#FFF3F3'; // 기본 배경 색
   }};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 7px 7px 0px; 
+  padding: 7px 7px 0px;
   gap: 10px;
   position: relative;
 `;
@@ -132,9 +122,9 @@ const FileCount = styled.span`
     } else if (props.totalFiles === '총파일 수') {
       return '#051C91';
     } else if (props.totalFiles === '구축율') {
-      return props.fillPercentage < 50 ? '#FF1500' : '#0F580F'; 
+      return props.fillPercentage < 50 ? '#FF1500' : '#0F580F';
     }
-    return '#333'; 
+    return '#333';
   }};
   margin-left: 7px;
 `;

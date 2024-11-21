@@ -223,7 +223,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
       <QualityMenuBtn active={activeCompositon} onClick={handleDataCompositionViewMenuClick}>
-          데이터 구성 현황
+          데이터 구축 현황
           <Icon src={ClosedIcon} alt="Close Icon" />
         </QualityMenuBtn>
         <QualityMenuBtn active={activeQuality} onClick={handleQualityMenuClick}>
