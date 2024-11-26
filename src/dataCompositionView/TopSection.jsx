@@ -77,6 +77,7 @@ const Section = ({ title, totalData, subData }) => {
         <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
         <MergedCell isAll={isAll}>{title} {expanded ? '▲' : '▼'}</MergedCell>
         <ContentContainer isAll={isAll}>
+        <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
           {totalData.map((item, index) => (
             <ContentCell key={index} isAll={isAll}>{item}</ContentCell>
           ))}
@@ -84,7 +85,7 @@ const Section = ({ title, totalData, subData }) => {
       </TitleRow>
 
       {/* 자식 데이터 렌더링 */}
-      <SubRowContainer expanded={expanded}>
+      <SubRowContainer expanded={expanded} isAll={isAll}>
         {subData.map((row, rowIndex) => (
           <SubRow key={rowIndex}>
             {row.map((cell, cellIndex) => (
@@ -189,7 +190,7 @@ const SectionContainer = styled.div`
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#efefff' : '#FFFFFF')};
+  background-color: ${(props) => (props.isAll ? '#f8f8ff' : '#FFFFFF')};
   padding: 10px;
   font-weight: bold;
   font-size: ${(props) => (props.isAll ? '16px' : '14px')};
@@ -198,11 +199,11 @@ const TitleRow = styled.div`
 `;
 
 const MergedCell = styled.div`
-  flex: 0.6;
+  flex: 0.7;
   text-align: left;
   font-size: ${(props) => (props.isAll ? '14px' : '12px')};
   font-weight: bold;
-  color: ${(props) => (props.isAll ? '#0f0f3f' : '#333')};
+  color: ${(props) => (props.isAll ? '#121264' : '#333')};
   padding-left: 15px;
 `;
 
@@ -213,7 +214,7 @@ const ContentContainer = styled.div`
   border-radius: 10px;
   flex: 8;
   padding: 10px 0;
-  margin-left: 8%;
+  margin-left: 7%;
 `;
 
 const ContentCell = styled.div`
@@ -230,7 +231,7 @@ const ContentCell = styled.div`
 
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
-  background-color: #FFFFFF;
+  background-color: ${(props) => (props.isAll ? '#fafaff' : '#ffffff')};
 `;
 
 const SubRow = styled.div`
