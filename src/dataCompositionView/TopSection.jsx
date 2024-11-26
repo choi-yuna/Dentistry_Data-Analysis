@@ -214,7 +214,7 @@ const ContentContainer = styled.div`
   border-radius: 10px;
   flex: 8;
   padding: 10px 0;
-  margin-left: 7%;
+  margin-left: 2%;
 `;
 
 const ContentCell = styled.div`
@@ -236,11 +236,13 @@ const SubRowContainer = styled.div`
 
 const SubRow = styled.div`
   display: flex;
+  flex: 0.7;
   padding: 5px 0;
+  margin-left: 11%;
 `;
 
 const SubCell = styled.div`
-  flex: 1;
+  flex: 0.7;
   text-align: center;
   font-size: ${(props) => (props.isAll ? '12px' : '11px')};
   color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
@@ -249,7 +251,6 @@ const SubCell = styled.div`
   &:last-child {
     border-right: none;
   }
-  margin-left: 3%;
 `;
 
 const LoadingContainer = styled.div`
