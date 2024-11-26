@@ -21,8 +21,8 @@ const TopSection = () => {
 
   return (
     <TopSectionContainer>
-      <HeaderRow>
-        <TabsContainer>
+     <TopCtn>
+     <TabsContainer>
           <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
             질환별 보기
           </TabButton>
@@ -30,15 +30,33 @@ const TopSection = () => {
             기관별 보기
           </TabButton>
         </TabsContainer>
+      <HeaderRow>
         <HeaderCell>수집처</HeaderCell>
         <HeaderCell>목표 건수</HeaderCell>
         <HeaderCell>라벨링 건수</HeaderCell>
-        <HeaderCell>1차검수</HeaderCell>
-        <HeaderCell>데이터 구성 검수</HeaderCell>
-        <HeaderCell>2차검수</HeaderCell>
-        <HeaderCell>구축율(%)</HeaderCell>
-      </HeaderRow>
         
+        {/* 묶음 박스: 1차검수와 1차 구축율 */}
+        <GroupedHeader>
+          <HeaderCell>1차검수</HeaderCell>
+          <HeaderCell>1차 구축율</HeaderCell>
+        </GroupedHeader>
+
+        {/* 묶음 박스: 데이터 구성 오류 건수와 데이터 구성 검수구축율 */}
+        <GroupedHeader>
+          <HeaderCell>데이터 구성 <br />오류 건수</HeaderCell>
+          <HeaderCell>데이터 구성 <br />검수 구축율</HeaderCell>
+        </GroupedHeader>
+
+        {/* 묶음 박스: 2차검수와 최종 구축율 */}
+        <GroupedHeader>
+          <HeaderCell>2차검수</HeaderCell>
+          <HeaderCell>최종 구축율</HeaderCell>
+        </GroupedHeader>
+      </HeaderRow>
+     </TopCtn>
+
+
+      {/* 데이터 섹션 */}
       {sections.map((section, index) => (
         <Section
           key={index}
@@ -51,28 +69,26 @@ const TopSection = () => {
   );
 };
 
-// Section 컴포넌트
 const Section = ({ title, totalData, subData }) => {
   const [expanded, setExpanded] = useState(false);
-
+  const isAll = title === '질환 ALL' || title === '기관 ALL';
   return (
     <SectionContainer>
-      <TitleRow onClick={() => setExpanded(!expanded)}>
-        <MergedCell>{title} {expanded ? '▲' : '▼'}</MergedCell>
-        <ContentContainer>
-          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+        <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
+        <MergedCell isAll={isAll}>{title} {expanded ? '▲' : '▼'}</MergedCell>
+        <ContentContainer isAll={isAll}>
           {totalData.map((item, index) => (
-            <ContentCell key={index}>{item}</ContentCell>
+            <ContentCell key={index} isAll={isAll}>{item}</ContentCell>
           ))}
         </ContentContainer>
       </TitleRow>
 
+      {/* 자식 데이터 렌더링 */}
       <SubRowContainer expanded={expanded}>
         {subData.map((row, rowIndex) => (
           <SubRow key={rowIndex}>
-            <EmptyCell />
             {row.map((cell, cellIndex) => (
-              <SubCell key={cellIndex}>{cell}</SubCell>
+              <SubCell key={cellIndex} isAll={isAll}>{cell}</SubCell>
             ))}
           </SubRow>
         ))}
@@ -83,29 +99,21 @@ const Section = ({ title, totalData, subData }) => {
 
 export default TopSection;
 
-// 스타일 정의 (기존 스타일 그대로 사용)
+
 const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
-  padding: 0 20px;
   width: 100%;
 `;
 
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #f7f7f7;
-  padding: 10px 0;
-  border-bottom: 1px solid #959595;
-  width: 95%;
-  position: sticky;  /* 화면에 고정 */
-  top: 0;            /* 상단 고정 */
-  z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
-  background-color: #F7F7F7;  /* 고정된 헤더 부분 배경색 설정 */
+const TopCtn = styled.div`
+display: flex;
+flex-direction: row;
+margin-bottom: 20px;
+align-items: start;
 `;
-
 
 const TabsContainer = styled.div`
   display: flex;
@@ -116,79 +124,105 @@ const TabButton = styled.button`
   background-color: ${(props) => (props.active ? '#B5B5B5' : '#E7E7E9')};
   border: none;
   border-radius: 20px;
-  padding: 5px 10px;
+  height: 35px;
+  width: 80px;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 10px;
+  font-weight: bolder;
   color: #333;
   box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
-
   &:hover {
     background-color: #b5b5b5;
   }
+  margin-top: 15%;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding: 10px 0;
+  border-bottom: 1px solid #959595;
+  width: 88%;
+  position: sticky;  /* 화면에 고정 */
+  top: 0;            /* 상단 고정 */
+  z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
+  margin-left: 1%;
 `;
 
 const HeaderCell = styled.div`
-  flex: 1;
+  flex: 0.7;
   text-align: center;
-  font-weight: bold;
-  font-size: 12px;
+  font-weight: bolder;
+  font-size: 11px;
   color: #000;
-  border-right: 1px solid #d9d8d8;
-
+  border-right: 1px solid #afafaf;
   &:last-child {
     border-right: none;
   }
 `;
 
+/* 묶음 헤더 스타일 */
+const GroupedHeader = styled.div`
+  display: flex;
+  flex: 1.4; 
+  justify-content: space-between;
+  background-color: #e4e4e4;
+  border-radius: 8px;
+  padding: 5px;
+  text-align: center;
+  margin: 3px;
+  height: 30px;
+  align-items: center;
+`;
+
 const SectionContainer = styled.div`
-  background-color: #FFFFFF;
+  background-color: ${(props) => (props.isAll ? '#f7f7ff' : '#FFFFFF')};
   border-radius: 10px;
   margin-bottom: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: ${(props) => (props.isAll ? '0px 4px 10px rgba(0, 0, 0, 0.2)' : '0px 4px 8px rgba(0, 0, 0, 0.1)')};
   overflow: hidden;
-  width: 95%;
+  width: 100%;
 `;
+
 
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: ${(props) => (props.isAll ? '#efefff' : '#FFFFFF')};
   padding: 10px;
   font-weight: bold;
-  font-size: 14px;
-  color: #333;
-  border-top: none; 
+  font-size: ${(props) => (props.isAll ? '16px' : '14px')};
+  color: ${(props) => (props.isAll ? '#3333AA' : '#333')};
   cursor: pointer;
-  margin-top: 0px; 
 `;
 
 const MergedCell = styled.div`
-  flex: 1.5;
+  flex: 0.6;
   text-align: left;
-  font-size: 14px;
+  font-size: ${(props) => (props.isAll ? '14px' : '12px')};
   font-weight: bold;
-  color: #333;
+  color: ${(props) => (props.isAll ? '#0f0f3f' : '#333')};
   padding-left: 15px;
 `;
 
 const ContentContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: #EFEFEF;
+  background-color: ${(props) => (props.isAll ? '#ffffff' : '#EFEFEF')};
   border-radius: 10px;
   flex: 8;
   padding: 10px 0;
+  margin-left: 8%;
 `;
 
 const ContentCell = styled.div`
-  flex: 2;
+  flex: 0.7;
   text-align: center;
-  font-size: 13px;
-  color: #000;
-  font-weight: bold;
+  font-size: ${(props) => (props.isAll ? '12px' : '11px')};
+  color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
+  font-weight: ${(props) => (props.isAll ? '700' : '600')};
   border-right: 1px solid #D9D8D8;
-
   &:last-child {
     border-right: none;
   }
@@ -197,7 +231,6 @@ const ContentCell = styled.div`
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: #FFFFFF;
-  
 `;
 
 const SubRow = styled.div`
@@ -205,21 +238,17 @@ const SubRow = styled.div`
   padding: 5px 0;
 `;
 
-const EmptyCell = styled.div`
-  flex: 1.45;
-  background-color: #FFFFFF;
-`;
-
 const SubCell = styled.div`
   flex: 1;
   text-align: center;
-  font-size: 12px;
-  color: #000;
+  font-size: ${(props) => (props.isAll ? '12px' : '11px')};
+  color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
+  font-weight: ${(props) => (props.isAll ? '700' : '600')};
   border-right: 1px solid #D9D8D8;
-
   &:last-child {
     border-right: none;
   }
+  margin-left: 3%;
 `;
 
 const LoadingContainer = styled.div`
