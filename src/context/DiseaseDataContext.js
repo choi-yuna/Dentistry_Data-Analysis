@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 // Context 생성
@@ -13,8 +13,15 @@ export const DiseaseDataProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
 
+  // 첫 번째 렌더링 여부를 추적하는 변수
+  const hasFetched = useRef(false);
+
   // 데이터 Fetch 함수
   useEffect(() => {
+    // 첫 렌더링 시 서버 요청 실행 방지
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const fetchData = async () => {
       try {
         console.log('[DEBUG] 데이터 요청 시작'); // 요청 시작 시점
