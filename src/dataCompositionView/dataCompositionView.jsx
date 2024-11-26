@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
-import TotalFileStatus from '../components/TotalFileStatus';
 import TopSection from './TopSection';
-import { useDiseaseData } from '../context/DiseaseDataContext'; // Context 가져오기
+import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -28,19 +27,9 @@ const DataCompositionView = () => {
       <MainContent>
         <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <ContentCtn collapsed={collapsed}>
-          <TopCtn>
             <TitleCtn>
               <Title>데이터 구축 현황</Title>
             </TitleCtn>
-            <TotalFileCtn>
-              {loading && <LoadingMessage>Loading...</LoadingMessage>}
-              {error && <ErrorMessage>Error: {error}</ErrorMessage>}
-              {!loading && !error && fileStatuses.map((status, index) => {
-                console.log('[DEBUG] Rendering TotalFileStatus:', status); // 각 상태 로그
-                return <TotalFileStatus key={index} {...status} />;
-              })}
-            </TotalFileCtn>
-          </TopCtn>
           <TopSectionCtn>
             <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
           </TopSectionCtn>
@@ -53,13 +42,12 @@ const DataCompositionView = () => {
 export default DataCompositionView;
 
 
-// Styled Components
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   transition: width 0.3s ease, height 0.3s ease;
 `;
 
@@ -79,40 +67,22 @@ const ContentCtn = styled.div`
   height: calc(100vh - 80px);
 `;
 
-const TotalFileCtn = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex: none;
-  margin-top: 3%;
-  gap: 20px;
-  margin-left: 5%;
-`;
 
 const TitleCtn = styled.div`
   display: flex;
-  height: 160px;
+  height: 60px;
   width: 300px;
+  margin-top: 3%;
   align-items: center;
-`;
-
-const TopCtn = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 97%;
-  justify-content: space-between;
-  flex: none;
-  gap: 5%;
 `;
 
 const TopSectionCtn = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 200px); /* 200px는 다른 요소들의 높이에 맞춰 조정 필요 */
-  overflow-y: auto; /* 세로 스크롤 추가 */
+  height: calc(100vh - 200px); 
+  overflow-y: auto; 
   overflow-x: hidden;
   width: 100%;
-  margin-top: 2%;
 `;
 
 const Title = styled.div`
@@ -120,14 +90,4 @@ const Title = styled.div`
   color: black;
   font-size: 20px;
   font-weight: 800;
-`;
-
-const LoadingMessage = styled.div`
-  color: #666;
-  font-size: 18px;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  font-size: 18px;
 `;
