@@ -104,7 +104,7 @@ export default TopSection;
 const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
   width: 100%;
 `;
@@ -112,13 +112,13 @@ const TopSectionContainer = styled.div`
 const TopCtn = styled.div`
 display: flex;
 flex-direction: row;
-margin-bottom: 20px;
+margin-bottom: 5px;
 align-items: start;
 `;
 
 const TabsContainer = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 7px;
 `;
 
 const TabButton = styled.button`
@@ -148,7 +148,7 @@ const HeaderRow = styled.div`
   position: sticky;  /* 화면에 고정 */
   top: 0;            /* 상단 고정 */
   z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
-  margin-left: 1%;
+  margin-right: 1%;
 `;
 
 const HeaderCell = styled.div`
@@ -178,20 +178,21 @@ const GroupedHeader = styled.div`
 `;
 
 const SectionContainer = styled.div`
-  background-color: ${(props) => (props.isAll ? '#f7f7ff' : '#FFFFFF')};
+  background-color: ${(props) => (props.isAll ? '#ebebff' : '#FFFFFF')};
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: ${(props) => (props.isAll ? '0px 4px 10px rgba(0, 0, 0, 0.2)' : '0px 4px 8px rgba(0, 0, 0, 0.1)')};
   overflow: hidden;
-  width: 100%;
+  width: 99%;
+
 `;
 
 
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#f8f8ff' : '#FFFFFF')};
-  padding: 10px;
+  background-color: ${(props) => (props.isAll ? '#ddddfa' : '#FFFFFF')};
+  padding: 13px;
   font-weight: bold;
   font-size: ${(props) => (props.isAll ? '16px' : '14px')};
   color: ${(props) => (props.isAll ? '#3333AA' : '#333')};
@@ -210,7 +211,7 @@ const MergedCell = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#ffffff' : '#EFEFEF')};
+  background-color: ${(props) => (props.isAll ? '#fafdff' : '#EFEFEF')};
   border-radius: 10px;
   flex: 8;
   padding: 10px 0;
@@ -231,7 +232,7 @@ const ContentCell = styled.div`
 
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
-  background-color: ${(props) => (props.isAll ? '#fafaff' : '#ffffff')};
+  background-color: ${(props) => (props.isAll ? '#fafdffe1' : '#ffffff')};
 `;
 
 const SubRow = styled.div`
