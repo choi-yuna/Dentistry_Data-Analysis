@@ -38,19 +38,19 @@ const TopSection = () => {
         {/* 묶음 박스: 1차검수와 1차 구축율 */}
         <GroupedHeader>
           <HeaderCell>1차검수</HeaderCell>
-          <HeaderCell>1차 구축율</HeaderCell>
+          <HeaderCell>1차 구축율 (%)</HeaderCell>
         </GroupedHeader>
 
         {/* 묶음 박스: 데이터 구성 오류 건수와 데이터 구성 검수구축율 */}
         <GroupedHeader>
           <HeaderCell>데이터 구성 <br />오류 건수</HeaderCell>
-          <HeaderCell>데이터 구성 <br />검수 구축율</HeaderCell>
+          <HeaderCell>데이터 구성 <br />검수 구축율 (%)</HeaderCell>
         </GroupedHeader>
 
         {/* 묶음 박스: 2차검수와 최종 구축율 */}
         <GroupedHeader>
           <HeaderCell>2차검수</HeaderCell>
-          <HeaderCell>최종 구축율</HeaderCell>
+          <HeaderCell>최종 구축율 (%)</HeaderCell>
         </GroupedHeader>
       </HeaderRow>
      </TopCtn>

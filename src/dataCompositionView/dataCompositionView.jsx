@@ -9,7 +9,7 @@ const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('질환별 보기');
 
-  const { data, loading, error } = useDiseaseData(); 
+  const { data, loading, error, refreshData  } = useDiseaseData(); 
 
   // 디버깅 로그 추가
   console.log('[DEBUG] DataCompositionView: DiseaseDataContext Data:', data);
@@ -21,6 +21,12 @@ const DataCompositionView = () => {
 
   console.log('[DEBUG] DataCompositionView: Parsed FileStatuses:', fileStatuses);
 
+    // 새로고침 버튼 클릭 핸들러
+    const handleRefreshClick = () => {
+      console.log('[DEBUG] 전체 새로고침 버튼 클릭');
+      refreshData(); // refreshData 호출
+    };
+
   return (
     <AppContainer>
       <TopBar />
@@ -29,6 +35,7 @@ const DataCompositionView = () => {
         <ContentCtn collapsed={collapsed}>
             <TitleCtn>
               <Title>데이터 구축 현황</Title>
+              <Refresh onClick={handleRefreshClick} >전체 새로고침</Refresh>
             </TitleCtn>
           <TopSectionCtn>
             <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -71,9 +78,9 @@ const ContentCtn = styled.div`
 const TitleCtn = styled.div`
   display: flex;
   height: 60px;
-  width: 300px;
   margin-top: 3%;
   align-items: center;
+  gap: 63%;
 `;
 
 const TopSectionCtn = styled.div`
@@ -90,4 +97,23 @@ const Title = styled.div`
   color: black;
   font-size: 20px;
   font-weight: 800;
+  width: 200px;
+`;
+
+const Refresh = styled.button`
+  display: flex;
+  height: 40px;
+  width: 110px;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  background-color: #d5d4f7;
+  margin-left: 8%;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 900;
+  border: 1px solid #a8a9c2;
+  &:hover{
+    background-color: #9696bb;
+  }
 `;

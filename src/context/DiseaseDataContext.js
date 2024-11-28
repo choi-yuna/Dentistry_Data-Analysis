@@ -15,6 +15,23 @@ export const DiseaseDataProvider = ({ children }) => {
 
   const hasFetched = useRef(false); // 첫 요청 여부 추적
 
+  const fetchData = async (refresh = false) => {
+    try {
+      console.log('[DEBUG] 서버 데이터 요청 시작', { refresh });
+      setLoading(true);
+      const response = await axios.post('http://localhost:8080/api/dashboard', { refresh });
+      console.log('[DEBUG] 서버 응답:', response.data);
+      setData(response.data);
+      setError(null); // 성공 시 오류 상태 초기화
+    } catch (err) {
+      console.error('[ERROR] 서버 요청 실패:', err);
+      setError('데이터를 가져오는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+      console.log('[DEBUG] 데이터 요청 완료');
+    }
+  };
+
   useEffect(() => {
     if (hasFetched.current) {
       console.log('[DEBUG] 이미 데이터를 가져왔으므로 요청을 건너뜁니다.');
@@ -22,28 +39,12 @@ export const DiseaseDataProvider = ({ children }) => {
     }
 
     hasFetched.current = true; // 첫 요청 이후 true로 설정
-
-    const fetchData = async () => {
-      try {
-        console.log('[DEBUG] 서버 데이터 요청 시작');
-        setLoading(true);
-        const response = await axios.post('http://localhost:8080/api/dashboard');
-        console.log('[DEBUG] 서버 응답:', response.data);
-        setData(response.data);
-      } catch (err) {
-        console.error('[ERROR] 서버 요청 실패:', err);
-        setError('데이터를 가져오는 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
-        console.log('[DEBUG] 데이터 요청 완료');
-      }
-    };
-
     fetchData();
   }, []); // 빈 배열로 설정하여 컴포넌트 마운트 시 한 번만 실행
 
+  // Provider에서 refreshData 메서드 제공
   return (
-    <DiseaseDataContext.Provider value={{ data, loading, error }}>
+    <DiseaseDataContext.Provider value={{ data, loading, error, refreshData: () => fetchData(true) }}>
       {children}
     </DiseaseDataContext.Provider>
   );
