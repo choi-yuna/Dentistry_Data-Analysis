@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import TopSection from './TopSection';
@@ -9,7 +9,7 @@ const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('질환별 보기');
 
-  const { data, loading, error, refreshData  } = useDiseaseData(); 
+  const { data, loading, error, refreshData } = useDiseaseData();
 
   // 디버깅 로그 추가
   console.log('[DEBUG] DataCompositionView: DiseaseDataContext Data:', data);
@@ -17,15 +17,15 @@ const DataCompositionView = () => {
   console.log('[DEBUG] DataCompositionView: Error State:', error);
 
   // Context에서 받은 데이터를 활용하여 렌더링
-  const fileStatuses = data && data.data ? data.data.대시보드?.statuses : []; 
+  const fileStatuses = data && data.data ? data.data.대시보드?.statuses : [];
 
   console.log('[DEBUG] DataCompositionView: Parsed FileStatuses:', fileStatuses);
 
-    // 새로고침 버튼 클릭 핸들러
-    const handleRefreshClick = () => {
-      console.log('[DEBUG] 전체 새로고침 버튼 클릭');
-      refreshData(); // refreshData 호출
-    };
+  // 새로고침 버튼 클릭 핸들러
+  const handleRefreshClick = () => {
+    console.log('[DEBUG] 전체 새로고침 버튼 클릭');
+    refreshData(); // refreshData 호출
+  };
 
   return (
     <AppContainer>
@@ -33,14 +33,24 @@ const DataCompositionView = () => {
       <MainContent>
         <MenuBar collapsed={collapsed} setCollapsed={setCollapsed} />
         <ContentCtn collapsed={collapsed}>
-            <TitleCtn>
-              <Title>데이터 구축 현황</Title>
-              {!loading && (
+          <TitleCtn>
+            <Title>데이터 구축 현황</Title>
+            {!loading && (
               <Refresh onClick={handleRefreshClick}>전체 새로고침</Refresh>
             )}
-            </TitleCtn>
+          </TitleCtn>
           <TopSectionCtn>
-            <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
+            {loading ? (
+              <LoadingContainer>
+                <Spinner>
+                  <OuterCircle />
+                  <InnerCircle />
+                </Spinner>
+                <LoadingText>데이터를 분석 중입니다...</LoadingText>
+              </LoadingContainer>
+            ) : (
+              <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
+            )}
           </TopSectionCtn>
         </ContentCtn>
       </MainContent>
@@ -49,7 +59,6 @@ const DataCompositionView = () => {
 };
 
 export default DataCompositionView;
-
 
 const AppContainer = styled.div`
   display: flex;
@@ -76,7 +85,6 @@ const ContentCtn = styled.div`
   height: calc(100vh - 80px);
 `;
 
-
 const TitleCtn = styled.div`
   display: flex;
   height: 60px;
@@ -88,8 +96,8 @@ const TitleCtn = styled.div`
 const TopSectionCtn = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 200px); 
-  overflow-y: auto; 
+  height: calc(100vh - 200px);
+  overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
 `;
@@ -105,17 +113,87 @@ const Title = styled.div`
 const Refresh = styled.button`
   display: flex;
   height: 40px;
-  width: 110px;
+  width: 130px;
   align-items: center;
   justify-content: center;
-  color: black;
-  background-color: #d5d4f7;
+  color: #fffcfc; 
+  background-color: #60a7f3; 
   margin-left: 8%;
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: 900;
-  border: 1px solid #a8a9c2;
-  &:hover{
-    background-color: #9696bb;
+  font-size: 14px;
+  font-weight: 600;
+  border: none; 
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease; 
+
+  &:hover {
+    background-color: #0056b3; 
+    box-shadow: 0 6px 8px rgba(0, 123, 255, 0.5); 
+    transform: translateY(-2px); 
   }
+
+  &:active {
+    background-color: #064486; 
+    box-shadow: 0 3px 5px rgba(0, 123, 255, 0.3); 
+    transform: translateY(0); 
+  }
+`;
+
+
+const spinOuter = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const spinInner = keyframes`
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+`;
+
+const Spinner = styled.div`
+  position: relative;
+  width: 80px;
+  height: 80px;
+`;
+
+const OuterCircle = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-top: 4px solid #6a5acd;
+  border-radius: 50%;
+  animation: ${spinOuter} 1.5s linear infinite;
+`;
+
+const InnerCircle = styled.div`
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  top: 20%;
+  left: 20%;
+  border: 4px solid transparent;
+  border-top: 4px solid #291f7c;
+  border-radius: 50%;
+  animation: ${spinInner} 1s linear infinite;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  border-radius: 10px;
+  height: 100%; 
+  width: 100%; 
+`;
+
+const LoadingText = styled.div`
+  margin-top: 20px;
+  font-size: 16px;
+  color: #000000;
 `;
