@@ -23,6 +23,7 @@
     "react-router-dom": "^6.26.1",
     "react-scripts": "^5.0.1",
     "react-simple-south-korea-map-chart": "^1.1.1",
+    "react-spinners": "^0.14.1",
     "react-svg-map": "^2.2.0",
     "styled-components": "^6.1.12",
     "web-vitals": "^2.1.0"

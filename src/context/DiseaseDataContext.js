@@ -19,7 +19,10 @@ export const DiseaseDataProvider = ({ children }) => {
     try {
       console.log('[DEBUG] 서버 데이터 요청 시작', { refresh });
       setLoading(true);
-      const response = await axios.post('http://localhost:8080/api/dashboard', { refresh });
+      const response = await axios.post('http://localhost:8080/api/dashboard', null, {
+        params: { refresh }  // 쿼리 파라미터로 refresh 값을 전송
+      });
+      
       console.log('[DEBUG] 서버 응답:', response.data);
       setData(response.data);
       setError(null); // 성공 시 오류 상태 초기화
