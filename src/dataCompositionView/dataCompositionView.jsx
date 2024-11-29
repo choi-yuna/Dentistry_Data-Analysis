@@ -112,15 +112,15 @@ const Title = styled.div`
 
 const Refresh = styled.button`
   display: flex;
-  height: 40px;
-  width: 130px;
+  height: 25px;
+  width: 100px;
   align-items: center;
   justify-content: center;
-  color: #fffcfc; 
+  color: #ffffff; 
   background-color: #60a7f3; 
   margin-left: 8%;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   border: none; 
   box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);

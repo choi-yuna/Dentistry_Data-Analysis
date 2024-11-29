@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDiseaseData } from '../context/DiseaseDataContext';
 
+
+
+
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
   const { data, loading, error } = useDiseaseData(); // Context에서 데이터 가져오기
@@ -21,8 +24,8 @@ const TopSection = () => {
 
   return (
     <TopSectionContainer>
-     <TopCtn>
-     <TabsContainer>
+      <TopCtn>
+        <TabsContainer>
           <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
             질환별 보기
           </TabButton>
@@ -30,31 +33,27 @@ const TopSection = () => {
             기관별 보기
           </TabButton>
         </TabsContainer>
-      <HeaderRow>
-        <HeaderCell>수집처</HeaderCell>
-        <HeaderCell>목표 건수</HeaderCell>
-        <HeaderCell>라벨링 건수</HeaderCell>
-        
-        {/* 묶음 박스: 1차검수와 1차 구축율 */}
-        <GroupedHeader>
-          <HeaderCell>1차검수</HeaderCell>
+        <HeaderRow>
+          <HeaderCell>수집처</HeaderCell>
+          <HeaderCell>목표 건수</HeaderCell>
+
+          {/* 라벨링 관련 헤더 */}
+          <GroupedHeader>
+            <Column>
+            <GroupedHeaderTitle>1차검수/ 라벨링</GroupedHeaderTitle>
+            <HeaderRowUnder>
+              <HeaderCell>라벨링 등록 건수</HeaderCell>
+              <HeaderCell>라벨링 Pass 건수</HeaderCell>
+            </HeaderRowUnder>
+            </Column>
+          </GroupedHeader>
           <HeaderCell>1차 구축율 (%)</HeaderCell>
-        </GroupedHeader>
-
-        {/* 묶음 박스: 데이터 구성 오류 건수와 데이터 구성 검수구축율 */}
-        <GroupedHeader>
-          <HeaderCell>데이터 구성 <br />오류 건수</HeaderCell>
-          <HeaderCell>데이터 구성 <br />검수 구축율 (%)</HeaderCell>
-        </GroupedHeader>
-
-        {/* 묶음 박스: 2차검수와 최종 구축율 */}
-        <GroupedHeader>
-          <HeaderCell>2차검수</HeaderCell>
-          <HeaderCell>최종 구축율 (%)</HeaderCell>
-        </GroupedHeader>
-      </HeaderRow>
-     </TopCtn>
-
+          <GroupedHeader>
+          <HeaderCell>2차 검수</HeaderCell>
+          <HeaderCell> 구축율 (%)</HeaderCell>
+          </GroupedHeader>
+        </HeaderRow>
+      </TopCtn>
 
       {/* 데이터 섹션 */}
       {sections.map((section, index) => (
@@ -74,12 +73,16 @@ const Section = ({ title, totalData, subData }) => {
   const isAll = title === '질환 ALL' || title === '기관 ALL';
   return (
     <SectionContainer>
-        <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
-        <MergedCell isAll={isAll}>{title} {expanded ? '▲' : '▼'}</MergedCell>
+      <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
+        <MergedCell isAll={isAll}>
+          {title} {expanded ? '▲' : '▼'}
+        </MergedCell>
         <ContentContainer isAll={isAll}>
-        <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
           {totalData.map((item, index) => (
-            <ContentCell key={index} isAll={isAll}>{item}</ContentCell>
+            <ContentCell key={index} isAll={isAll}>
+              {item}
+            </ContentCell>
           ))}
         </ContentContainer>
       </TitleRow>
@@ -89,7 +92,9 @@ const Section = ({ title, totalData, subData }) => {
         {subData.map((row, rowIndex) => (
           <SubRow key={rowIndex}>
             {row.map((cell, cellIndex) => (
-              <SubCell key={cellIndex} isAll={isAll}>{cell}</SubCell>
+              <SubCell key={cellIndex} isAll={isAll}>
+                {cell}
+              </SubCell>
             ))}
           </SubRow>
         ))}
@@ -112,8 +117,13 @@ const TopSectionContainer = styled.div`
 const TopCtn = styled.div`
 display: flex;
 flex-direction: row;
+position: sticky;
+z-index: 100;
+top: 0;
 margin-bottom: 5px;
 align-items: start;
+background-color: #f7f7f7;
+
 `;
 
 const TabsContainer = styled.div`
@@ -138,43 +148,70 @@ const TabButton = styled.button`
   margin-top: 15%;
 `;
 
+// 추가 스타일
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
   background-color: #f7f7f7;
   padding: 10px 0;
-  border-bottom: 1px solid #959595;
-  width: 88%;
-  position: sticky;  /* 화면에 고정 */
-  top: 0;            /* 상단 고정 */
-  z-index: 100;      /* 스크롤할 때 다른 요소보다 위에 고정 */
-  margin-right: 1%;
+  border-bottom: 1px solid #959595; 
+  width: 100%;
+  position: sticky; /* 화면에 고정 */
+  top: 0; /* 상단 고정 */
+  z-index: 100; /* 스크롤할 때 다른 요소보다 위에 고정 */
 `;
 
 const HeaderCell = styled.div`
-  flex: 0.7;
+  flex: 1;
   text-align: center;
   font-weight: bolder;
   font-size: 11px;
   color: #000;
-  border-right: 1px solid #afafaf;
+  position: relative; 
+  &:not(:last-child)::after {
+    content: ''; 
+    position: absolute;
+    top: -5px; 
+    bottom: -5px; 
+    right: 0; 
+    width: 1px; 
+    background-color: #afafaf; 
+  }
   &:last-child {
-    border-right: none;
+    border-right: none; 
   }
 `;
 
-/* 묶음 헤더 스타일 */
+
 const GroupedHeader = styled.div`
   display: flex;
-  flex: 1.4; 
+  flex-direction: row; 
   justify-content: space-between;
-  background-color: #e4e4e4;
-  border-radius: 8px;
-  padding: 5px;
-  text-align: center;
-  margin: 3px;
-  height: 30px;
   align-items: center;
+  flex: 2;
+  background-color: #e2e9f0;
+  border-radius: 8px;
+  text-align: center;
+  padding: 5px;
+  margin: 0 5px;
+`;
+
+
+const GroupedHeaderTitle = styled.div`
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #000;
+  width: calc(100% + 2px); 
+  border-bottom: 1px solid #959595;
+  margin: 0 -7px; 
+`;
+const HeaderRowUnder = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 5px 0;
 `;
 
 const SectionContainer = styled.div`
@@ -183,10 +220,16 @@ const SectionContainer = styled.div`
   margin-bottom: 10px;
   box-shadow: ${(props) => (props.isAll ? '0px 4px 10px rgba(0, 0, 0, 0.2)' : '0px 4px 8px rgba(0, 0, 0, 0.1)')};
   overflow: hidden;
-  width: 99%;
-
+  width: 98%;
+  margin-left: 2%;
 `;
 
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
 
 const TitleRow = styled.div`
   display: flex;
