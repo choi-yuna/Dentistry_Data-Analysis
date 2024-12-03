@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDiseaseData } from '../context/DiseaseDataContext';
 
-
-
-
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
   const { data, loading, error } = useDiseaseData(); // Context에서 데이터 가져오기
@@ -69,6 +66,18 @@ const TopSection = () => {
 };
 
 const Section = ({ title, totalData, subData }) => {
+
+  const formatNumber = (value) => {
+    // 숫자나 문자열로 넘어온 숫자를 처리
+    const number = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value;
+    
+    // 숫자가 아니면 그대로 반환
+    if (isNaN(number)) return value;
+    
+    // 숫자에 쉼표 추가
+    return number.toLocaleString('ko-KR');
+  };
+  
   const [expanded, setExpanded] = useState(false);
   const isAll = title === '질환 ALL' || title === '기관 ALL';
   return (
@@ -81,7 +90,7 @@ const Section = ({ title, totalData, subData }) => {
           <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
           {totalData.map((item, index) => (
             <ContentCell key={index} isAll={isAll}>
-              {item}
+              {formatNumber(item)}
             </ContentCell>
           ))}
         </ContentContainer>
@@ -93,7 +102,7 @@ const Section = ({ title, totalData, subData }) => {
           <SubRow key={rowIndex}>
             {row.map((cell, cellIndex) => (
               <SubCell key={cellIndex} isAll={isAll}>
-                {cell}
+                {formatNumber(cell)}
               </SubCell>
             ))}
           </SubRow>
