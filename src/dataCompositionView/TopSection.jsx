@@ -39,7 +39,7 @@ const TopSection = () => {
             <Column>
             <GroupedHeaderTitle>1차검수/ 라벨링</GroupedHeaderTitle>
             <HeaderRowUnder>
-              <HeaderCell>라벨링 등록 건수</HeaderCell>
+              <HeaderCell>라벨링 등록 건수 <br/> (json 파일 기준)</HeaderCell>
               <HeaderCell>라벨링 Pass 건수</HeaderCell>
             </HeaderRowUnder>
             </Column>
@@ -47,7 +47,7 @@ const TopSection = () => {
           <HeaderCell>1차 구축율 (%)</HeaderCell>
           <GroupedHeader>
           <HeaderCell>2차 검수</HeaderCell>
-          <HeaderCell> 구축율 (%)</HeaderCell>
+          <HeaderCell>최종 구축율 (%)</HeaderCell>
           </GroupedHeader>
         </HeaderRow>
       </TopCtn>
@@ -219,6 +219,7 @@ const HeaderRowUnder = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  align-items: center;
   width: 100%;
   padding: 5px 0;
 `;
