@@ -112,7 +112,7 @@ const Section = ({ title, totalData, subData }) => {
     if (isNaN(number)) return value;
 
     // 퍼센트 또는 '건' 추가
-    return addPercent ? `${number.toLocaleString('ko-KR')}%` : `${number.toLocaleString('ko-KR')} 건`;
+    return addPercent ? `${number.toLocaleString('ko-KR')} %` : `${number.toLocaleString('ko-KR')} 건`;
   };
 
 
