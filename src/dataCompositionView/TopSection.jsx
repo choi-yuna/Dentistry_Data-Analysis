@@ -57,7 +57,7 @@ const TopSection = () => {
             </Column>
           </GroupedHeader>
 
-          <GroupedHeader>
+          <GroupedHeader style={{width: '30px', height: '65px'}}>
           <HeaderCell>2차 검수</HeaderCell>
           <HeaderCell>최종 구축율 (%)</HeaderCell>
           </GroupedHeader>
@@ -219,7 +219,7 @@ const GroupedHeader = styled.div`
 
 
 const GroupedHeaderTitle = styled.div`
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
   margin-bottom: 5px;
   color: #000;
@@ -258,7 +258,7 @@ const Column = styled.div`
 const TitleRow = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#ddddfa' : '#FFFFFF')};
+  background-color: ${(props) => (props.isAll ? '#dee7f0' : '#FFFFFF')};
   padding: 13px;
   font-weight: bold;
   font-size: ${(props) => (props.isAll ? '16px' : '14px')};
@@ -299,7 +299,7 @@ const ContentCell = styled.div`
 
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
-  background-color: ${(props) => (props.isAll ? '#fafdffe1' : '#ffffff')};
+  background-color: ${(props) => (props.isAll ? '#dee7f05e' : '#ffffff')};
 `;
 
 const SubRow = styled.div`
