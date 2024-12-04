@@ -35,16 +35,28 @@ const TopSection = () => {
           <HeaderCell>목표 건수</HeaderCell>
 
           {/* 라벨링 관련 헤더 */}
-          <GroupedHeader>
+          <GroupedHeader style={{ flex: 5 }}>
             <Column>
             <GroupedHeaderTitle>1차검수/ 라벨링</GroupedHeaderTitle>
             <HeaderRowUnder>
-              <HeaderCell>라벨링 등록 건수 <br/> (json 파일 기준)</HeaderCell>
-              <HeaderCell>라벨링 Pass 건수</HeaderCell>
+            <HeaderCell style={{ flex: 1.8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'}}> 
+                  <div>
+                    라벨링 등록 건수 <br />
+                    (json 파일 기준)
+                  </div>
+                  <div>
+                    / 등록 구축율 (%)
+                   </div>
+                </div>
+            </HeaderCell>
+              <HeaderCell style={{ flex: 1.6 }}>
+                라벨링 Pass 건수 / 1차 구축율 (%)
+              </HeaderCell>
             </HeaderRowUnder>
             </Column>
           </GroupedHeader>
-          <HeaderCell>1차 구축율 (%)</HeaderCell>
+
           <GroupedHeader>
           <HeaderCell>2차 검수</HeaderCell>
           <HeaderCell>최종 구축율 (%)</HeaderCell>
@@ -171,7 +183,7 @@ const HeaderRow = styled.div`
 `;
 
 const HeaderCell = styled.div`
-  flex: 1;
+  flex: 1.3;
   text-align: center;
   font-weight: bolder;
   font-size: 11px;
@@ -197,7 +209,7 @@ const GroupedHeader = styled.div`
   flex-direction: row; 
   justify-content: space-between;
   align-items: center;
-  flex: 2;
+  flex: 2.4;
   background-color: #e2e9f0;
   border-radius: 8px;
   text-align: center;
@@ -218,11 +230,13 @@ const GroupedHeaderTitle = styled.div`
 const HeaderRowUnder = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
+  justify-content: center; 
+  align-items: center; 
   width: 100%;
-  padding: 5px 0;
+  padding: 10px 0; 
+  gap: 10px; 
 `;
+
 
 const SectionContainer = styled.div`
   background-color: ${(props) => (props.isAll ? '#ebebff' : '#FFFFFF')};
