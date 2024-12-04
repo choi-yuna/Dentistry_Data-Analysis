@@ -278,7 +278,7 @@ const MergedCell = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#fafdff' : '#EFEFEF')};
+  background-color: ${(props) => (props.isAll ? '#fafdff' : '#f4f5f7')};
   border-radius: 10px;
   flex: 8;
   padding: 10px 0;
