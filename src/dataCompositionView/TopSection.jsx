@@ -39,20 +39,46 @@ const TopSection = () => {
             <Column>
             <GroupedHeaderTitle>1차검수/ 라벨링</GroupedHeaderTitle>
             <HeaderRowUnder>
-            <HeaderCell style={{ flex: 1.8 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'}}> 
-                  <div>
-                    라벨링 등록 건수 <br />
-                    (json 파일 기준)
-                  </div>
-                  <div>
-                    / 등록 구축율 (%)
-                   </div>
-                </div>
-            </HeaderCell>
-              <HeaderCell style={{ flex: 1.6 }}>
-                라벨링 Pass 건수 / 1차 구축율 (%)
-              </HeaderCell>
+            <HeaderCell style={{ flex: 1.8, position: 'relative' , height: '28px'}}>
+               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
+                 <div>
+                   라벨링 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 등록 구축율 (%)
+                 </div>
+               </div>
+               <div
+                 style={{
+                   position: 'absolute',
+                   bottom: -12,
+                   right: 10,
+                   top: 25,
+                   fontSize: '10px',
+                   color: '#525252',
+                   textAlign: 'right',
+                 }}
+               >
+                  (json 파일 기준)
+               </div>
+             </HeaderCell>
+             <HeaderCell style={{ flex: 1.6, position: 'relative' , height: '28px'}}>
+               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
+                 <div>
+                 라벨링 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 1차 구축율 (%)
+                 </div>
+               </div>
+               <div
+                 style={{
+                   position: 'absolute',
+                   bottom: -12,
+                   right: 10,
+                   top: 25,
+                   fontSize: '10px',
+                   color: '#525252',
+                   textAlign: 'right',
+                 }}
+               >
+                  (CRF, json, ini, 원영상 파일 기준)
+               </div>
+             </HeaderCell>
             </HeaderRowUnder>
             </Column>
           </GroupedHeader>
@@ -78,20 +104,37 @@ const TopSection = () => {
 };
 
 const Section = ({ title, totalData, subData }) => {
-
-  const formatNumber = (value) => {
-    // 숫자나 문자열로 넘어온 숫자를 처리
+  // 숫자를 포맷팅하고 %나 '건'을 붙이는 함수
+  const formatNumber = (value, addPercent = false) => {
     const number = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value;
-    
+
     // 숫자가 아니면 그대로 반환
     if (isNaN(number)) return value;
-    
-    // 숫자에 쉼표 추가
-    return number.toLocaleString('ko-KR');
+
+    // 퍼센트 또는 '건' 추가
+    return addPercent ? `${number.toLocaleString('ko-KR')}%` : `${number.toLocaleString('ko-KR')} 건`;
   };
-  
+
+
+  const getStylesByRate = (rate, includeBackground = true) => {
+    if (rate >= 100) {
+      return includeBackground
+        ? { color: '#018a13', backgroundColor: '#d4f7dc' }
+        : { color: '#018a13' }; 
+    }
+    if (rate >= 50) {
+      return includeBackground
+        ? { color: '#1f00cc', backgroundColor: '#d9d3f7b9' }
+        : { color: '#1f00cc' }; 
+    }
+    return includeBackground
+      ? { color: '#fc0505', backgroundColor: '#f7d4d4bc' }
+      : { color: '#fc0505' }; 
+  };
+
   const [expanded, setExpanded] = useState(false);
   const isAll = title === '질환 ALL' || title === '기관 ALL';
+
   return (
     <SectionContainer>
       <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
@@ -100,11 +143,15 @@ const Section = ({ title, totalData, subData }) => {
         </MergedCell>
         <ContentContainer isAll={isAll}>
           <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
-          {totalData.map((item, index) => (
-            <ContentCell key={index} isAll={isAll}>
-              {formatNumber(item)}
-            </ContentCell>
-          ))}
+          {totalData.map((item, index) => {
+            const styles =
+              (index === 2 || index === 4 || index === 6) && item !== 0 ? getStylesByRate(item, true) : {};
+            return (
+              <ContentCell key={index} isAll={isAll} style={styles}>
+                {formatNumber(item, index === 2 || index === 4 || index === 6)}
+              </ContentCell>
+            );
+          })}
         </ContentContainer>
       </TitleRow>
 
@@ -112,11 +159,17 @@ const Section = ({ title, totalData, subData }) => {
       <SubRowContainer expanded={expanded} isAll={isAll}>
         {subData.map((row, rowIndex) => (
           <SubRow key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <SubCell key={cellIndex} isAll={isAll}>
-                {formatNumber(cell)}
-              </SubCell>
-            ))}
+            {row.map((cell, cellIndex) => {
+              const styles =
+                (cellIndex === 3 || cellIndex === 5 || cellIndex === 7) && Number(cell) !== 0
+                  ? getStylesByRate(Number(cell), false) // 배경색 제외
+                  : {};
+              return (
+                <SubCell key={cellIndex} isAll={isAll} style={styles}>
+                  {formatNumber(cell, cellIndex === 3 || cellIndex === 5 || cellIndex === 7)}
+                </SubCell>
+              );
+            })}
           </SubRow>
         ))}
       </SubRowContainer>
@@ -295,6 +348,11 @@ const ContentCell = styled.div`
   &:last-child {
     border-right: none;
   }
+  /* 배경색 적용 */
+  background-color: ${(props) => props.bgColor || 'transparent'};
+  padding: 2px 8px ; 
+  border-radius: 8px; 
+  margin: 0px; 
 `;
 
 const SubRowContainer = styled.div`
