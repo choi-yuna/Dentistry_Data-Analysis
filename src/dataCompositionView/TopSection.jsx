@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDiseaseData } from '../context/DiseaseDataContext';
+import { Padding } from '@mui/icons-material';
 
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기'); // 기본 탭 설정
@@ -31,18 +32,18 @@ const TopSection = () => {
           </TabButton>
         </TabsContainer>
         <HeaderRow>
-          <HeaderCell>수집처</HeaderCell>
+          <HeaderCell>데이터 가공처</HeaderCell>
           <HeaderCell>목표 건수</HeaderCell>
 
           {/* 라벨링 관련 헤더 */}
           <GroupedHeader style={{ flex: 5 }}>
             <Column>
-            <GroupedHeaderTitle>1차검수/ 라벨링</GroupedHeaderTitle>
+            <GroupedHeaderTitle>서버 업로드 (라벨링 및 1차검수)</GroupedHeaderTitle>
             <HeaderRowUnder>
             <HeaderCell style={{ flex: 1.8, position: 'relative' , height: '28px'}}>
                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
                  <div>
-                   라벨링 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 등록 구축율 (%)
+                    업로드 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
                  </div>
                </div>
                <div
@@ -56,13 +57,13 @@ const TopSection = () => {
                    textAlign: 'right',
                  }}
                >
-                  (json 파일 기준)
+                  (영상/json 기준)
                </div>
              </HeaderCell>
              <HeaderCell style={{ flex: 1.6, position: 'relative' , height: '28px'}}>
                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
                  <div>
-                 라벨링 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 1차 구축율 (%)
+                 업로드 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
                  </div>
                </div>
                <div
@@ -71,12 +72,12 @@ const TopSection = () => {
                    bottom: -12,
                    right: 10,
                    top: 25,
-                   fontSize: '10px',
+                   fontSize: '9px',
                    color: '#525252',
                    textAlign: 'right',
                  }}
                >
-                  (CRF, json, ini, 원영상 파일 기준)
+                  (영상/CRF/라벨링/메타 데이터 모두 포함 여부)
                </div>
              </HeaderCell>
             </HeaderRowUnder>
@@ -116,67 +117,103 @@ const Section = ({ title, totalData, subData }) => {
   };
 
 
-  const getStylesByRate = (rate, includeBackground = true) => {
+
+
+
+  const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
+    // 해당 인덱스가 스타일을 적용할 인덱스 배열에 포함되는지 확인
+    const isTargetIndex = indicesToStyle.includes(cellIndex);
+  
+    if (!isTargetIndex) {
+      return {}; // 인덱스가 해당되지 않으면 빈 스타일 반환
+    }
+  
     if (rate >= 100) {
       return includeBackground
-        ? { color: '#018a13', backgroundColor: '#d4f7dc' }
-        : { color: '#018a13' }; 
+        ? { color: '#018a13', backgroundColor: '#e0ffed' }
+        : { color: '#018a13' };
     }
     if (rate >= 50) {
       return includeBackground
-        ? { color: '#1f00cc', backgroundColor: '#d9d3f7b9' }
-        : { color: '#1f00cc' }; 
+        ? { color: '#1f00cc', backgroundColor: '#ede4ff' }
+        : { color: '#1f00cc' };
     }
     return includeBackground
-      ? { color: '#fc0505', backgroundColor: '#f7d4d4bc' }
-      : { color: '#fc0505' }; 
+      ? { color: '#fc0505', backgroundColor: '#ffe6e6' }
+      : { color: '#fc0505' };
   };
+  
+    // 특정 위치의 셀을 하이라이트
+    const isHighlightedCell = (cellIndex, type) => {
+      if (type === 'header') {
+        return [3,4].includes(cellIndex); // 헤더에서 강조할 인덱스
+      }
+      if (type === 'sub') {
+        return [4,5].includes(cellIndex); // 서브 데이터에서 강조할 인덱스
+      }
+      return false;
+    };
+  
+    const getHighlightStyle = (isHighlighted) => {
+      if (isHighlighted) {
+        return {
+          boxShadow: '0 0 8px #a8c6fa', 
+          border: '0.5px solid rgba(184, 234, 247, 0.363)',
+          borderRadius: '15px',
+
+        };
+      }
+    
+      // 강조되지 않은 경우 명확하게 `null` 반환
+      return null;
+    };
 
   const [expanded, setExpanded] = useState(false);
   const isAll = title === '질환 ALL' || title === '기관 ALL';
+return (
+  <SectionContainer>
+    {/* Title Row */}
+    <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
+      <MergedCell isAll={isAll}>
+        {title} {expanded ? '▲' : '▼'}
+      </MergedCell>
+      <ContentContainer isAll={isAll}>
+        <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+        {totalData.map((item, index) => {
+          const styles = {
+            ...getStylesByRate(item, index, [2,4], true), // 헤더에 특정 인덱스 적용
+            ...getHighlightStyle(isHighlightedCell(index, 'header')), // 강조 스타일 추가
+          };
+          return (
+            <ContentCell key={index} isAll={isAll} style={styles}>
+              {formatNumber(item, [2,4].includes(index))}
+            </ContentCell>
+          );
+        })}
+      </ContentContainer>
+    </TitleRow>
 
-  return (
-    <SectionContainer>
-      <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
-        <MergedCell isAll={isAll}>
-          {title} {expanded ? '▲' : '▼'}
-        </MergedCell>
-        <ContentContainer isAll={isAll}>
-          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
-          {totalData.map((item, index) => {
-            const styles =
-              (index === 2 || index === 4 || index === 6) && item !== 0 ? getStylesByRate(item, true) : {};
+    {/* SubRow 데이터 렌더링 */}
+    <SubRowContainer expanded={expanded} isAll={isAll}>
+      {subData.map((row, rowIndex) => (
+        <SubRow key={rowIndex}>
+          {row.map((cell, cellIndex) => {
+            const styles = {
+              ...getStylesByRate(Number(cell), cellIndex, [3, 5], false), // 서브 데이터에 특정 인덱스 적용
+              ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')), // 강조 스타일 추가
+            };
             return (
-              <ContentCell key={index} isAll={isAll} style={styles}>
-                {formatNumber(item, index === 2 || index === 4 || index === 6)}
-              </ContentCell>
+              <SubCell key={cellIndex} isAll={isAll} style={styles}>
+                {formatNumber(cell, [3, 5].includes(cellIndex))}
+              </SubCell>
             );
           })}
-        </ContentContainer>
-      </TitleRow>
-
-      {/* 자식 데이터 렌더링 */}
-      <SubRowContainer expanded={expanded} isAll={isAll}>
-        {subData.map((row, rowIndex) => (
-          <SubRow key={rowIndex}>
-            {row.map((cell, cellIndex) => {
-              const styles =
-                (cellIndex === 3 || cellIndex === 5 || cellIndex === 7) && Number(cell) !== 0
-                  ? getStylesByRate(Number(cell), false) // 배경색 제외
-                  : {};
-              return (
-                <SubCell key={cellIndex} isAll={isAll} style={styles}>
-                  {formatNumber(cell, cellIndex === 3 || cellIndex === 5 || cellIndex === 7)}
-                </SubCell>
-              );
-            })}
-          </SubRow>
-        ))}
-      </SubRowContainer>
-    </SectionContainer>
-  );
-};
-
+        </SubRow>
+      ))}
+    </SubRowContainer>
+  </SectionContainer>
+);
+}
 export default TopSection;
 
 
@@ -239,7 +276,7 @@ const HeaderCell = styled.div`
   flex: 1.3;
   text-align: center;
   font-weight: bolder;
-  font-size: 11px;
+  font-size: 12px;
   color: #000;
   position: relative; 
   &:not(:last-child)::after {
