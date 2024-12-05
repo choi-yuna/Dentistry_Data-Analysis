@@ -105,27 +105,23 @@ const TopSection = () => {
 };
 
 const Section = ({ title, totalData, subData }) => {
-  // 숫자를 포맷팅하고 %나 '건'을 붙이는 함수
+
+  const [expanded, setExpanded] = useState(false);
+  const isAll = title === '질환 ALL' || title === '기관 ALL';
+
+
   const formatNumber = (value, addPercent = false) => {
     const number = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value;
-
-    // 숫자가 아니면 그대로 반환
     if (isNaN(number)) return value;
-
-    // 퍼센트 또는 '건' 추가
     return addPercent ? `${number.toLocaleString('ko-KR')} %` : `${number.toLocaleString('ko-KR')} 건`;
   };
 
 
-
-
-
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
-    // 해당 인덱스가 스타일을 적용할 인덱스 배열에 포함되는지 확인
     const isTargetIndex = indicesToStyle.includes(cellIndex);
   
     if (!isTargetIndex) {
-      return {}; // 인덱스가 해당되지 않으면 빈 스타일 반환
+      return {}; 
     }
   
     if (rate >= 100) {
@@ -143,13 +139,12 @@ const Section = ({ title, totalData, subData }) => {
       : { color: '#fc0505' };
   };
   
-    // 특정 위치의 셀을 하이라이트
     const isHighlightedCell = (cellIndex, type) => {
       if (type === 'header') {
-        return [3,4].includes(cellIndex); // 헤더에서 강조할 인덱스
+        return [3,4].includes(cellIndex); // 헤더에
       }
       if (type === 'sub') {
-        return [4,5].includes(cellIndex); // 서브 데이터에서 강조할 인덱스
+        return [4,5].includes(cellIndex); // 서브 데이터
       }
       return false;
     };
@@ -163,13 +158,10 @@ const Section = ({ title, totalData, subData }) => {
 
         };
       }
-    
-      // 강조되지 않은 경우 명확하게 `null` 반환
       return null;
     };
 
-  const [expanded, setExpanded] = useState(false);
-  const isAll = title === '질환 ALL' || title === '기관 ALL';
+
 return (
   <SectionContainer>
     {/* Title Row */}
@@ -180,20 +172,21 @@ return (
       <ContentContainer isAll={isAll}>
         <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
         {totalData.map((item, index) => {
+           const includeBackground = index !== 2; 
           const styles = {
-            ...getStylesByRate(item, index, [2,4], true), // 헤더에 특정 인덱스 적용
+            ...getStylesByRate(item, index, [2,4], includeBackground), // 헤더에 특정 인덱스 적용
             ...getHighlightStyle(isHighlightedCell(index, 'header')), // 강조 스타일 추가
           };
           return (
             <ContentCell key={index} isAll={isAll} style={styles}>
-              {formatNumber(item, [2,4].includes(index))}
+              {formatNumber(item, [2, 4].includes(index))}
             </ContentCell>
           );
         })}
       </ContentContainer>
     </TitleRow>
 
-    {/* SubRow 데이터 렌더링 */}
+    {/* SubRow */}
     <SubRowContainer expanded={expanded} isAll={isAll}>
       {subData.map((row, rowIndex) => (
         <SubRow key={rowIndex}>
