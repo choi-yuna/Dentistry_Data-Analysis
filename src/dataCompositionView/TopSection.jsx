@@ -4,7 +4,7 @@ import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기');
-  const { data, loading, error } = useDiseaseData(); 
+  const { data, loading, error } = useDiseaseData();
   const [expandedRow, setExpandedRow] = useState({});
 
   const toggleRow = (key) => {
@@ -14,14 +14,14 @@ const TopSection = () => {
     }));
   };
 
-  
+
   console.log('TopSection에서 받은 Context 데이터:', { data, loading, error });
 
   if (loading) return <LoadingContainer>로딩 중...</LoadingContainer>;
   if (error) return <ErrorContainer>{error}</ErrorContainer>;
 
   // 중첩된 data 처리
-  const nestedData = data?.data || {}; 
+  const nestedData = data?.data || {};
   const sections = activeTab === '질환별 보기' ? nestedData['질환별'] || [] : nestedData['기관별'] || [];
 
   if (sections.length === 0) {
@@ -44,54 +44,54 @@ const TopSection = () => {
           <HeaderCell>목표 건수</HeaderCell>
           <GroupedHeader style={{ flex: 5 }}>
             <Column>
-            <GroupedHeaderTitle>서버 업로드 (라벨링 및 1차검수)</GroupedHeaderTitle>
-            <HeaderRowUnder>
-            <HeaderCell style={{ flex: 1.8, position: 'relative' , height: '28px'}}>
-               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
-                 <div>
-                    업로드 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
-                 </div>
-               </div>
-               <div
-                 style={{
-                   position: 'absolute',
-                   bottom: -12,
-                   right: 10,
-                   top: 25,
-                   fontSize: '10px',
-                   color: '#525252',
-                   textAlign: 'right',
-                 }}
-               >
-                  (영상/json 기준)
-               </div>
-             </HeaderCell>
-             <HeaderCell style={{ flex: 1.6, position: 'relative' , height: '28px'}}>
-               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
-                 <div>
-                 업로드 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
-                 </div>
-               </div>
-               <div
-                 style={{
-                   position: 'absolute',
-                   bottom: -12,
-                   right: 10,
-                   top: 25,
-                   fontSize: '9px',
-                   color: '#525252',
-                   textAlign: 'right',
-                 }}
-               >
-                  (영상/CRF/라벨링/메타 데이터 모두 포함 여부)
-               </div>
-             </HeaderCell>
-            </HeaderRowUnder>
+              <GroupedHeaderTitle>서버 업로드 (라벨링 및 1차검수)</GroupedHeaderTitle>
+              <HeaderRowUnder>
+                <HeaderCell style={{ flex: 1.8, position: 'relative', height: '28px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
+                    <div>
+                      업로드 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: -12,
+                      right: 10,
+                      top: 25,
+                      fontSize: '11px',
+                      color: '#525252',
+                      textAlign: 'right',
+                    }}
+                  >
+                    (영상/json 기준)
+                  </div>
+                </HeaderCell>
+                <HeaderCell style={{ flex: 1.6, position: 'relative', height: '28px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
+                    <div>
+                      업로드 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: -12,
+                      right: 5,
+                      top: 25,
+                      fontSize: '11px',
+                      color: '#525252',
+                      textAlign: 'right',
+                    }}
+                  >
+                    (영상/CRF/라벨링/메타 데이터 모두 포함 여부)
+                  </div>
+                </HeaderCell>
+              </HeaderRowUnder>
             </Column>
           </GroupedHeader>
-          <GroupedHeader style={{width: '30px', height: '65px'}}>
-          <HeaderCell>2차 검수</HeaderCell>
-          <HeaderCell>최종 구축율 (%)</HeaderCell>
+          <GroupedHeader style={{ width: '30px', height: '65px' }}>
+            <HeaderCell>2차 검수</HeaderCell>
+            <HeaderCell>최종 구축율 (%)</HeaderCell>
           </GroupedHeader>
         </HeaderRow>
       </TopCtn>
@@ -99,26 +99,26 @@ const TopSection = () => {
       {/* 데이터 섹션 */}
       {sections.map((section, index) => (
         <Section
-        key={index}
-        title={section.title}
-        totalData={section.totalData}
-        subData={section.subData}
-        controlData={section.controlData}
-        type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
-        expandedRow={expandedRow}
-        toggleRow={toggleRow} 
+          key={index}
+          title={section.title}
+          totalData={section.totalData}
+          subData={section.subData}
+          controlData={section.controlData}
+          type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
+          expandedRow={expandedRow}
+          toggleRow={toggleRow}
         />
       ))}
     </TopSectionContainer>
   );
 };
 
-const Section = ({  title, totalData, subData, controlData, type, expandedRow, toggleRow  }) => {
+const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow }) => {
 
   const [expanded, setExpanded] = useState(false);
   const shouldShowButton = (row) =>
-    (type === '질환별' && title ==='골수염' && row[0] === '단국대학교') ||
-    (type === '기관별' && title ==='단국대학교' && row[0] === '골수염');
+    (type === '질환별' && title === '골수염' && row[0] === '단국대학교') ||
+    (type === '기관별' && title === '단국대학교' && row[0] === '골수염');
 
   const isAll = title === '질환 ALL' || title === '기관 ALL';
 
@@ -133,9 +133,9 @@ const Section = ({  title, totalData, subData, controlData, type, expandedRow, t
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
     const isTargetIndex = indicesToStyle.includes(cellIndex);
     if (!isTargetIndex) {
-      return {}; 
+      return {};
     }
-  
+
     if (rate >= 100) {
       return includeBackground
         ? { color: '#018a13', backgroundColor: '#e0ffed' }
@@ -150,124 +150,130 @@ const Section = ({  title, totalData, subData, controlData, type, expandedRow, t
       ? { color: '#fc0505', backgroundColor: '#ffe6e6' }
       : { color: '#fc0505' };
   };
-  
-    const isHighlightedCell = (cellIndex, type) => {
-      if (type === 'header') {
-        return [3,4].includes(cellIndex); // 헤더에
-      }
-      if (type === 'sub') {
-        return [4,5].includes(cellIndex); // 서브 데이터
-      }
-      return false;
-    };
-  
-    const getHighlightStyle = (isHighlighted) => {
-      if (isHighlighted) {
-        return {
-          boxShadow: '0 0 8px #a8c6fa', 
-          border: '0.5px solid rgba(184, 234, 247, 0.363)',
-          borderRadius: '15px',
 
-        };
-      }
-      return null;
-    };
+  const isHighlightedCell = (cellIndex, type) => {
+    if (type === 'header') {
+      return [3, 4].includes(cellIndex); // 헤더에
+    }
+    if (type === 'sub') {
+      return [4, 5].includes(cellIndex); // 서브 데이터
+    }
+    return false;
+  };
+
+  const getHighlightStyle = (isHighlighted) => {
+    if (isHighlighted) {
+      return {
+        boxShadow: '0 0 8px #a8c6fa',
+        border: '0.5px solid rgba(184, 234, 247, 0.363)',
+        borderRadius: '15px',
+
+      };
+    }
+    return null;
+  };
 
 
-    return (
-      <SectionContainer>
-        {/* Title Row */}
-        <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
-          <MergedCell isAll={isAll}>
-            {title} {expanded ? '▲' : '▼'}
-          </MergedCell>
-          <ContentContainer isAll={isAll}>
-            <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
-            {totalData.map((item, index) => {
-              const includeBackground = index !== 2;
-              const styles = {
-                ...getStylesByRate(item, index, [2, 4], includeBackground),
-                ...getHighlightStyle(isHighlightedCell(index, 'header')),
-              };
-              return (
-                <ContentCell key={index} isAll={isAll} style={styles}>
-                  {formatNumber(item, [2, 4].includes(index))}
-                </ContentCell>
-              );
-            })}
-          </ContentContainer>
-        </TitleRow>
-  
-        {/* SubRow */}
-        <SubRowContainer expanded={expanded} isAll={isAll}  isAdditional={false}> 
-          {subData.map((row, rowIndex) => {
-            const rowKey = `${title}-${rowIndex}`;
+  return (
+    <SectionContainer>
+      {/* Title Row */}
+      <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
+        <MergedCell isAll={isAll}>
+          {title} {expanded ? '▲' : '▼'}
+        </MergedCell>
+        <ContentContainer isAll={isAll}>
+          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+          {totalData.map((item, index) => {
+            const includeBackground = index !== 2;
+            const styles = {
+              ...getStylesByRate(item, index, [2, 4], includeBackground),
+              ...getHighlightStyle(isHighlightedCell(index, 'header')),
+            };
             return (
-              <React.Fragment key={rowKey}>
-                <SubRow>
-                  {row.map((cell, cellIndex) => {
-                    
-              const includeBackground = cellIndex !== 3;
-                    const styles = {
-                      ...getStylesByRate(Number(cell), cellIndex, [3, 5], includeBackground),
-                      ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
-                    };
-                    return (
-                <SubCell key={cellIndex} isAll={isAll} style={{
-                  ...styles,
+              <ContentCell key={index} isAll={isAll} style={styles}>
+                {formatNumber(item, [2, 4].includes(index))}
+              </ContentCell>
+            );
+          })}
+        </ContentContainer>
+      </TitleRow>
 
-                }}>
-                  {cellIndex === 0 ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '35px' }}>
-                      <span>
-                        {type === '질환별' && title === '골수염' && row[0] === '고려대학교'
-                          ? '고려대학교 (대조군)'
-                          : type === '기관별' && title === '고려대학교' && row[0] === '골수염'
-                          ? '골수염 (대조군)'
-                          : row[0]}
-                      </span>
-                      {shouldShowButton(row) && (
-                        <span
-                          onClick={() => toggleRow(rowKey)}
-                          style={{
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            marginLeft: '5px',
-                          }}
-                        >
-                          {expandedRow[rowKey] ? '▲' : '▼'}
-                        </span>
+      {/* SubRow */}
+      <SubRowContainer expanded={expanded} isAll={isAll} isAdditional={false}>
+        {subData.map((row, rowIndex) => {
+          const rowKey = `${title}-${rowIndex}`;
+          return (
+            <React.Fragment key={rowKey}>
+              <SubRow>
+                {row.map((cell, cellIndex) => {
+
+                  const includeBackground = cellIndex !== 3;
+                  const styles = {
+                    ...getStylesByRate(Number(cell), cellIndex, [3, 5], includeBackground),
+                    ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
+                  };
+                  return (
+                    <SubCell key={cellIndex} isAll={isAll} style={{
+                      ...styles,
+
+                    }}>
+                      {cellIndex === 0 ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '35px' }}>
+                          <span>
+                            {type === '질환별' && title === '골수염' && row[0] === '고려대학교'
+                              ? '고려대학교 (대조군)'
+                              : type === '기관별' && title === '고려대학교' && row[0] === '골수염'
+                                ? '골수염 (대조군)'
+                                : row[0]}
+                          </span>
+                          {shouldShowButton(row) && (
+                            <span
+                              onClick={() => toggleRow(rowKey)}
+                              style={{
+                                cursor: 'pointer',
+                                fontSize: '12px',
+                                marginLeft: '5px',
+                              }}
+                            >
+                              {expandedRow[rowKey] ? '▲' : '▼'}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        formatNumber(cell, [3, 5].includes(cellIndex))
                       )}
-                    </div>
-                  ) : (
-                    formatNumber(cell, [3, 5].includes(cellIndex))
-                  )}
-                </SubCell>
+                    </SubCell>
 
-                    );
-                  })}
-                </SubRow>
+                  );
+                })}
+              </SubRow>
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
-               <SubRowContainer expanded isAll={isAll} isAdditional={true}>
-                 {controlData.map((controlRow, controlIndex) => (
-                   <SubRow key={`control-${controlIndex}`}>
-                     {controlRow.map((controlCell, controlCellIndex) => {
-                       const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
-                       const styles = {
-                         ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
-                         ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
-                       };  
-                       return (
-                         <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
-                           {formatNumber(controlCell, controlCellIndex === 3 || controlCellIndex === 5)}
-                         </SubCell>
-                       );
-                     })}
-                   </SubRow>
-                 ))}
-               </SubRowContainer>
-             )}
+                <SubRowContainer expanded isAll={isAll} isAdditional={true}>
+                  {controlData.map((controlRow, controlIndex) => (
+                    <SubRow key={`control-${controlIndex}`}>
+                      {controlRow.map((controlCell, controlCellIndex) => {
+                        const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
+                        
+                        // null일 경우 스타일 제거
+                        const styles = controlCell !== null 
+                          ? {
+                              ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
+                              ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
+                            }
+                          : {}; // null일 경우 빈 스타일 적용
+                          
+                        return (
+                          <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
+                            {/* null일 때는 빈 값 렌더링 */}
+                            {controlCell !== null ? formatNumber(controlCell, controlCellIndex === 3 || controlCellIndex === 5) : ''}
+                          </SubCell>
+                        );
+                      })}
+                    </SubRow>
+                  ))}
+                </SubRowContainer>
+              )}
             </React.Fragment>
           );
         })}
@@ -316,14 +322,14 @@ const TabsContainer = styled.div`
 `;
 
 const TabButton = styled.button`
-  background-color: ${(props) => (props.active ? '#B5B5B5' : '#E7E7E9')};
+  background-color: ${(props) => (props.active ? '#c8d9ec' : '#E7E7E9')};
   border: none;
   border-radius: 20px;
   height: 35px;
   width: 80px;
   cursor: pointer;
   font-size: 10px;
-  font-weight: bolder;
+  font-weight: bold;
   color: #333;
   box-shadow: ${(props) => (props.active ? 'none' : '0 4px 4px rgba(0, 0, 0, 0.25)')};
   &:hover {
@@ -468,7 +474,7 @@ const ContentCell = styled.div`
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: ${(props) =>
-    props.isAdditional ? '#e1eff15a' : props.isAll ? '#dee7f053' : '#ffffff'};
+    props.isAdditional ? '#e4f0f15a' : props.isAll ? '#dee7f053' : '#ffffff'};
 `;
 
 const SubRow = styled.div`

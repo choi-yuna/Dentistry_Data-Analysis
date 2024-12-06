@@ -117,7 +117,7 @@ const Refresh = styled.button`
   align-items: center;
   justify-content: center;
   color: #ffffff; 
-  background-color: #60a7f3; 
+  background-color: #407bba; 
   margin-left: 14%;
   margin-top: 1%;
   border-radius: 20px;
