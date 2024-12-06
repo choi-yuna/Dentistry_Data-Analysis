@@ -129,7 +129,8 @@ const Icon = styled.img`
 const ToggleIcon = styled.img`
   width: 13px;
   height: 15px;
-  margin-right: 2px;
+  margin-right: 3px;
+  margin-left: -3px;
 `;
 
 const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
@@ -219,7 +220,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   return (
     <MenuBarContainer collapsed={collapsed}>
       <ToggleButton onClick={handleToggle} collapsed={collapsed}>
-        <ToggleIcon src={collapsed ? Close : Open} alt="Toggle Icon" />
+        <ToggleIcon src={collapsed ? Open : Close} alt="Toggle Icon" />
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
       <QualityMenuBtn active={activeCompositon} onClick={handleDataCompositionViewMenuClick}>
