@@ -118,8 +118,6 @@ const Section = ({  title, totalData, subData, controlData, type, expandedRow, t
   const [expanded, setExpanded] = useState(false);
   const shouldShowButton = (row) =>
     (type === '질환별' && title ==='골수염' && row[0] === '단국대학교') ||
-    (type === '질환별' && title ==='질환 ALL' &&  row[0] === '단국대학교') ||
-    (type === '기관별' && title ==='기관 ALL' &&  row[0] === '골수염') ||
     (type === '기관별' && title ==='단국대학교' && row[0] === '골수염');
 
   const isAll = title === '질환 ALL' || title === '기관 ALL';
@@ -201,29 +199,31 @@ const Section = ({  title, totalData, subData, controlData, type, expandedRow, t
         </TitleRow>
   
         {/* SubRow */}
-        <SubRowContainer expanded={expanded} isAll={isAll}  isAdditional={false}>
+        <SubRowContainer expanded={expanded} isAll={isAll}  isAdditional={false}> 
           {subData.map((row, rowIndex) => {
             const rowKey = `${title}-${rowIndex}`;
             return (
               <React.Fragment key={rowKey}>
                 <SubRow>
                   {row.map((cell, cellIndex) => {
+                    
+              const includeBackground = cellIndex !== 3;
                     const styles = {
-                      ...getStylesByRate(Number(cell), cellIndex, [3, 5], false),
+                      ...getStylesByRate(Number(cell), cellIndex, [3, 5], includeBackground),
                       ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
                     };
                     return (
                       <SubCell key={cellIndex} style={styles}>
                         {cellIndex === 0 ? (
-                          <div style={{ display: 'flex', alignItems: 'center',  gap: '5px', marginLeft:'35px'}}>
-                            <span>{cell}</span> {/* 텍스트 */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '35px' }}>
+                            <span>{cell}</span>
                             {shouldShowButton(row) && (
                               <span
                                 onClick={() => toggleRow(rowKey)}
                                 style={{
                                   cursor: 'pointer',
-                                  fontSize: '12px', // 크기를 줄임
-                                  marginLeft: '5px', // 여백
+                                  fontSize: '12px',
+                                  marginLeft: '5px',
                                 }}
                               >
                                 {expandedRow[rowKey] ? '▲' : '▼'}
@@ -231,28 +231,33 @@ const Section = ({  title, totalData, subData, controlData, type, expandedRow, t
                             )}
                           </div>
                         ) : (
-                          cell
+                          formatNumber(cell, cellIndex === 3 || cellIndex === 5) // 건/퍼센트 포매팅 적용
                         )}
                       </SubCell>
-
                     );
                   })}
                 </SubRow>
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
-                <SubRowContainer expanded  isAll={isAll} isAdditional={true}>
-                  {controlData.map((controlRow, controlIndex) => (
-                    <SubRow key={`control-${controlIndex}`}>
-                      {controlRow.map((controlCell, controlCellIndex) => (
-                        <SubCell key={`control-cell-${controlCellIndex}`}>
-                          {controlCell}
-                        </SubCell>
-                      ))}
-                    </SubRow>
-                  ))}
-                </SubRowContainer>
-              )}
-
+               <SubRowContainer expanded isAll={isAll} isAdditional={true}>
+                 {controlData.map((controlRow, controlIndex) => (
+                   <SubRow key={`control-${controlIndex}`}>
+                     {controlRow.map((controlCell, controlCellIndex) => {
+                       const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
+                       const styles = {
+                         ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
+                         ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
+                       };
+                       return (
+                         <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
+                           {formatNumber(controlCell, controlCellIndex === 3 || controlCellIndex === 5)}
+                         </SubCell>
+                       );
+                     })}
+                   </SubRow>
+                 ))}
+               </SubRowContainer>
+             )}
             </React.Fragment>
           );
         })}
@@ -295,6 +300,7 @@ background-color: #f7f7f7;
 const TabsContainer = styled.div`
   display: flex;
   gap: 7px;
+  margin-top: 15px;
 `;
 
 const TabButton = styled.button`
@@ -450,7 +456,7 @@ const ContentCell = styled.div`
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: ${(props) =>
-    props.isAdditional ? '#f0f0f05a' : props.isAll ? '#ececec5e' : '#ffffff'};
+    props.isAdditional ? '#e1eff15a' : props.isAll ? '#dee7f053' : '#ffffff'};
 `;
 
 const SubRow = styled.div`
