@@ -195,9 +195,18 @@ return (
               ...getStylesByRate(Number(cell), cellIndex, [3, 5], false), // 서브 데이터에 특정 인덱스 적용
               ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')), // 강조 스타일 추가
             };
+
+    // 텍스트 변경 로직 추가
+    const displayText =
+      cellIndex === 0 && title === '골수염' && row[0] === '고려대학교' // 질환별 조건
+        ? '고려대학교 (대조군)'
+        : cellIndex === 0 && title === '고려대학교' && row[0] === '골수염' // 기관별 조건
+        ? '골수염 (대조군)'
+        : cell;
+
             return (
               <SubCell key={cellIndex} isAll={isAll} style={styles}>
-                {formatNumber(cell, [3, 5].includes(cellIndex))}
+ {cellIndex === 0 ? displayText : formatNumber(cell, [3, 5].includes(cellIndex))}
               </SubCell>
             );
           })}
