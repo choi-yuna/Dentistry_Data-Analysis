@@ -118,7 +118,8 @@ const Refresh = styled.button`
   justify-content: center;
   color: #ffffff; 
   background-color: #60a7f3; 
-  margin-left: 8%;
+  margin-left: 14%;
+  margin-top: 1%;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
