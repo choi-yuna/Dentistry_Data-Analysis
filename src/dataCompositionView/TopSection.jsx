@@ -13,8 +13,6 @@ const TopSection = () => {
       [key]: !prev[key],
     }));
   };
-
-
   console.log('TopSection에서 받은 Context 데이터:', { data, loading, error });
 
   if (loading) return <LoadingContainer>로딩 중...</LoadingContainer>;
@@ -57,7 +55,7 @@ const TopSection = () => {
           <HeaderCell>구축율 (%)</HeaderCell>
           <HeaderCell>2차 검수</HeaderCell>
           <HeaderCell>최종 구축율 (%)</HeaderCell>
-       </HeaderRow>
+        </HeaderRow>
 
       </TopCtn>
 
@@ -81,12 +79,41 @@ const TopSection = () => {
 const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow }) => {
 
   const [expanded, setExpanded] = useState(false);
+  const [detailData, setDetailData] = useState([]); // 오류 상세 데이터 상태
+  const [fileId, setFileId] = useState(null); // fileId 상태 추가
+  const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+
   const shouldShowButton = (row) =>
     (type === '질환별' && title === '골수염' && row[0] === '단국대학교') ||
     (type === '기관별' && title === '단국대학교' && row[0] === '골수염');
 
   const isAll = title === '질환 ALL' || title === '기관 ALL';
 
+
+  const handleErrorDetails = (disease, hospital) => {
+    // 서버에서 받아오는 데이터 (예제 데이터 사용)
+    const serverResponse = {
+      disease: "치주질환",
+      hospital: "고려대학교",
+      fileId: "abcd",
+      files: [
+        { name: "dcm파일", exists: true },
+        { name: "crf", exists: false },
+        { name: "ini파일", exists: true },
+        { name: "alve 폴더 내 .png", exists: false },
+      ],
+    };
+    setDetailData(serverResponse.files);
+    setShowModal(true);
+    setFileId(serverResponse.fileId);
+    // 데이터 필터링
+    if (disease === serverResponse.disease && hospital === serverResponse.hospital) {
+      setDetailData(serverResponse.files);
+      setShowModal(true);
+    } else {
+      console.error("해당 데이터와 일치하는 오류 상세 정보가 없습니다.");
+    }
+  };
 
   const formatNumber = (value, addPercent = false) => {
     const number = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value;
@@ -171,17 +198,13 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
             <React.Fragment key={rowKey}>
               <SubRow>
                 {row.map((cell, cellIndex) => {
-
                   const includeBackground = cellIndex !== 3;
                   const styles = {
                     ...getStylesByRate(Number(cell), cellIndex, [3, 5], includeBackground),
                     ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
                   };
                   return (
-                    <SubCell key={cellIndex} isAll={isAll} style={{
-                      ...styles,
-
-                    }}>
+                    <SubCell key={cellIndex} isAll={isAll}  style={{ ...styles,  alignItems: 'center', gap: '5px' }}>
                       {cellIndex === 0 ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '35px' }}>
                           <span>
@@ -204,14 +227,21 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </span>
                           )}
                         </div>
+                      ) : cellIndex === 5 ? ( // 구축율 뒤에 오류 상세보기 버튼 추가
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '20%' }}>
+                          {formatNumber(cell, true)}
+                          <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
+                            오류 상세보기
+                          </ErrorButton>
+                        </div>
                       ) : (
-                        formatNumber(cell, [3, 5].includes(cellIndex))
+                        cell
                       )}
                     </SubCell>
-
                   );
                 })}
               </SubRow>
+
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
                 <SubRowContainer expanded isAll={isAll} isAdditional={true}>
@@ -219,15 +249,15 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                     <SubRow key={`control-${controlIndex}`}>
                       {controlRow.map((controlCell, controlCellIndex) => {
                         const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
-                        
+
                         // null일 경우 스타일 제거
-                        const styles = controlCell !== null 
+                        const styles = controlCell !== null
                           ? {
-                              ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
-                              ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
-                            }
+                            ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
+                            ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
+                          }
                           : {}; // null일 경우 빈 스타일 적용
-                          
+
                         return (
                           <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
                             {/* null일 때는 빈 값 렌더링 */}
@@ -243,20 +273,102 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
           );
         })}
       </SubRowContainer>
+      {showModal && (
+        <Modal>
+          <ModalContent>
+            <h3>오류 상세보기</h3>
+            <Table>
+              <thead>
+                <tr>
+                  <th>파일 이름</th>
+                  {detailData.map((file, index) => (
+                    <th key={index}>{file.name}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* 첫 번째 행 - 상태 */}
+                <tr>
+                  <td>{fileId}</td>
+                  {detailData.map((file, index) => (
+                    <td key={index} style={{ color: file.exists ? "blue" : "red" }}>
+                      {file.exists ? "O" : "X"}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </Table>
+            <CloseButton onClick={() => setShowModal(false)}>닫기</CloseButton>
+          </ModalContent>
+
+        </Modal>
+      )}
+
     </SectionContainer>
   );
 };
 
 
 export default TopSection;
-const AdditionalRow = styled.div`
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: row;
   align-items: center;
-  background-color: ${(props) => (props.isAll ? '#dee7f05e' : '#ffffff')}; /* 기존 SubRow와 동일 */
-  padding: 5px 0; /* SubRow의 패딩 적용 */
-  margin-left: 11%; /* SubRow와 동일한 위치 */
-  border-top: 1px solid #D9D8D8; /* 구분선을 추가 */
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background: #deebf3;
+    font-weight: bold;
+  }
+`;
+
+const CloseButton = styled.button`
+  background: #f86363;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+`;
+
+const ErrorButton = styled.button`
+  background-color: #f86363;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 4px;
+  margin-left: 4%;
+  cursor: pointer;
+  font-size: 10px;
+  &:hover {
+    background-color: darkred;
+  }
 `;
 
 
