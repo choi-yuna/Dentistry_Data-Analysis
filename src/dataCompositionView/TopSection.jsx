@@ -54,13 +54,10 @@ const TopSection = () => {
                   </div>
                   <div
                     style={{
-                      position: 'absolute',
-                      bottom: -12,
-                      right: 10,
-                      top: 25,
                       fontSize: '11px',
                       color: '#525252',
-                      textAlign: 'right',
+                      textAlign: 'center',
+                      marginTop: 6,
                     }}
                   >
                     (영상/json 기준)
@@ -74,13 +71,10 @@ const TopSection = () => {
                   </div>
                   <div
                     style={{
-                      position: 'absolute',
-                      bottom: -12,
-                      right: 5,
-                      top: 25,
                       fontSize: '11px',
                       color: '#525252',
-                      textAlign: 'right',
+                      textAlign: 'center',
+                      marginTop: 6,
                     }}
                   >
                     (영상/CRF/라벨링/메타 데이터 모두 포함 여부)

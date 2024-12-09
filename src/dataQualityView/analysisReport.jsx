@@ -49,7 +49,7 @@ const GroupTitle = styled.h3`
   margin-bottom: 10px;
   text-align: start;
   margin-left: 4%;
-  text-weight: bold;
+  
 `;
 
 const ReportItems = styled.div`
