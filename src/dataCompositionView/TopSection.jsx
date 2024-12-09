@@ -145,10 +145,10 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
   const isHighlightedCell = (cellIndex, type) => {
     if (type === 'header') {
-      return [3, 4].includes(cellIndex); // 헤더에
+      return [5, 8].includes(cellIndex); // 헤더에
     }
     if (type === 'sub') {
-      return [4, 5].includes(cellIndex); // 서브 데이터
+      return [6, 9].includes(cellIndex); // 서브 데이터
     }
     return false;
   };
@@ -178,12 +178,12 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
           {totalData.map((item, index) => {
             const includeBackground = index !== 2;
             const styles = {
-              ...getStylesByRate(item, index, [2, 4], includeBackground),
+              ...getStylesByRate(item, index, [5], includeBackground),
               ...getHighlightStyle(isHighlightedCell(index, 'header')),
             };
             return (
               <ContentCell key={index} isAll={isAll} style={styles}>
-                {formatNumber(item, [2, 4].includes(index))}
+                {formatNumber(item, [5, 8].includes(index))}
               </ContentCell>
             );
           })}
@@ -200,7 +200,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                 {row.map((cell, cellIndex) => {
                   const includeBackground = cellIndex !== 3;
                   const styles = {
-                    ...getStylesByRate(Number(cell), cellIndex, [3, 5], includeBackground),
+                    ...getStylesByRate(Number(cell), cellIndex, [6, 9], includeBackground),
                     ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
                   };
                   return (
@@ -227,15 +227,15 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </span>
                           )}
                         </div>
-                      ) : cellIndex === 5 ? ( // 구축율 뒤에 오류 상세보기 버튼 추가
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '20%' }}>
+                      ) : cellIndex === 6 ? ( // 구축율 뒤에 오류 상세보기 버튼 추가
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '15%' }}>
                           {formatNumber(cell, true)}
                           <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
                             오류 상세보기
                           </ErrorButton>
                         </div>
                       ) : (
-                        cell
+                        formatNumber(cell)
                       )}
                     </SubCell>
                   );
