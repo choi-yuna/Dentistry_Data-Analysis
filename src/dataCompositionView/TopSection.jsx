@@ -42,52 +42,23 @@ const TopSection = () => {
         <HeaderRow>
           <HeaderCell>데이터 가공처</HeaderCell>
           <HeaderCell>목표 건수</HeaderCell>
-          <GroupedHeader style={{ flex: 5 }}>
+          <GroupedHeader>
+            <HeaderCell>임상 (CRF)</HeaderCell>
+            <HeaderCell>영상</HeaderCell>
             <Column>
-              <GroupedHeaderTitle>서버 업로드 (라벨링 및 1차검수)</GroupedHeaderTitle>
+              <GroupedHeaderTitle>라벨링</GroupedHeaderTitle>
               <HeaderRowUnder>
-                <HeaderCell style={{ flex: 1.8, position: 'relative', height: '28px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
-                    <div>
-                      업로드 등록 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '11px',
-                      color: '#525252',
-                      textAlign: 'center',
-                      marginTop: 6,
-                    }}
-                  >
-                    (영상/json 기준)
-                  </div>
-                </HeaderCell>
-                <HeaderCell style={{ flex: 1.6, position: 'relative', height: '28px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '12px' }}>
-                    <div>
-                      업로드 Pass 건수 &nbsp;&nbsp;/&nbsp;&nbsp; 구축율 (%)
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '11px',
-                      color: '#525252',
-                      textAlign: 'center',
-                      marginTop: 6,
-                    }}
-                  >
-                    (영상/CRF/라벨링/메타 데이터 모두 포함 여부)
-                  </div>
-                </HeaderCell>
+                <HeaderCell>메타</HeaderCell>
+                <HeaderCell>Drawing</HeaderCell>
               </HeaderRowUnder>
             </Column>
           </GroupedHeader>
-          <GroupedHeader style={{ width: '30px', height: '65px' }}>
-            <HeaderCell>2차 검수</HeaderCell>
-            <HeaderCell>최종 구축율 (%)</HeaderCell>
-          </GroupedHeader>
-        </HeaderRow>
+          <HeaderCell>Pass 건수</HeaderCell>
+          <HeaderCell>구축율 (%)</HeaderCell>
+          <HeaderCell>2차 검수</HeaderCell>
+          <HeaderCell>최종 구축율 (%)</HeaderCell>
+       </HeaderRow>
+
       </TopCtn>
 
       {/* 데이터 섹션 */}
@@ -332,37 +303,33 @@ const TabButton = styled.button`
   margin-top: 15%;
 `;
 
-// 추가 스타일
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
   background-color: #f7f7f7;
   padding: 10px 0;
-  border-bottom: 1px solid #959595; 
+  border-bottom: 1px solid #959595;
   width: 100%;
-  position: sticky; /* 화면에 고정 */
-  top: 0; /* 상단 고정 */
-  z-index: 100; /* 스크롤할 때 다른 요소보다 위에 고정 */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 `;
 
 const HeaderCell = styled.div`
-  flex: 1.3;
+  flex: 1; /* 각 항목의 동일한 비율 */
   text-align: center;
-  font-weight: bolder;
+  font-weight: bold;
   font-size: 12px;
   color: #000;
-  position: relative; 
+  position: relative;
   &:not(:last-child)::after {
-    content: ''; 
+    content: '';
     position: absolute;
-    top: -5px; 
-    bottom: -5px; 
-    right: 0; 
-    width: 1px; 
-    background-color: #afafaf; 
-  }
-  &:last-child {
-    border-right: none; 
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background-color: #d3d3d3;
   }
 `;
 
@@ -372,7 +339,7 @@ const GroupedHeader = styled.div`
   flex-direction: row; 
   justify-content: space-between;
   align-items: center;
-  flex: 2.4;
+  flex: 4;
   background-color: #e2e9f0;
   border-radius: 8px;
   text-align: center;
@@ -390,8 +357,11 @@ const GroupedHeaderTitle = styled.div`
   border-bottom: 1px solid #959595;
   margin: 0 -7px; 
 `;
+
+
 const HeaderRowUnder = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: row;
   justify-content: center; 
   align-items: center; 
@@ -416,6 +386,7 @@ const Column = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  flex: 2;
 `;
 
 const TitleRow = styled.div`
