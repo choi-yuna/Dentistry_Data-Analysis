@@ -253,7 +253,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                         // null일 경우 스타일 제거
                         const styles = controlCell !== null
                           ? {
-                            ...getStylesByRate(Number(controlCell), controlCellIndex, [3, 5], includeBackground),
+                            ...getStylesByRate(Number(controlCell), controlCellIndex, [6], includeBackground),
                             ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
                           }
                           : {}; // null일 경우 빈 스타일 적용
