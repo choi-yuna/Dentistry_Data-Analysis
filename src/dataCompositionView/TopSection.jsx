@@ -231,7 +231,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '15%' }}>
                           {formatNumber(cell, true)}
                           <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
-                            오류 상세보기
+                            오류 보기
                           </ErrorButton>
                         </div>
                       ) : (
@@ -240,7 +240,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                     </SubCell>
                   );
                 })}
-              </SubRow>
+              </SubRow>``
 
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
@@ -358,12 +358,12 @@ const CloseButton = styled.button`
 `;
 
 const ErrorButton = styled.button`
-  background-color: #f56258;
+  background-color: #f56258e4;
   color: white;
   border: none;
   border-radius: 8px;
   padding: 5px 2px;
-  margin-left: 5%;
+  margin-left: 1%;
   cursor: pointer;
   font-size: 10px;
   &:hover {
@@ -376,26 +376,26 @@ const TopSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 100%;
+  
 `;
 
 const TopCtn = styled.div`
 display: flex;
 flex-direction: row;
+position: fixed; 
 position: sticky;
-z-index: 100;
-top: 0;
-margin-bottom: 5px;
+z-index: 100;  top: 0; 
 align-items: start;
 background-color: #f7f7f7;
-
+ width: 100%;
 `;
 
 const TabsContainer = styled.div`
   display: flex;
   gap: 7px;
-  margin-top: 15px;
+  margin-top: 5px;
 `;
 
 const TabButton = styled.button`
@@ -419,7 +419,7 @@ const HeaderRow = styled.div`
   display: flex;
   align-items: center;
   background-color: #f7f7f7;
-  padding: 10px 0;
+  padding: 3px 0;
   border-bottom: 1px solid #959595;
   width: 100%;
   position: sticky;
@@ -552,6 +552,9 @@ const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: ${(props) =>
     props.isAdditional ? '#e4f0f15a' : props.isAll ? '#dee7f053' : '#ffffff'};
+     flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+  overflow-y: auto; /* 콘텐츠 스크롤 허용 */
+  height: 100hv;
 `;
 
 const SubRow = styled.div`

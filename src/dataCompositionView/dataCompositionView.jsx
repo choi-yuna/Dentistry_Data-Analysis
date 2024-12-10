@@ -79,8 +79,7 @@ const ContentCtn = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 20px;
-  margin-top: 30px;
+  padding: 5px;
   margin-left: ${(props) => (props.collapsed ? '5%' : '20%')};
   height: calc(100vh - 80px);
 `;
@@ -108,6 +107,7 @@ const Title = styled.div`
   font-size: 20px;
   font-weight: 800;
   width: 200px;
+  margin-top: 2%;
 `;
 
 const Refresh = styled.button`
@@ -119,7 +119,7 @@ const Refresh = styled.button`
   color: #ffffff; 
   background-color: #407bba; 
   margin-left: 14%;
-  margin-top: 1%;
+  margin-top: 2%;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
