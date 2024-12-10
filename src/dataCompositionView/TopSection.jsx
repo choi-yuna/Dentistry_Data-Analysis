@@ -191,88 +191,98 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
       </TitleRow>
 
       {/* SubRow */}
-      <SubRowContainer expanded={expanded} isAll={isAll} isAdditional={false}>
-        {subData.map((row, rowIndex) => {
-          const rowKey = `${title}-${rowIndex}`;
-          return (
-            <React.Fragment key={rowKey}>
-              <SubRow>
-                {row.map((cell, cellIndex) => {
-                  const includeBackground = cellIndex !== 3;
-                  const styles = {
-                    ...getStylesByRate(Number(cell), cellIndex, [7, 9], includeBackground),
-                    ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
-                  };
+      {/* SubRow */}
+<SubRowContainer expanded={expanded} isAll={isAll} isAdditional={false}>
+  {subData.map((row, rowIndex) => {
+    const rowKey = `${title}-${rowIndex}`;
+    return (
+      <React.Fragment key={rowKey}>
+        <SubRow>
+          {row.map((cell, cellIndex) => {
+            // 조건에 따라 cellValue 계산
+            const cellValue =
+              (type === "질환별" && title === "두개안면" && cellIndex === 5) ||
+              (row[0] === "두개안면" && cellIndex === 5) 
+                ? ''
+                : cell;
+
+            const includeBackground = cellIndex !== 3;
+            const styles = {
+              ...getStylesByRate(Number(cellValue), cellIndex, [7, 9], includeBackground),
+              ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
+            };
+
+            return (
+              <SubCell key={cellIndex} isAll={isAll} style={{ ...styles, alignItems: 'center', gap: '5px' }}>
+                {cellIndex === 0 ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '30px' }}>
+                    <span>
+                      {type === '질환별' && title === '골수염' && row[0] === '고려대학교'
+                        ? '고려대학교 (대조군)'
+                        : type === '기관별' && title === '고려대학교' && row[0] === '골수염'
+                          ? '골수염 (대조군)'
+                          : row[0]}
+                    </span>
+                    {shouldShowButton(row) && (
+                      <span
+                        onClick={() => toggleRow(rowKey)}
+                        style={{
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          marginLeft: '5px',
+                        }}
+                      >
+                        {expandedRow[rowKey] ? '▲' : '▼'}
+                      </span>
+                    )}
+                  </div>
+                ) : cellIndex === 7 ? ( // 구축율 뒤에 오류 상세보기 버튼 추가
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '15%' }}>
+                    {formatNumber(cellValue, true)}
+                    <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
+                      오류 보기
+                    </ErrorButton>
+                  </div>
+                ) : (
+                  formatNumber(cellValue)
+                )}
+              </SubCell>
+            );
+          })}
+        </SubRow>
+
+        {/* 추가 행 */}
+        {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
+          <SubRowContainer expanded isAll={isAll} isAdditional={true}>
+            {controlData.map((controlRow, controlIndex) => (
+              <SubRow key={`control-${controlIndex}`}>
+                {controlRow.map((controlCell, controlCellIndex) => {
+                  const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
+
+                  // null일 경우 스타일 제거
+                  const styles = controlCell !== null
+                    ? {
+                      ...getStylesByRate(Number(controlCell), controlCellIndex, [6], includeBackground),
+                      ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
+                    }
+                    : {}; // null일 경우 빈 스타일 적용
+
                   return (
-                    <SubCell key={cellIndex} isAll={isAll}  style={{ ...styles,  alignItems: 'center', gap: '5px' }}>
-                      {cellIndex === 0 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '30px' }}>
-                          <span>
-                            {type === '질환별' && title === '골수염' && row[0] === '고려대학교'
-                              ? '고려대학교 (대조군)'
-                              : type === '기관별' && title === '고려대학교' && row[0] === '골수염'
-                                ? '골수염 (대조군)'
-                                : row[0]}
-                          </span>
-                          {shouldShowButton(row) && (
-                            <span
-                              onClick={() => toggleRow(rowKey)}
-                              style={{
-                                cursor: 'pointer',
-                                fontSize: '12px',
-                                marginLeft: '5px',
-                              }}
-                            >
-                              {expandedRow[rowKey] ? '▲' : '▼'}
-                            </span>
-                          )}
-                        </div>
-                      ) : cellIndex === 7 ? ( // 구축율 뒤에 오류 상세보기 버튼 추가
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '15%' }}>
-                          {formatNumber(cell, true)}
-                          <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
-                            오류 보기
-                          </ErrorButton>
-                        </div>
-                      ) : (
-                        formatNumber(cell)
-                      )}
+                    <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
+                      {/* null일 때는 빈 값 렌더링 */}
+                      {controlCell !== null ? formatNumber(controlCell) : ''}
                     </SubCell>
                   );
                 })}
-              </SubRow>``
+              </SubRow>
+            ))}
+          </SubRowContainer>
+        )}
+      </React.Fragment>
+    );
+  })}
+</SubRowContainer>
 
-              {/* 추가 행 */}
-              {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
-                <SubRowContainer expanded isAll={isAll} isAdditional={true}>
-                  {controlData.map((controlRow, controlIndex) => (
-                    <SubRow key={`control-${controlIndex}`}>
-                      {controlRow.map((controlCell, controlCellIndex) => {
-                        const includeBackground = controlCellIndex !== 3; // 배경 포함 여부
-
-                        // null일 경우 스타일 제거
-                        const styles = controlCell !== null
-                          ? {
-                            ...getStylesByRate(Number(controlCell), controlCellIndex, [6], includeBackground),
-                            ...getHighlightStyle(isHighlightedCell(controlCellIndex, 'sub')), // 강조 스타일
-                          }
-                          : {}; // null일 경우 빈 스타일 적용
-
-                        return (
-                          <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
-                            {/* null일 때는 빈 값 렌더링 */}
-                            {controlCell !== null ? formatNumber(controlCell) : ''}
-                          </SubCell>
-                        );
-                      })}
-                    </SubRow>
-                  ))}
-                </SubRowContainer>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </SubRowContainer>
       {showModal && (
         <Modal>
           <ModalContent>
@@ -554,7 +564,7 @@ const SubRowContainer = styled.div`
     props.isAdditional ? '#e4f0f15a' : props.isAll ? '#dee7f053' : '#ffffff'};
      flex-grow: 1; /* 남은 공간을 채우도록 설정 */
   overflow-y: auto; /* 콘텐츠 스크롤 허용 */
-  height: 100hv;
+  height: 100;
 `;
 
 const SubRow = styled.div`
