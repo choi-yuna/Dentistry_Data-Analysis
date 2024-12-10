@@ -41,13 +41,13 @@ const TopSection = () => {
           <HeaderCell>데이터 가공처</HeaderCell>
           <HeaderCell>목표 건수</HeaderCell>
           <GroupedHeader>
-            <HeaderCell>임상 (CRF)</HeaderCell>
-            <HeaderCell>영상</HeaderCell>
             <Column>
-              <GroupedHeaderTitle>라벨링</GroupedHeaderTitle>
+              <GroupedHeaderTitle>등록데이터</GroupedHeaderTitle>
               <HeaderRowUnder>
-                <HeaderCell>메타</HeaderCell>
-                <HeaderCell>Drawing</HeaderCell>
+                <HeaderCell>영상</HeaderCell>
+                <HeaderCell>임상 (CRF)</HeaderCell>
+                <HeaderCell>라벨링-Json</HeaderCell>
+                <HeaderCell>라벨링-Drawing</HeaderCell>
               </HeaderRowUnder>
             </Column>
           </GroupedHeader>
@@ -145,10 +145,10 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
   const isHighlightedCell = (cellIndex, type) => {
     if (type === 'header') {
-      return [6, 8].includes(cellIndex); // 헤더에
+      return [5, 6, 8].includes(cellIndex); // 헤더에
     }
     if (type === 'sub') {
-      return [7, 9].includes(cellIndex); // 서브 데이터
+      return [6, 7, 9].includes(cellIndex); // 서브 데이터
     }
     return false;
   };
@@ -358,12 +358,12 @@ const CloseButton = styled.button`
 `;
 
 const ErrorButton = styled.button`
-  background-color: #f86363f6;
+  background-color: #f56258;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 5px 4px;
-  margin-left: 4%;
+  padding: 5px 2px;
+  margin-left: 5%;
   cursor: pointer;
   font-size: 10px;
   &:hover {
