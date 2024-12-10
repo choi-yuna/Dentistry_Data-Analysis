@@ -206,7 +206,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                   return (
                     <SubCell key={cellIndex} isAll={isAll}  style={{ ...styles,  alignItems: 'center', gap: '5px' }}>
                       {cellIndex === 0 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '35px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '30px' }}>
                           <span>
                             {type === '질환별' && title === '골수염' && row[0] === '고려대학교'
                               ? '고려대학교 (대조군)'
@@ -358,7 +358,7 @@ const CloseButton = styled.button`
 `;
 
 const ErrorButton = styled.button`
-  background-color: #f86363;
+  background-color: #f86363f6;
   color: white;
   border: none;
   border-radius: 8px;
