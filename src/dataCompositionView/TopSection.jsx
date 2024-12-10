@@ -42,7 +42,7 @@ const TopSection = () => {
           <HeaderCell>목표 건수</HeaderCell>
           <GroupedHeader>
             <Column>
-              <GroupedHeaderTitle>등록데이터</GroupedHeaderTitle>
+              <GroupedHeaderTitle>업로드데이터</GroupedHeaderTitle>
               <HeaderRowUnder>
                 <HeaderCell>영상</HeaderCell>
                 <HeaderCell>임상 (CRF)</HeaderCell>
@@ -51,8 +51,15 @@ const TopSection = () => {
               </HeaderRowUnder>
             </Column>
           </GroupedHeader>
+          <GroupedHeader style={{ flex: 2}}>
+            <Column>
+              <GroupedHeaderTitle>둥록데이터</GroupedHeaderTitle>
+              <HeaderRowUnder>
           <HeaderCell>Pass 건수</HeaderCell>
           <HeaderCell>구축율 (%)</HeaderCell>
+          </HeaderRowUnder>
+            </Column>
+          </GroupedHeader>
           <HeaderCell>2차 검수</HeaderCell>
           <HeaderCell>최종 구축율 (%)</HeaderCell>
         </HeaderRow>
@@ -167,32 +174,32 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
   return (
-<SectionContainer>
-  {/* Title Row */}
-  <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
-    <MergedCell isAll={isAll}>
-      {title} {expanded ? '▲' : '▼'}
-    </MergedCell>
-    <ContentContainer isAll={isAll}>
-      <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
-      {totalData.map((item, index) => {
-        const includeBackground = index !== 2;
-        const adjustedIndex = index + 1;
-        const cellValue =
-          (title === "두개안면" && adjustedIndex === 5) ? '' : item;
-        const styles = {
-          ...getStylesByRate(cellValue, index, [6], includeBackground),
-          ...getHighlightStyle(isHighlightedCell(index, 'header')),
-        };
-        return (
-          <ContentCell key={index} isAll={isAll} style={styles}>
-            {formatNumber(cellValue, [6, 8].includes(index))}
-          </ContentCell>
-        );
-      })}
-    </ContentContainer>
-  </TitleRow>
-   
+    <SectionContainer>
+      {/* Title Row */}
+      <TitleRow isAll={isAll} onClick={() => setExpanded(!expanded)}>
+        <MergedCell isAll={isAll}>
+          {title} {expanded ? '▲' : '▼'}
+        </MergedCell>
+        <ContentContainer isAll={isAll}>
+          <ContentCell style={{ fontWeight: 'bold' }}>합계</ContentCell>
+          {totalData.map((item, index) => {
+            const includeBackground = index !== 2;
+            const adjustedIndex = index + 1;
+            const cellValue =
+              (title === "두개안면" && adjustedIndex === 5) ? '' : item;
+            const styles = {
+              ...getStylesByRate(cellValue, index, [6], includeBackground),
+              ...getHighlightStyle(isHighlightedCell(index, 'header')),
+            };
+            return (
+              <ContentCell key={index} isAll={isAll} style={styles}>
+                {formatNumber(cellValue, [6, 8].includes(index))}
+              </ContentCell>
+            );
+          })}
+        </ContentContainer>
+      </TitleRow>
+
 
 
       {/* SubRow */}
@@ -239,12 +246,14 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </span>
                           )}
                         </div>
-                      ) : cellIndex === 7 ? ( 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '15%' }}>
+                      ) : cellIndex === 7 ? (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '28%' }}>
                           {formatNumber(cellValue, true)}
-                          <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
-                            오류 보기
-                          </ErrorButton>
+                          <ErrorButtonCtn>
+                             <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
+                               오류 보기
+                             </ErrorButton>
+                          </ErrorButtonCtn>
                         </div>
                       ) : (
                         formatNumber(cellValue, [7, 9].includes(cellIndex))
@@ -367,17 +376,28 @@ const CloseButton = styled.button`
   padding: 10px 15px;
   cursor: pointer;
   margin-top: 10px;
+  gap: -30px;  
+`;
+
+const ErrorButtonCtn = styled.div`
+  display: inline-block;
+  position: relative;   
+  padding: 4px;         
+  background-color: rgba(117, 117, 117, 0.1); 
+  border-radius: 10px;   
 `;
 
 const ErrorButton = styled.button`
   background-color: #f56258e4;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 5px 2px;
-  margin-left: 1%;
+  border-radius: 5px; 
+  padding: 2px 2px;  
+  margin: 0;        
   cursor: pointer;
-  font-size: 10px;
+  font-size: 8px;  
+  width: auto;      
+  height: auto;      
   &:hover {
     background-color: darkred;
   }
@@ -390,7 +410,6 @@ const TopSectionContainer = styled.div`
   gap: 15px;
   margin-bottom: 10px;
   width: 100%;
-  
 `;
 
 const TopCtn = styled.div`
