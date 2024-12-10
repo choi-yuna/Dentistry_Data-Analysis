@@ -261,7 +261,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                         return (
                           <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
                             {/* null일 때는 빈 값 렌더링 */}
-                            {controlCell !== null ? formatNumber(controlCell, controlCellIndex === 3 || controlCellIndex === 5) : ''}
+                            {controlCell !== null ? formatNumber(controlCell) : ''}
                           </SubCell>
                         );
                       })}
