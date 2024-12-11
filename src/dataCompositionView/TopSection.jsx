@@ -141,14 +141,14 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     if (isNaN(number)) return value;
     return addPercent ? `${number.toLocaleString('ko-KR')} %` : `${number.toLocaleString('ko-KR')} 건`;
   };
-
+ 
 
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
     const isTargetIndex = indicesToStyle.includes(cellIndex);
     if (!isTargetIndex) {
       return {};
     }
-
+         
     if (rate >= 100) {
       return includeBackground
         ? { color: '#018a13', backgroundColor: '#e0ffed' }
@@ -205,9 +205,12 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
               ...getStylesByRate(cellValue, index, [6], includeBackground),
               ...getHighlightStyle(isHighlightedCell(index, 'header')),
             };
+
             return (
               <ContentCell key={index} isAll={isAll} style={styles}>
-                {formatNumber(cellValue, [6, 8].includes(index))}
+                {index === 7 && Number(cellValue) === 100
+                  ? null // 값이 100일 때 버튼 숨김
+                  : formatNumber(cellValue, [6, 8].includes(index))}
               </ContentCell>
             );
           })}
@@ -260,18 +263,23 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </span>
                           )}
                         </div>
-                      ) : cellIndex === 7 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '33%' }}>
-                          {formatNumber(cellValue, true)}
-                          <ErrorButtonCtn>
-                          <ErrorButton onClick={() => handleErrorDetails(title, row[0])}>
-                              <img src={errorList} />
-                            </ErrorButton>
-                          </ErrorButtonCtn>
-                        </div>
+                      ) : cellIndex === 7 && title !== '질환 ALL' && title !== '기관 ALL'? (
+                        Number(cell) !== 100 ? (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '33%' }}>
+                            {formatNumber(cell, true)}
+                            <ErrorButtonCtn>
+                              <ErrorButton onClick={() => handleErrorDetails(title, row[0])}>
+                                <img src={errorList} />
+                              </ErrorButton>
+                            </ErrorButtonCtn>
+                          </div>
+                        ) : (
+                          formatNumber(cell, true) // 버튼 없이 값만 표시
+                        )
                       ) : (
-                        formatNumber(cellValue, [7, 9].includes(cellIndex))
+                        formatNumber(cell, [7, 9].includes(cellIndex))
                       )}
+                      
                     </SubCell>
                   );
                 })}
@@ -335,9 +343,9 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                {fileDetail.files.map((file, fileIndex) => (
                  <TableCell
                    key={fileIndex}
-                   isExist={!!file.exists} // 동적 스타일링
+                   isExist={file.exists !== null ? file.exists : null} // 동적 스타일링
                  >
-                   {file.exists ? 'O' : 'X'}
+                   {file.exists === null ? '' : file.exists ? 'O' : 'X'} 
                  </TableCell>
                ))}
              </tr>
@@ -383,7 +391,7 @@ const ModalHeaderText = styled.h3`
 
 
 const ModalContent = styled.div`
-  position: relative; /* 닫기 버튼을 ModalContent 내부에 위치 */
+  position: fixed; 
   background: white;
   border-radius: 10px;
   padding: 20px;
@@ -408,6 +416,7 @@ const Table = styled.table`
   }
 `;
 
+
 const FileIdCell = styled.td`
   border: 1px solid #e9c6c6;
   padding: 2px 4px; /* 패딩 최소화 */
@@ -423,15 +432,23 @@ const TableCell = styled.td.attrs((props) => ({
   isExist: props.isExist,
 }))`
   border: 1px solid #e9c6c6;
-  padding: 2px 4px; /* 패딩 최소화 */
+  padding: 2px 4px;
   text-align: center;
-  font-size: 11px; 
-  text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
-  background-color: ${(props) => (props.isExist ? '#e4ffe496' : '#f8d4d49e')}; 
-  color: ${(props) => (props.isExist ? '#2f442fbd' : '#df0808')}; 
-  line-height: 1; /* 줄 간격 최소화 */
+  background-color: ${(props) =>
+    props.isExist === null
+      ? '#ffffff' // exists가 null일 경우 흰색
+      : props.isExist
+      ? '#e4ffe496' // exists가 true일 경우
+      : '#f8d4d49e'}; // exists가 false일 경우
+  color: ${(props) =>
+    props.isExist === null
+      ? '#000000' // exists가 null일 경우 검정
+      : props.isExist
+      ? '#2f442fbd' // exists가 true일 경우
+      : '#df0808'}; // exists가 false일 경우 빨강
+  line-height: 1;
 `;
 
 const ModalHeader = styled.h3`
@@ -449,7 +466,7 @@ const ModalHeader = styled.h3`
 
 const CloseButton = styled.button`
   position: fixed; /* 화면에 고정 */
-  top: 6%; /* 화면 상단에서 10% */
+  top: 10%; /* 화면 상단에서 10% */
   right: 26%; /* 화면 우측에서 모달 중앙을 고려한 위치 조정 */
   transform: translate(50%, -50%); /* 버튼을 적절히 정렬 */
   background: #f86363;
