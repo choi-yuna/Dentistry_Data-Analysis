@@ -318,46 +318,49 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
       {/* 모달 */}
-      {showModal && (
- <Modal>
- <ModalContent>
-   <CloseButton onClick={() => setShowModal(false)}>×</CloseButton>
-   {noDataError ? (
-     <ModalHeaderText>해당 질환 또는 병원에 대한 오류 데이터가 없습니다.</ModalHeaderText>
-   ) : (
-     <>
-       <ModalHeader>오류 상세보기</ModalHeader>
-       <Table>
-         <thead>
-           <tr>
-             <th>파일 ID</th>
-             {detailData[0]?.files.map((file, index) => (
-               <th key={index}>{file.name}</th>
-             ))}
-           </tr>
-         </thead>
-         <tbody>
-           {detailData.map((fileDetail, index) => (
-             <tr key={index}>
-               <FileIdCell>{fileDetail.fileId}</FileIdCell>
-               {fileDetail.files.map((file, fileIndex) => (
-                 <TableCell
-                   key={fileIndex}
-                   isExist={file.exists !== null ? file.exists : null} // 동적 스타일링
-                 >
-                   {file.exists === null ? '' : file.exists ? 'O' : 'X'} 
-                 </TableCell>
-               ))}
-             </tr>
-           ))}
-         </tbody>
-       </Table>
-     </>
-   )}
- </ModalContent>
-</Modal>
-
+{showModal && (
+  <Modal>
+    <ModalContent>
+      {noDataError ? (
+        <>
+          <CloseButtonNoData onClick={() => setShowModal(false)}>×</CloseButtonNoData>
+          <ModalHeaderText>해당 질환 또는 병원에 대한 오류 데이터가 없습니다.</ModalHeaderText>
+        </>
+      ) : (
+        <>
+          <CloseButton onClick={() => setShowModal(false)}>×</CloseButton>
+          <ModalHeader>오류 상세보기</ModalHeader>
+          <Table>
+            <thead>
+              <tr>
+                <th>파일 ID</th>
+                {detailData[0]?.files.map((file, index) => (
+                  <th key={index}>{file.name}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {detailData.map((fileDetail, index) => (
+                <tr key={index}>
+                  <FileIdCell>{fileDetail.fileId}</FileIdCell>
+                  {fileDetail.files.map((file, fileIndex) => (
+                    <TableCell
+                      key={fileIndex}
+                      isExist={file.exists !== null ? file.exists : null}
+                    >
+                      {file.exists === null ? '' : file.exists ? 'O' : 'X'}
+                    </TableCell>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </>
+      )}
+    </ModalContent>
+  </Modal>
 )}
+
 
     </SectionContainer>
   );
@@ -389,9 +392,33 @@ const ModalHeaderText = styled.h3`
   color: #333; /* 기본 텍스트 색상 */
 `;
 
+const CloseButtonNoData = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f86363;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2000;
+
+  &:hover {
+    background: #d9534f;
+  }
+`;
+
+
 
 const ModalContent = styled.div`
-  position: fixed; 
+  position: relative; /* 기준을 모달 컨텐츠로 설정 */
   background: white;
   border-radius: 10px;
   padding: 20px;
@@ -401,7 +428,6 @@ const ModalContent = styled.div`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   min-height: 610px;
 `;
-
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -463,31 +489,27 @@ const ModalHeader = styled.h3`
 `;
 
 
-
 const CloseButton = styled.button`
-  position: fixed; /* 화면에 고정 */
-  top: 10%; /* 화면 상단에서 10% */
-  right: 26%; /* 화면 우측에서 모달 중앙을 고려한 위치 조정 */
-  transform: translate(50%, -50%); /* 버튼을 적절히 정렬 */
+  position: absolute; /* 모달 컨텐츠 상단에 고정 */
+  top: 10px; /* 모달 컨텐츠 내부 상단에서의 위치 */
+  right: 10px; /* 모달 컨텐츠 내부 오른쪽에서의 위치 */
   background: #f86363;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 23px;
-  height: 23px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px; /* '×' 크기 */
+  font-size: 18px; /* '×' 크기 */
   font-weight: bold;
   cursor: pointer;
   z-index: 2000; /* 다른 요소보다 위에 표시 */
-
   &:hover {
     background: #d9534f;
   }
 `;
-
 const ErrorButtonCtn = styled.div`
   display: inline-block;
   position: relative;   
@@ -583,6 +605,8 @@ const HeaderCell = styled.div`
     width: 1px;
     background-color: #d3d3d3;
   }
+  overflow-x: hidden;
+
 `;
 
 
