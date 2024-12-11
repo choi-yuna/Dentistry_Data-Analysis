@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDiseaseData } from '../context/DiseaseDataContext';
+import errorList from '../assets/images/errorLIst.svg';
 
 const TopSection = () => {
   const [activeTab, setActiveTab] = useState('질환별 보기');
@@ -20,6 +21,8 @@ const TopSection = () => {
 
   // 중첩된 data 처리
   const nestedData = data?.data || {};
+  const errorData = data?.data.errorData || [];
+  console.log('TopSection에서 받은 errorData 데이터:', { errorData });
   const sections = activeTab === '질환별 보기' ? nestedData['질환별'] || [] : nestedData['기관별'] || [];
 
   if (sections.length === 0) {
@@ -68,27 +71,29 @@ const TopSection = () => {
 
       {/* 데이터 섹션 */}
       {sections.map((section, index) => (
-        <Section
-          key={index}
-          title={section.title}
-          totalData={section.totalData}
-          subData={section.subData}
-          controlData={section.controlData}
-          type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
-          expandedRow={expandedRow}
-          toggleRow={toggleRow}
-        />
-      ))}
+    <Section
+        key={index}
+        title={section.title}
+        totalData={section.totalData}
+        subData={section.subData}
+        controlData={section.controlData}
+        type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
+        expandedRow={expandedRow}
+        toggleRow={toggleRow}
+        errorData={errorData}
+    />
+))}
+
     </TopSectionContainer>
   );
 };
 
-const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow }) => {
+const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow, errorData  }) => {
 
   const [expanded, setExpanded] = useState(false);
   const [detailData, setDetailData] = useState([]); // 오류 상세 데이터 상태
-  const [fileId, setFileId] = useState(null); // fileId 상태 추가
   const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+  const [noDataError, setNoDataError] = useState(false); // 오류 데이터가 없는 경우 상태
 
   const shouldShowButton = (row) =>
     (type === '질환별' && title === '골수염' && row[0] === '단국대학교') ||
@@ -97,30 +102,39 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
   const isAll = title === '질환 ALL' || title === '기관 ALL';
 
 
-  const handleErrorDetails = (disease, hospital) => {
-    // 서버에서 받아오는 데이터 (예제 데이터 사용)
-    const serverResponse = {
-      disease: "치주질환",
-      hospital: "고려대학교",
-      fileId: "abcd",
-      files: [
-        { name: "dcm파일", exists: true },
-        { name: "crf", exists: false },
-        { name: "ini파일", exists: true },
-        { name: "alve 폴더 내 .png", exists: false },
-      ],
-    };
-    setDetailData(serverResponse.files);
-    setShowModal(true);
-    setFileId(serverResponse.fileId);
-    // 데이터 필터링
-    if (disease === serverResponse.disease && hospital === serverResponse.hospital) {
-      setDetailData(serverResponse.files);
-      setShowModal(true);
+
+
+
+
+  const handleErrorDetails = (currentTitle, currentRow) => {
+    setNoDataError(false); // 초기화
+
+    let filteredData;
+    if (type === '질환별') {
+      console.log('질환별 조건으로 필터링');
+      filteredData = errorData.find(
+        (item) => item.disease === currentTitle && item.hospital === currentRow
+      );
+    } else if (type === '기관별') {
+      console.log('기관별 조건으로 필터링');
+      filteredData = errorData.find(
+        (item) => item.hospital === currentTitle && item.disease === currentRow
+      );
+    }
+
+    if (filteredData) {
+      console.log('필터링된 데이터:', filteredData);
+      setDetailData(filteredData.fileDetails); // 파일 상세 데이터를 상태에 저장
+      setShowModal(true); // 모달 표시
     } else {
-      console.error("해당 데이터와 일치하는 오류 상세 정보가 없습니다.");
+      console.error('해당 질환 또는 병원에 대한 오류 데이터가 없습니다.');
+      setNoDataError(true); // 오류 데이터 없음 상태 설정
+      setShowModal(true); // 모달 표시
     }
   };
+
+
+
 
   const formatNumber = (value, addPercent = false) => {
     const number = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value;
@@ -247,12 +261,12 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                           )}
                         </div>
                       ) : cellIndex === 7 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '28%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '33%' }}>
                           {formatNumber(cellValue, true)}
                           <ErrorButtonCtn>
-                             <ErrorButton onClick={() => handleErrorDetails(title, cell)}>
-                               오류 보기
-                             </ErrorButton>
+                          <ErrorButton onClick={() => handleErrorDetails(title, row[0])}>
+                              <img src={errorList} />
+                            </ErrorButton>
                           </ErrorButtonCtn>
                         </div>
                       ) : (
@@ -294,36 +308,48 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
         })}
       </SubRowContainer>
 
-      {showModal && (
-        <Modal>
-          <ModalContent>
-            <h3>오류 상세보기</h3>
-            <Table>
-              <thead>
-                <tr>
-                  <th>파일 이름</th>
-                  {detailData.map((file, index) => (
-                    <th key={index}>{file.name}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {/* 첫 번째 행 - 상태 */}
-                <tr>
-                  <td>{fileId}</td>
-                  {detailData.map((file, index) => (
-                    <td key={index} style={{ color: file.exists ? "blue" : "red" }}>
-                      {file.exists ? "O" : "X"}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </Table>
-            <CloseButton onClick={() => setShowModal(false)}>닫기</CloseButton>
-          </ModalContent>
 
-        </Modal>
-      )}
+      {/* 모달 */}
+      {showModal && (
+ <Modal>
+ <ModalContent>
+   <CloseButton onClick={() => setShowModal(false)}>×</CloseButton>
+   {noDataError ? (
+     <ModalHeaderText>해당 질환 또는 병원에 대한 오류 데이터가 없습니다.</ModalHeaderText>
+   ) : (
+     <>
+       <ModalHeader>오류 상세보기</ModalHeader>
+       <Table>
+         <thead>
+           <tr>
+             <th>파일 ID</th>
+             {detailData[0]?.files.map((file, index) => (
+               <th key={index}>{file.name}</th>
+             ))}
+           </tr>
+         </thead>
+         <tbody>
+           {detailData.map((fileDetail, index) => (
+             <tr key={index}>
+               <FileIdCell>{fileDetail.fileId}</FileIdCell>
+               {fileDetail.files.map((file, fileIndex) => (
+                 <TableCell
+                   key={fileIndex}
+                   isExist={!!file.exists} // 동적 스타일링
+                 >
+                   {file.exists ? 'O' : 'X'}
+                 </TableCell>
+               ))}
+             </tr>
+           ))}
+         </tbody>
+       </Table>
+     </>
+   )}
+ </ModalContent>
+</Modal>
+
+)}
 
     </SectionContainer>
   );
@@ -343,66 +369,132 @@ const Modal = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow: hidden; /* 배경 스크롤 고정 */
 `;
 
+const ModalHeaderText = styled.h3`
+  font-size: 16px;
+  font-weight: bold;
+  max-width: 80%; /* 최대 너비 제한 */
+  text-align: center; /* 중앙 정렬 */
+  margin: 10px auto; /* 상하 간격 설정 */
+  color: #333; /* 기본 텍스트 색상 */
+`;
+
+
 const ModalContent = styled.div`
+  position: relative; /* 닫기 버튼을 ModalContent 내부에 위치 */
   background: white;
   border-radius: 10px;
   padding: 20px;
   width: 50%;
+  max-height: 90vh;
+  overflow-y: auto; /* 모달 내부 스크롤 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-height: 610px;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
+
   th {
     background: #deebf3;
     font-weight: bold;
+    font-size: 11.5px;
+    padding: 6px 8px;
+    border: 1px solid #e9c6c6;
   }
 `;
 
+const FileIdCell = styled.td`
+  border: 1px solid #e9c6c6;
+  padding: 2px 4px; /* 패딩 최소화 */
+  text-align: center;
+  font-size: 11px; /* 글자 크기 감소 */
+  font-weight: bold;
+  background-color: #ffffff; /* 배경 흰색 */
+  color: #000000; /* 텍스트 검정 */
+  line-height: 1; /* 줄 간격 최소화 */
+`;
+
+const TableCell = styled.td.attrs((props) => ({
+  isExist: props.isExist,
+}))`
+  border: 1px solid #e9c6c6;
+  padding: 2px 4px; /* 패딩 최소화 */
+  text-align: center;
+  font-size: 11px; 
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: ${(props) => (props.isExist ? '#e4ffe496' : '#f8d4d49e')}; 
+  color: ${(props) => (props.isExist ? '#2f442fbd' : '#df0808')}; 
+  line-height: 1; /* 줄 간격 최소화 */
+`;
+
+const ModalHeader = styled.h3`
+  font-size: 16px; 
+  font-weight: bold; 
+  max-width: 80%; 
+  text-align: center; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  margin: 5px auto; 
+`;
+
+
+
 const CloseButton = styled.button`
+  position: fixed; /* 화면에 고정 */
+  top: 6%; /* 화면 상단에서 10% */
+  right: 26%; /* 화면 우측에서 모달 중앙을 고려한 위치 조정 */
+  transform: translate(50%, -50%); /* 버튼을 적절히 정렬 */
   background: #f86363;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* '×' 크기 */
+  font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
-  gap: -30px;  
+  z-index: 2000; /* 다른 요소보다 위에 표시 */
+
+  &:hover {
+    background: #d9534f;
+  }
 `;
 
 const ErrorButtonCtn = styled.div`
   display: inline-block;
   position: relative;   
   padding: 4px;         
-  background-color: rgba(117, 117, 117, 0.1); 
+  background-color: rgba(218, 113, 113, 0.082); 
   border-radius: 10px;   
 `;
 
 const ErrorButton = styled.button`
-  background-color: #f56258e4;
-  color: white;
+  background-color: transparent;
   border: none;
-  border-radius: 5px; 
-  padding: 2px 2px;  
-  margin: 0;        
+  padding: 0;
   cursor: pointer;
-  font-size: 8px;  
-  width: auto;      
-  height: auto;      
+  width: 16x; 
+  height: 13px; 
   &:hover {
-    background-color: darkred;
+    transform: scale(1.2); 
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
-
 
 const TopSectionContainer = styled.div`
   display: flex;
@@ -605,6 +697,8 @@ const SubCell = styled.div`
   &:last-child {
     border-right: none;
   }
+  align-items: center;
+  justify-content: center;
 `;
 
 const LoadingContainer = styled.div`

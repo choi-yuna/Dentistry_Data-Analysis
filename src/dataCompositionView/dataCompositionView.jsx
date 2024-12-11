@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import TopBar from '../components/topbar';
 import MenuBar from '../components/menubar';
 import TopSection from './TopSection';
+import errorList from '../assets/images/errorLIst.svg';
 import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const DataCompositionView = () => {
@@ -51,6 +52,10 @@ const DataCompositionView = () => {
             ) : (
               <TopSection activeTab={activeTab} setActiveTab={setActiveTab} />
             )}
+            <ErrorInfoCtn>
+              <ErrorIcon src={errorList} alt="에러 이모티콘" />
+              <span>- 오류 상세보기</span>
+            </ErrorInfoCtn>
           </TopSectionCtn>
         </ContentCtn>
       </MainContent>
@@ -67,6 +72,7 @@ const AppContainer = styled.div`
   overflow: hidden;
   background-color: #f7f7f7;
   transition: width 0.3s ease, height 0.3s ease;
+  position: relative; 
 `;
 
 const MainContent = styled.div`
@@ -99,6 +105,7 @@ const TopSectionCtn = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
+
 `;
 
 const Title = styled.div`
@@ -197,4 +204,24 @@ const LoadingText = styled.div`
   margin-top: 20px;
   font-size: 16px;
   color: #000000;
+`;
+const ErrorInfoCtn = styled.div`
+  position: absolute; /* 화면에서 강제로 위치 지정 */
+  bottom: 60px; /* 하단에서 20px 위 */
+  right: 2%; /* 오른쪽에서 2% */
+  background-color: #f7f7f7; 
+  padding: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #575757;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 아이콘과 텍스트 간격 */
+  z-index: 10; /* 다른 요소 위에 표시 */
+`;
+
+const ErrorIcon = styled.img`
+  width: 16px; /* 아이콘 크기 */
+  height: 14px;
+  object-fit: contain; /* 원본 비율 유지 */
 `;
