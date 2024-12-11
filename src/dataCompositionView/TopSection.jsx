@@ -54,13 +54,13 @@ const TopSection = () => {
               </HeaderRowUnder>
             </Column>
           </GroupedHeader>
-          <GroupedHeader style={{ flex: 2}}>
+          <GroupedHeader style={{ flex: 2 }}>
             <Column>
               <GroupedHeaderTitle>둥록데이터</GroupedHeaderTitle>
               <HeaderRowUnder>
-          <HeaderCell>Pass 건수</HeaderCell>
-          <HeaderCell>구축율 (%)</HeaderCell>
-          </HeaderRowUnder>
+                <HeaderCell>Pass 건수</HeaderCell>
+                <HeaderCell>구축율 (%)</HeaderCell>
+              </HeaderRowUnder>
             </Column>
           </GroupedHeader>
           <HeaderCell>2차 검수</HeaderCell>
@@ -71,24 +71,24 @@ const TopSection = () => {
 
       {/* 데이터 섹션 */}
       {sections.map((section, index) => (
-    <Section
-        key={index}
-        title={section.title}
-        totalData={section.totalData}
-        subData={section.subData}
-        controlData={section.controlData}
-        type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
-        expandedRow={expandedRow}
-        toggleRow={toggleRow}
-        errorData={errorData}
-    />
-))}
+        <Section
+          key={index}
+          title={section.title}
+          totalData={section.totalData}
+          subData={section.subData}
+          controlData={section.controlData}
+          type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
+          expandedRow={expandedRow}
+          toggleRow={toggleRow}
+          errorData={errorData}
+        />
+      ))}
 
     </TopSectionContainer>
   );
 };
 
-const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow, errorData  }) => {
+const Section = ({ title, totalData, subData, controlData, type, expandedRow, toggleRow, errorData }) => {
 
   const [expanded, setExpanded] = useState(false);
   const [detailData, setDetailData] = useState([]); // 오류 상세 데이터 상태
@@ -141,14 +141,14 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     if (isNaN(number)) return value;
     return addPercent ? `${number.toLocaleString('ko-KR')} %` : `${number.toLocaleString('ko-KR')} 건`;
   };
- 
+
 
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
     const isTargetIndex = indicesToStyle.includes(cellIndex);
     if (!isTargetIndex) {
       return {};
     }
-         
+
     if (rate >= 100) {
       return includeBackground
         ? { color: '#018a13', backgroundColor: '#e0ffed' }
@@ -228,10 +228,11 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
               <SubRow>
                 {row.map((cell, cellIndex) => {
                   const cellValue =
-                    (type === "질환별" && title === "두개안면" && cellIndex === 5) ||
-                      (row[0] === "두개안면" && cellIndex === 5)
-                      ? ''
+                    (title === "두개안면" && cellIndex === 5) ||
+                      (row[0]?.includes("두개안면") && cellIndex === 5)
+                      ? '' // 빈값으로 설정
                       : cell;
+
 
                   const includeBackground = cellIndex !== 3;
                   const styles = {
@@ -263,7 +264,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </span>
                           )}
                         </div>
-                      ) : cellIndex === 7 && title !== '질환 ALL' && title !== '기관 ALL'? (
+                      ) : cellIndex === 7 && title !== '질환 ALL' && title !== '기관 ALL' ? (
                         Number(cell) !== 100 ? (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '33%' }}>
                             {formatNumber(cell, true)}
@@ -274,12 +275,12 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                             </ErrorButtonCtn>
                           </div>
                         ) : (
-                          formatNumber(cell, true) // 버튼 없이 값만 표시
+                          formatNumber(cellValue, true) // 버튼 없이 값만 표시
                         )
                       ) : (
-                        formatNumber(cell, [7, 9].includes(cellIndex))
+                        formatNumber(cellValue, [7, 9].includes(cellIndex))
                       )}
-                      
+
                     </SubCell>
                   );
                 })}
@@ -318,48 +319,48 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
       {/* 모달 */}
-{showModal && (
-  <Modal>
-    <ModalContent>
-      {noDataError ? (
-        <>
-          <CloseButtonNoData onClick={() => setShowModal(false)}>×</CloseButtonNoData>
-          <ModalHeaderText>해당 질환 또는 병원에 대한 오류 데이터가 없습니다.</ModalHeaderText>
-        </>
-      ) : (
-        <>
-          <CloseButton onClick={() => setShowModal(false)}>×</CloseButton>
-          <ModalHeader>오류 상세보기</ModalHeader>
-          <Table>
-            <thead>
-              <tr>
-                <th>파일 ID</th>
-                {detailData[0]?.files.map((file, index) => (
-                  <th key={index}>{file.name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {detailData.map((fileDetail, index) => (
-                <tr key={index}>
-                  <FileIdCell>{fileDetail.fileId}</FileIdCell>
-                  {fileDetail.files.map((file, fileIndex) => (
-                    <TableCell
-                      key={fileIndex}
-                      isExist={file.exists !== null ? file.exists : null}
-                    >
-                      {file.exists === null ? '' : file.exists ? 'O' : 'X'}
-                    </TableCell>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </>
+      {showModal && (
+        <Modal>
+          <ModalContent>
+            {noDataError ? (
+              <>
+                <CloseButtonNoData onClick={() => setShowModal(false)}>×</CloseButtonNoData>
+                <ModalHeaderText>해당 질환 또는 병원에 대한 오류 데이터가 없습니다.</ModalHeaderText>
+              </>
+            ) : (
+              <>
+                <CloseButton onClick={() => setShowModal(false)}>×</CloseButton>
+                <ModalHeader>오류 상세보기</ModalHeader>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>파일 ID</th>
+                      {detailData[0]?.files.map((file, index) => (
+                        <th key={index}>{file.name}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailData.map((fileDetail, index) => (
+                      <tr key={index}>
+                        <FileIdCell>{fileDetail.fileId}</FileIdCell>
+                        {fileDetail.files.map((file, fileIndex) => (
+                          <TableCell
+                            key={fileIndex}
+                            isExist={file.exists !== null ? file.exists : null}
+                          >
+                            {file.exists === null ? '' : file.exists ? 'O' : 'X'}
+                          </TableCell>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       )}
-    </ModalContent>
-  </Modal>
-)}
 
 
     </SectionContainer>
@@ -466,14 +467,14 @@ const TableCell = styled.td.attrs((props) => ({
     props.isExist === null
       ? '#ffffff' // exists가 null일 경우 흰색
       : props.isExist
-      ? '#e4ffe496' // exists가 true일 경우
-      : '#f8d4d49e'}; // exists가 false일 경우
+        ? '#e4ffe496' // exists가 true일 경우
+        : '#f8d4d49e'}; // exists가 false일 경우
   color: ${(props) =>
     props.isExist === null
       ? '#000000' // exists가 null일 경우 검정
       : props.isExist
-      ? '#2f442fbd' // exists가 true일 경우
-      : '#df0808'}; // exists가 false일 경우 빨강
+        ? '#2f442fbd' // exists가 true일 경우
+        : '#df0808'}; // exists가 false일 경우 빨강
   line-height: 1;
 `;
 
