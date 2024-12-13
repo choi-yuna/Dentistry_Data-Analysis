@@ -242,7 +242,8 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 setLoading(false);
                 return;
             }
-
+            
+            setOriginalPatientData(patientData);
             console.log("서버에서 받은 데이터:", patientData);
 
             const analyzedData = performDataAnalysis(patientData); // 공통 분석 함수 호출
