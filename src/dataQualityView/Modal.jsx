@@ -144,7 +144,7 @@ const Modal = ({ isOpen, onClose, excelData, invalidItems = [] }) => {  // inval
 
     useEffect(() => {
         if (isOpen) {
-            const options = [...new Set(excelData.slice(1).map(row => row[0]))].filter(option => ['A', 'B', 'C', 'D'].includes(option));
+            const options = [...new Set(excelData.slice(1).map(row => row[0]))].filter(option => ['A', 'B', 'C', 'D','E'].includes(option));
             setDiseaseOptions(options);
             setSelectedDisease(options[0] || '');
         }
