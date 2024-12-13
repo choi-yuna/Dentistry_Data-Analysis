@@ -4,9 +4,9 @@ import chartIcon from '../assets/images/chart-button.svg';
 import { analyzeData } from '../utils/dataAnalysis';
 import { analyzeItems } from '../utils/itemAnalysis';
 import { calculateQualityRate } from '../utils/qualityAnalysis';
-import { calculateOverallQuality } from '../utils/overallAnalysis'; 
+import { calculateOverallQuality } from '../utils/overallAnalysis';
 import { fetchPatientData } from '../api/fileUploadApi';
-import { useFileContext } from '../FileContext'; 
+import { useFileContext } from '../FileContext';
 import { DataContext } from '../context/DataContext';
 
 const spin = keyframes`
@@ -166,7 +166,7 @@ const ErrorMessage = styled.div`
 `;
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
 
     const { institution, setInstitution, disease, setDisease, setAnalyzedData, setOriginalPatientData } = useContext(DataContext);
     const { fileId } = useFileContext();
@@ -179,10 +179,11 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         setDisease(e.target.value);
     };
 
-    const handleSubmit = async (e) => {
+    // 파일 업로드 후 분석
+    const handleAnalyzeWithFile = async (e) => {
         e.preventDefault();
-        setLoading(true);  
-        setAnalyzedData(null); 
+        setLoading(true);
+        setAnalyzedData(null);
 
         try {
             if (!fileId) {
@@ -190,6 +191,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                 setLoading(false);
                 return;
             }
+
             if (!institution || !disease) {
                 alert('기관과 질환을 모두 선택해야 합니다.');
                 setLoading(false);
@@ -207,49 +209,90 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
             setOriginalPatientData(patientData);
             console.log('서버에서 받은 분석된 데이터:', patientData);
 
-            const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(patientData);
-            const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio, qualityRatio,invalidItems } = analyzeItems(patientData);
-            const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(patientData);
-            const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(patientData);
-
-            const analyzedData = {
-                nullCount,
-                invalidCount,
-                completenessRatio,
-                validityRatio,
-                totalItems,
-                invalidItems,
-                missingItemCount,
-                invalidItemCount,
-                itemCompletenessRatio,
-                itemValidityRatio,
-                qualityRatio,
-                totalPatients,
-                validPatientCount,
-                patientQualityRate,
-                validItemCount,
-                itemQualityRate,
-                overallPatients,
-                overallItems,
-                overallValidPatients,
-                overallPatientQualityRate,
-                overallValidItems,
-                overallItemQualityRate,
-            };
-
+            const analyzedData = performDataAnalysis(patientData); // 공통 분석 함수 호출
             onAnalyze(analyzedData);
             setAnalyzedData(analyzedData);
         } catch (error) {
             console.error('데이터를 불러오는데 오류가 발생했습니다:', error);
         } finally {
-            setLoading(false);  // 데이터 로드 완료 후 로딩 상태를 false로 설정
+            setLoading(false);
         }
+    };
+
+    // 파일 없이 분석
+    const handleAnalyzeWithoutFile = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setAnalyzedData(null);
+
+        try {
+            if (!institution || !disease) {
+                alert('기관과 질환을 모두 선택해야 합니다.');
+                setLoading(false);
+                return;
+            }
+
+            console.warn("파일 없이 분석 요청을 보냅니다.");
+
+            // 서버에서 분석된 데이터를 직접 요청
+            const { data: patientData = [] } = await fetchPatientData(null, institution, disease); // 파일 ID를 null로 전송
+
+            if (!patientData || patientData.length === 0) {
+                console.warn("서버에서 데이터를 받지 못했습니다.");
+                setLoading(false);
+                return;
+            }
+
+            console.log("서버에서 받은 데이터:", patientData);
+
+            const analyzedData = performDataAnalysis(patientData); // 공통 분석 함수 호출
+            onAnalyze(analyzedData);
+            setAnalyzedData(analyzedData);
+        } catch (error) {
+            console.error('분석 요청 중 오류가 발생했습니다:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    // 공통 데이터 분석 함수
+    const performDataAnalysis = (data) => {
+        const { nullCount, invalidCount, completenessRatio, validityRatio } = analyzeData(data);
+        const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio, qualityRatio, invalidItems } = analyzeItems(data);
+        const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(data);
+        const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(data);
+
+        return {
+            nullCount,
+            invalidCount,
+            completenessRatio,
+            validityRatio,
+            totalItems,
+            invalidItems,
+            missingItemCount,
+            invalidItemCount,
+            itemCompletenessRatio,
+            itemValidityRatio,
+            qualityRatio,
+            totalPatients,
+            validPatientCount,
+            patientQualityRate,
+            validItemCount,
+            itemQualityRate,
+            overallPatients,
+            overallItems,
+            overallValidPatients,
+            overallPatientQualityRate,
+            overallValidItems,
+            overallItemQualityRate,
+        };
     };
 
     return (
         <PageContainer>
             <FormContainer collapsed={collapsed}>
-                <FormInline onSubmit={handleSubmit}>
+                <FormInline>
                     <FormGroup>
                         <LabelSelectGroup>
                             <Label htmlFor="institution">기관 :</Label>
@@ -280,9 +323,13 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                         </LabelSelectGroup>
                     </FormGroup>
                     <AnalyzeButtonContainer>
-                        <Button type="submit" disabled={loading}> {/* 로딩 중일 때 버튼 비활성화 */}
-                            {loading ? '로딩 중...' : '데이터 분석'}
-                            {!loading && <img src={chartIcon} alt="아이콘" />} {/* 로딩 중이 아닐 때 아이콘 표시 */}
+                        <Button type="button" onClick={handleAnalyzeWithFile} disabled={loading}>
+                            {loading ? '로딩 중...' : '업로드 데이터 분석'}
+                            {!loading && <img src={chartIcon} alt="아이콘" />}
+                        </Button>
+                        <Button type="button" onClick={handleAnalyzeWithoutFile} disabled={loading} style={{ marginLeft: '10px' }}>
+                            {loading ? '로딩 중...' : '서버 데이터 분석'}
+                            {!loading && <img src={chartIcon} alt="아이콘" />}
                         </Button>
                     </AnalyzeButtonContainer>
                 </FormInline>
@@ -296,7 +343,6 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                     </LoadingMessage>
                 </LoadingOverlay>
             )}
-
         </PageContainer>
     );
 };
