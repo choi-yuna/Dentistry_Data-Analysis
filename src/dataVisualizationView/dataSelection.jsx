@@ -55,10 +55,6 @@ const Container = styled.div`
   transition: width 1s ease, height 0.3s ease;
 `;
 
-const FlexBox = styled.div`
-  display: flex;
-  align-items: center;
-`;
 
 const StyledTabs = styled(Tabs)`
   border: 1px solid #ccc;
@@ -217,38 +213,6 @@ const TextFieldStyled = styled(TextField)`
   height: 30px;
 `;
 
-const ButtonStyled = styled.button`
-  display: flex;
-  align-items: center;
-  margin-left : 65%;
-  margin-bottom : 3px;
-  justify-content: center;
-  padding: 6px 16px;
-  background-color: #F5FBFF; 
-  color: #203086;
-  font-size: 12px; 
-  font-weight: bold;
-  border: 1px solid #cccccc; 
-  border-radius: 8px; 
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
-
-  &:hover {
-    background-color: #DEE2F9; 
-    transform: translateY(-2px); 
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  img {
-    margin-left: 6px; 
-    width: 16px;      
-    height: 18px;
-  }
-`;
 
 
 
@@ -288,6 +252,56 @@ const SmallChip = styled(Chip)`
     height: 13px !important;
   }
 `;
+const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Tabs와 버튼들 간 간격 생성 */
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px; /* 버튼들 간의 간격 설정 */
+`;
+
+const ButtonStyled = styled.button`
+  padding: 12px 24px; /* 버튼 크기 조정 */
+  background-color: #f5fbff;
+  color: #203086;
+  font-size: 10px;
+  font-weight: bold;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  width: 160px; /* 버튼 너비 고정 */
+  height: 30px; /* 버튼 높이 고정 */
+
+  &:hover {
+    background-color: #dee2f9;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  img {
+    margin-left: 8px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+  }
+`;
+
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
@@ -410,23 +424,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     };
     
 
-    const handleTabResult = async (e) => {
-      e.preventDefault();
-
-          // 파일 업로드가 안된 경우 경고창 표시
-          if (!fileId) {
-            alert('파일을 업로드 해주세요.');
-            return;
-          }
-
-          // selectedItemsTab2가 비어있을 경우 경고창 표시
-          if (!selectedItemsTab2 || Object.keys(selectedItemsTab2).length === 0) {
-            alert('리포트 항목을 선택해 주세요.');
-            setLoading(false); 
-            return;
-          }
-
-          
+    const handleAnalyze = async (isFileAnalysis) => {
       setLoading(true); // 로딩 상태 활성화
   
       const resultToSendTab1 = {};
@@ -469,14 +467,14 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
               });
           }
       });
-
+  
       const finalData = {
-        // 전송할 데이터 항목들
-        ...resultToSendTab1, 
-        DISEASE_CLASS: disease,
-        fileIds: fileId,
-        header: headersToSendTab2,
-    };
+          ...resultToSendTab1,
+          DISEASE_CLASS: disease,
+          fileIds: isFileAnalysis ? fileId : null, // fileId 여부로 분석 유형 결정
+          header: headersToSendTab2,
+      };
+  
 
     try {
       const response = await fetchFilteredPatientData(finalData);
@@ -517,19 +515,31 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
 
     return (
         <Container collapsed={collapsed}>
-          <FlexBox>
-            <StyledTabs value={tabValue} onChange={handleTabChange}>
-              <StyledTab label="데이터 구성 항목" />
-              <StyledTab label="리포트 항목" />
-            </StyledTabs>
-            <ButtonStyled type="button" onClick={handleTabResult}>
-              데이터 분석
-              <img src={chartIcon} alt="아이콘" />
-            </ButtonStyled>
-            <IconButton onClick={handleToggle} size="small">
-              {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-          </FlexBox>
+<FlexBox>
+  <StyledTabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
+    <StyledTab label="데이터 구성 항목" />
+    <StyledTab label="리포트 항목" />
+  </StyledTabs>
+  <ButtonGroup>
+    <ButtonStyled
+      type="button"
+      onClick={() => handleAnalyze(true)} // 업로드 데이터 분석
+      disabled={!fileId}
+    >
+      업로드 데이터 분석
+      <img src={chartIcon} alt="아이콘" />
+    </ButtonStyled>
+    <ButtonStyled
+      type="button"
+      onClick={() => handleAnalyze(false)} // 서버 데이터 분석
+    >
+      서버 데이터 분석
+      <img src={chartIcon} alt="아이콘" />
+    </ButtonStyled>
+  </ButtonGroup>
+</FlexBox>
+
+
 
           <Collapse in={open}>
             <ListContainer>
