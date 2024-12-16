@@ -3,11 +3,12 @@ export const analyzeData = (data) => {
     let invalidCount = 0;  // 유효성 검사를 통과하지 못한 항목이 있는 행을 카운트
 
     data.forEach((entry, rowIndex) => {
+        const requiredData = entry.required || {}; // `required` 항목만 추출
         let hasMissingData = false;
         let hasInvalidData = false;
 
         // 누락 데이터 검사
-        Object.entries(entry).forEach(([key, value]) => {
+        Object.entries(requiredData).forEach(([key, value]) => {
             if (value === "" || value === null) {
                 hasMissingData = true;
                 hasInvalidData = true;
