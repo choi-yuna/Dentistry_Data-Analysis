@@ -6,48 +6,54 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
     const [selectedDisease, setSelectedDisease] = useState('');
     const [diseaseOptions, setDiseaseOptions] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
 
     // 초기 데이터 처리 및 질병 옵션 설정
     useEffect(() => {
-        if (isOpen && excelData.length > 0) {
-            console.log('Original Excel Data:', excelData);
+        if (isOpen) {
+            setIsLoading(true); // 로딩 시작
+            if (excelData.length > 0) {
+                console.log('Original Excel Data:', excelData);
 
-            const filteredExcelData = excelData.filter(
-                (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
-            );
+                const filteredExcelData = excelData.filter(
+                    (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
+                );
 
-            const transformedData = filteredExcelData.map(([optional, required]) => ({
-                optional,
-                required,
-            }));
+                const transformedData = filteredExcelData.map(([optional, required]) => ({
+                    optional,
+                    required,
+                }));
 
-            console.log('Transformed Data:', transformedData);
+                console.log('Transformed Data:', transformedData);
 
-            // 질병 선택 옵션 설정 (중복 제거)
-            const options = [...new Set(
-                transformedData
-                    .map((data) => data.required?.DISEASE_CLASS)
-                    .filter((item) => item) // 값이 존재하는 항목만
-            )];
+                // 질병 선택 옵션 설정 (중복 제거)
+                const options = [...new Set(
+                    transformedData
+                        .map((data) => data.required?.DISEASE_CLASS)
+                        .filter((item) => item) // 값이 존재하는 항목만
+                )];
 
-            console.log('Unique Disease Options:', options);
+                console.log('Unique Disease Options:', options);
 
-            setDiseaseOptions(options); // 중복 제거된 옵션 설정
-            if (!selectedDisease && options.length > 0) {
-                setSelectedDisease(options[0]); // 초기값 설정
+                setDiseaseOptions(options); // 중복 제거된 옵션 설정
+                if (!selectedDisease && options.length > 0) {
+                    setSelectedDisease(options[0]); // 초기값 설정
+                }
+
+                // 데이터 필터링 (초기화)
+                const initialFiltered = transformedData.filter(
+                    (data) => data.required?.DISEASE_CLASS === (selectedDisease || options[0])
+                );
+                setFilteredData(initialFiltered);
             }
-
-            // 데이터 필터링 (초기화)
-            const initialFiltered = transformedData.filter(
-                (data) => data.required?.DISEASE_CLASS === (selectedDisease || options[0])
-            );
-            setFilteredData(initialFiltered);
+            setIsLoading(false); // 로딩 종료
         }
     }, [isOpen, excelData]); // 의존성 최소화
 
     // 선택된 질병 변경 시 데이터 필터링
     useEffect(() => {
         if (selectedDisease) {
+            setIsLoading(true); // 로딩 시작
             const filtered = excelData
                 .filter(
                     (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
@@ -56,6 +62,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                 .filter((data) => data.required?.DISEASE_CLASS === selectedDisease);
 
             setFilteredData(filtered);
+            setIsLoading(false); // 로딩 종료
         }
     }, [selectedDisease, excelData]); // `excelData`와 `selectedDisease`에 의존
 
@@ -85,6 +92,20 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
 
     if (!isOpen) return null;
 
+    if (isLoading) {
+        return (
+            <ModalOverlay onClick={onClose}>
+                <ModalContent onClick={(e) => e.stopPropagation()}>
+                    <ModalHeader>
+                        <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
+                        <CloseButton onClick={onClose}>&times;</CloseButton>
+                    </ModalHeader>
+                    <LoadingContainer>로딩 중...</LoadingContainer>
+                </ModalContent>
+            </ModalOverlay>
+        );
+    }
+
     if (diseaseOptions.length === 0) {
         return (
             <ModalOverlay onClick={onClose}>
@@ -93,7 +114,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                         <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
                         <CloseButton onClick={onClose}>&times;</CloseButton>
                     </ModalHeader>
-                    <div>데이터가 없습니다.</div>
+                    <div>로딩중 ..</div>
                 </ModalContent>
             </ModalOverlay>
         );
@@ -125,9 +146,9 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                     </Select>
                 </SelectContainer>
                 <Explanation>
-                        <ColorBox color="red" /> 필수 항목 누락
-                        <ColorBox color="yellow" style={{ marginLeft: '15px' }} />선택 항목 누락
-                    </Explanation>
+                        <ColorBox color="red" /> 필수 항목 누락 / 이상
+                        <ColorBox color="yellow" style={{ marginLeft: '15px' }} /> 선택 항목 누락 / 이상
+                </Explanation>
                 <TableContainer>
                     <ExcelTable>
                         <thead>
@@ -170,10 +191,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
 
 export default Modal;
 
-// 스타일 컴포넌트는 기존 코드 유지
-
-
-
+// 스타일 컴포넌트 추가
 const ModalOverlay = styled.div`
     position: fixed;
     top: 0;
@@ -269,7 +287,7 @@ const ExcelCell = styled.td`
             ? 'white' // 수정 필요한 값
             : isRequired
             ? 'blue' // 필수값 텍스트 색
-            : 'black'}; // 선택값 텍스트 색
+            : 'black'};
     font-weight: ${({ isInvalid }) => (isInvalid ? 'bold' : 'normal')};
 `;
 
@@ -280,17 +298,17 @@ const Label = styled.label`
 
 const Select = styled.select`
     margin: 5px;
-    padding: 3px 8px;  /* 패딩을 줄여서 셀렉트 박스 크기 감소 */
-    font-size: 14px;  /* 폰트 크기 조정 */
+    padding: 3px 8px;
+    font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #fff;
     cursor: pointer;
     outline: none;
-    width: auto;  /* 고정된 너비 제거 */
-    
+    width: auto;
+
     &:focus {
-        border-color: #0C476A; /* 포커스 시 테두리 색상 */
+        border-color: #0C476A;
     }
 `;
 
@@ -303,6 +321,15 @@ const SelectContainer = styled.div`
     justify-content: start;
 `;
 
+const Explanation = styled.div`
+    font-size: 14px;
+    color: #555;
+    margin-left: 10px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+`;
+
 const ColorBox = styled.span`
     display: inline-block;
     width: 15px;
@@ -312,11 +339,12 @@ const ColorBox = styled.span`
     border: 1px solid #ccc;
 `;
 
-const Explanation = styled.div`
-    font-size: 14px;
-    color: #555;
-    margin-left: 10px; /* 셀렉트 박스와 설명 사이의 간격 */
-    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+const LoadingContainer = styled.div`
+    flex: 1;
     display: flex;
+    justify-content: center;
     align-items: center;
+    font-size: 18px;
+    color: #555;
+    z-index: 900;
 `;
