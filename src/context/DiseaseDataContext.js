@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
+
+
 // Context 생성
 const DiseaseDataContext = createContext();
 

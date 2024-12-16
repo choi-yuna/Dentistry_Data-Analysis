@@ -4,7 +4,7 @@ export const headerMapping = {
     "PATIENT_NO": "환자 번호",
     "IMAGE_NO": "이미지 번호",
     "IMAGE_SRC": "이미지 경로",
-    "CAPTURE_TIME": "촬영 시간",
+    "CAPTURE_TIME": "촬영 일자",
     "IMAGE_ID": "이미지 ID",
     "P_AGE": "환자 나이",
     "P_WEIGHT": "환자 체중",
@@ -41,19 +41,71 @@ export const headerMapping = {
 
 // 질병별 헤더 매핑
 export const diseaseHeaderMapping = {
-    'A': ["DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME", "IMAGE_ID",
-                "P_GENDER", "P_AGE", "DIA_PERIO"],
+    'A': [ 
+        //필수
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+        //선택
+        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION",
+        //필수
+        "IMAGE_ID", "P_GENDER", "P_AGE",
+        //선택
+        "P_WEIGHT", "P_HEIGHT", "P_RES_AREA", "MH_DIABETES","MH_HIGHBLOOD", "MH_OSTEOPROSIS", "MH_NOTE", "LS_SMOKE", "LS_ALCHOLE",
+        //필수
+        "DIA_PERIO",
+        //선택
+        "DIA_NOTE", "DIA_MISSTEETH_A", "DIA_MISSTEETH_B"],
 
-    'B': ['DISEASE_CLASS', 'INSTITUTION_ID', 'PATIENT_NO', 'IMAGE_NO', 'IMAGE_SRC', 'CAPTURE_TIME',
-          'IMAGE_ID', 'P_GENDER', 'P_AGE',
-          'DIS_LOC', 'DIS_CLASS', 'EXTRACTION', 'TRAUMA', 'IMPLANT', 'BONE_SUR', 'ORIGIN_INF', 'FIRST_TREAT',
-          'RECUR'],
+    'B': [
+        //필수
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+        //선택
+        "MAKER_INFO", "H_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
+        //필수
+        "IMAGE_ID", "P_GENDER", "P_AGE",
+        //선택
+        "P_WEIGHT","P_HEIGHT","P_RES_AREA",
+        //필수
+        "DIS_LOC","DIS_CLASS",
+        //선택
+        "HTN","HLD","DIA","TAC","HD","TD","LD","KD","RA","CANCER","DEM","SMOK","STER","CHEMO","IMM_D",
+        //필수
+        "EXTRACTION", "TRAUMA", "IMPLANT", "BONE_SUR", "ORIGIN_INF",
+        //선택항목
+        "VAS_INSUF","LF_NOTE",
+        //필수
+        "FIRST_TREAT", "RECUR"],
 
-    'C': ["DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
-                "IMAGE_ID", "P_GENDER", "P_AGE","DI_NAME","DI_LOC","PT_TNM"],
+    'C': [
+        //필수
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+        //선택
+        "MAKER_INFO", "H_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
+        //필수
+        "IMAGE_ID", "P_GENDER", "P_AGE",
+        //선택
+        "P_WEIGHT","P_HEIGHT","P_RES_AREA","DH_SMOKE","DH_ALCHO","DH_DIAB","DH_CARDIO",
+        //필수
+        "DI_NAME","DI_LOC",
+        //선택
+        "DI_SUR","DI_RAD","DI_CAN","BT_WBC","BT_HB","BT_HCT","BT_OTPT","BT_GFR",
+        //필수
+        "PT_TNM",
+        //선택항목
+        "PT_DOI","PT_SIZE", "PT_NODE",	"PT_EI","PT_VI", "PT_BI","PT_LI"],
 
-    'D': ["DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
-                "IMAGE_ID", "P_GENDER", "P_AGE","DI_DISEASE","DI_TIME","DI_DETAIL"],
+    'D': [ 
+        //필수
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+        //선택
+        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
+        //필수
+        "IMAGE_ID", "P_GENDER", "P_AGE",
+        //선택
+        "P_WEIGHT","P_HEIGHT","P_RES_AREA",
+        //필수
+        "DI_DISEASE","DI_TIME","MAKER_INFO",
+        //선택항목
+       "DI_NOTE","CI_SURGERY"],
 
     'E': ['DISEASE_CLASS', 'INSTITUTION_ID', 'PATIENT_NO', 'IMAGE_NO', 'IMAGE_SRC', 'CAPTURE_TIME',
           'IMAGE_ID', 'P_GENDER', 'P_AGE',
