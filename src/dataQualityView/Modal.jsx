@@ -124,7 +124,10 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                         )}
                     </Select>
                 </SelectContainer>
-
+                <Explanation>
+                        <ColorBox color="red" /> 필수 항목 누락
+                        <ColorBox color="yellow" style={{ marginLeft: '15px' }} />선택 항목 누락
+                    </Explanation>
                 <TableContainer>
                     <ExcelTable>
                         <thead>
@@ -258,8 +261,8 @@ const ExcelCell = styled.td`
             ? 'red'
             : isNull
             ? isRequired
-                ? 'yellow' // 필수값 누락
-                : 'lightyellow' // 선택값 누락
+                ? 'red' // 필수값 누락
+                : 'yellow' // 선택값 누락
             : 'white'};
     color: ${({ isRequired, isInvalid }) =>
         isInvalid
@@ -297,7 +300,7 @@ const SelectContainer = styled.div`
     padding: 3px 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #ddd;
-    justify-content: space-between; /* 선택박스와 설명이 나란히 위치하도록 정렬 */
+    justify-content: start;
 `;
 
 const ColorBox = styled.span`
