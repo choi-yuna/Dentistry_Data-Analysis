@@ -1,6 +1,165 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';  // 헤더 매핑 가져오기
+import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';
+
+const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
+    const [selectedDisease, setSelectedDisease] = useState('');
+    const [diseaseOptions, setDiseaseOptions] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+
+    useEffect(() => {
+        if (isOpen && excelData.length > 0) {
+            console.log('Original Excel Data:', excelData);
+    
+            const filteredExcelData = excelData.filter(
+                (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
+            );
+    
+            const transformedData = filteredExcelData.map(([optional, required]) => ({
+                optional,
+                required,
+            }));
+    
+            console.log('Transformed Data:', transformedData);
+    
+            // 질병 선택 옵션 설정 (중복 제거)
+            const options = [...new Set(
+                transformedData
+                    .map((data) => data.required?.DISEASE_CLASS)
+                    .filter((item) => item) // 값이 존재하는 항목만
+            )];
+    
+            console.log('Unique Disease Options:', options);
+    
+            if (options.length > 0 && JSON.stringify(diseaseOptions) !== JSON.stringify(options)) {
+                setDiseaseOptions(options); // 중복 제거된 옵션 설정
+                if (!selectedDisease) setSelectedDisease(options[0]); // 초기값 설정
+                setFilteredData(transformedData); // 변환된 데이터 설정
+            }
+        }
+    }, [isOpen, excelData]); // 의존성 최소화
+    
+    // 선택된 질병 변경 시 데이터 필터링
+    useEffect(() => {
+        if (selectedDisease) {
+            const filtered = filteredData.filter(
+                (data) => data?.required?.DISEASE_CLASS === selectedDisease
+            );
+            setFilteredData(filtered);
+        }
+    }, [selectedDisease]); // `filteredData`를 의존성에서 제거
+
+    const headers = diseaseHeaderMapping[selectedDisease] || [];
+
+    const renderCell = (value, isRequired, isInvalid) => {
+        const isNull = value === null || value === '';
+        return (
+            <ExcelCell
+                isNull={isNull}
+                isInvalid={isInvalid}
+                isRequired={isRequired}
+            >
+                {isNull ? 'N/A' : value}
+            </ExcelCell>
+        );
+    };
+
+    const isInvalidCell = (rowIndex, column, isRequired) => {
+        return invalidItems.some(
+            (item) =>
+                item.row === rowIndex &&
+                item.column === column &&
+                item.isRequired === isRequired
+        );
+    };
+
+    if (!isOpen) return null;
+
+    if (diseaseOptions.length === 0) {
+        return (
+            <ModalOverlay onClick={onClose}>
+                <ModalContent onClick={(e) => e.stopPropagation()}>
+                    <ModalHeader>
+                        <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
+                        <CloseButton onClick={onClose}>&times;</CloseButton>
+                    </ModalHeader>
+                    <div>데이터가 없습니다.</div>
+                </ModalContent>
+            </ModalOverlay>
+        );
+    }
+
+    return (
+        <ModalOverlay onClick={onClose}>
+            <ModalContent onClick={(e) => e.stopPropagation()}>
+                <ModalHeader>
+                    <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
+                    <CloseButton onClick={onClose}>&times;</CloseButton>
+                </ModalHeader>
+
+                <SelectContainer>
+                    <Label>질병 선택:</Label>
+                    <Select
+                        value={selectedDisease}
+                        onChange={(e) => setSelectedDisease(e.target.value)}
+                    >
+                        {diseaseOptions.length > 0 ? (
+                            diseaseOptions.map((disease, index) => (
+                                <option key={index} value={disease}>
+                                    {diseaseNameMapping[disease] || disease}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">선택할 수 있는 질병이 없습니다</option>
+                        )}
+                    </Select>
+                </SelectContainer>
+
+                <TableContainer>
+                    <ExcelTable>
+                        <thead>
+                            <ExcelHeaderRow>
+                                {headers.map((header, index) => (
+                                    <ExcelHeaderCell key={index}>
+                                        {headerMapping[header] || header}
+                                    </ExcelHeaderCell>
+                                ))}
+                            </ExcelHeaderRow>
+                        </thead>
+                        <tbody>
+                            {filteredData.map((data, rowIndex) => {
+                                const required = data?.required || {};
+                                const optional = data?.optional || {};
+
+                                return (
+                                    <ExcelRow key={rowIndex}>
+                                        {headers.map((header) => {
+                                            const isRequired = header in required;
+                                            const value = isRequired
+                                                ? required[header]
+                                                : optional[header] || ''; // 기본값 설정
+                                            return renderCell(
+                                                value,
+                                                isRequired,
+                                                false
+                                            );
+                                        })}
+                                    </ExcelRow>
+                                );
+                            })}
+                        </tbody>
+                    </ExcelTable>
+                </TableContainer>
+            </ModalContent>
+        </ModalOverlay>
+    );
+};
+
+export default Modal;
+
+// 스타일 컴포넌트는 기존 코드 유지
+
+
 
 const ModalOverlay = styled.div`
     position: fixed;
@@ -84,8 +243,20 @@ const ExcelCell = styled.td`
     padding: 4px;
     border: 1px solid #ddd;
     text-align: left;
-    background-color: ${({ isNull, isInvalid }) => (isNull ? 'yellow' : isInvalid ? 'red' : 'white')};
-    color: black;
+    background-color: ${({ isRequired, isNull, isInvalid }) =>
+        isInvalid
+            ? 'red'
+            : isNull
+            ? isRequired
+                ? 'yellow' // 필수값 누락
+                : 'lightyellow' // 선택값 누락
+            : 'white'};
+    color: ${({ isRequired, isInvalid }) =>
+        isInvalid
+            ? 'white' // 수정 필요한 값
+            : isRequired
+            ? 'blue' // 필수값 텍스트 색
+            : 'black'}; // 선택값 텍스트 색
     font-weight: ${({ isInvalid }) => (isInvalid ? 'bold' : 'normal')};
 `;
 
@@ -136,95 +307,3 @@ const Explanation = styled.div`
     display: flex;
     align-items: center;
 `;
-
-const Modal = ({ isOpen, onClose, excelData, invalidItems = [] }) => {  // invalidItems 추가
-    const [selectedDisease, setSelectedDisease] = useState('');
-    const [diseaseOptions, setDiseaseOptions] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-
-    useEffect(() => {
-        if (isOpen) {
-            const options = [...new Set(excelData.slice(1).map(row => row[0]))].filter(option => ['A', 'B', 'C', 'D','E'].includes(option));
-            setDiseaseOptions(options);
-            setSelectedDisease(options[0] || '');
-        }
-    }, [isOpen, excelData]);
-
-    useEffect(() => {
-        if (selectedDisease) {
-            const dataWithOriginalIndices = excelData.slice(1).map((row, index) => ({ row, originalIndex: index + 1 }));
-            const filtered = dataWithOriginalIndices.filter(rowObj => rowObj.row[0] === selectedDisease);
-            setFilteredData(filtered);
-        }
-    }, [selectedDisease, excelData]);
-
-    if (!isOpen) return null;
-
-    const headers = selectedDisease ? diseaseHeaderMapping[selectedDisease] : excelData[0];
-
-    // 유효성 검사에서 실패한 항목을 확인하는 함수
-    const isInvalidCell = (originalRowIndex, column) => {
-        return invalidItems.some(item => item.row === originalRowIndex && item.column === column);  // 실패한 항목인지 확인
-    };
-
-    return (
-        <ModalOverlay onClick={onClose}>
-            <ModalContent onClick={e => e.stopPropagation()}>
-                <ModalHeader>
-                    <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
-                    <CloseButton onClick={onClose}>&times;</CloseButton>
-                </ModalHeader>
-
-                <SelectContainer>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Label>질병 선택:</Label>
-                        <Select value={selectedDisease} onChange={e => setSelectedDisease(e.target.value)}>
-                            {diseaseOptions.map((disease, index) => (
-                                <option key={index} value={disease}>
-                                    {diseaseNameMapping[disease]}
-                                </option>
-                            ))}
-                        </Select>
-                    </div>
-
-                    {/* 설명 텍스트 추가 */}
-                    <Explanation>
-                        <ColorBox color="yellow" /> 누락된 값
-                        <ColorBox color="red" style={{ marginLeft: '15px' }} /> 수정이 필요한 항목
-                    </Explanation>
-                </SelectContainer>
-
-                <TableContainer>
-                    <ExcelTable>
-                        <thead>
-                            <ExcelHeaderRow>
-                                {headers.map((header, index) => (
-                                    <ExcelHeaderCell key={index}>
-                                        {headerMapping[header] || header}
-                                    </ExcelHeaderCell>
-                                ))}
-                            </ExcelHeaderRow>
-                        </thead>
-                        <tbody>
-                            {filteredData.map(({ row, originalIndex }, rowIndex) => (
-                                <ExcelRow key={rowIndex}>
-                                    {row.map((cell, cellIndex) => (
-                                        <ExcelCell
-                                            key={cellIndex}
-                                            isNull={cell === null || cell === ''}
-                                            isInvalid={isInvalidCell(originalIndex, headers[cellIndex])}  // 원래의 인덱스로 검사
-                                        >
-                                            {cell !== null && cell !== '' ? cell : 'N/A'}
-                                        </ExcelCell>
-                                    ))}
-                                </ExcelRow>
-                            ))}
-                        </tbody>
-                    </ExcelTable>
-                </TableContainer>
-            </ModalContent>
-        </ModalOverlay>
-    );
-};
-
-export default Modal;
