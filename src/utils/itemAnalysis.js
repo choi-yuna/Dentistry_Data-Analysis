@@ -11,18 +11,22 @@ export const analyzeItems = (data) => {
         };
     }
 
-    // 데이터의 헤더 수 (첫 번째 데이터 항목의 키 수)
-    const headerCount = Object.keys(data[0]).length;
+
+  // `required` 항목만 추출
+  const requiredData = data.map((entry) => entry.required || {});
+
+  // 필수 헤더 수 (첫 번째 데이터 항목의 키 수)
+  const headerCount = Object.keys(requiredData[0]).length;
 
     // 전체 항목 수 = 헤더의 수 * 행의 갯수
     const totalItems = headerCount * data.length;
-
+    
     let missingItemCount = 0;
     let invalidItemCount = 0;
     const invalidItems = []; // 유효성 검사에서 실패한 항목을 기록할 배열
 
     // 각 데이터 항목 검사
-    data.forEach((entry, rowIndex) => {
+    requiredData.forEach((entry, rowIndex) => {
         // 각 항목에 대해 누락 데이터 및 유효성 검사
         Object.entries(entry).forEach(([key, value]) => {
             // 누락된 항목 검사
