@@ -90,6 +90,11 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
         );
     };
 
+    const isOptionalHeader = (header) => {
+        const sampleOptional = filteredData[0]?.optional || {}; // 첫 번째 데이터의 optional 구조 사용
+        return header in sampleOptional; // header가 optional에 존재하면 true
+    };
+
     if (!isOpen) return null;
 
     if (isLoading) {
@@ -154,8 +159,18 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                         <thead>
                             <ExcelHeaderRow>
                                 {headers.map((header, index) => (
-                                    <ExcelHeaderCell key={index}>
-                                        {headerMapping[header] || header}
+                                    <ExcelHeaderCell
+                                        key={index}
+                                        isOptional={isOptionalHeader(header)} // 선택 항목 여부 전달
+                                    >
+                                        <span
+                                            style={{
+                                                color: isOptionalHeader(header) ? 'black' : 'blue',
+                                                fontWeight: isOptionalHeader(header) ? 'bold' : 'bold',
+                                            }}
+                                        >
+                                            {headerMapping[header] || header}
+                                        </span>
                                     </ExcelHeaderCell>
                                 ))}
                             </ExcelHeaderRow>
@@ -190,6 +205,11 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
 };
 
 export default Modal;
+
+// 스타일 컴포넌트 그대로 유지
+
+
+
 
 // 스타일 컴포넌트 추가
 const ModalOverlay = styled.div`
