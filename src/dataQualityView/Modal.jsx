@@ -7,47 +7,57 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
     const [diseaseOptions, setDiseaseOptions] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
 
+    // 초기 데이터 처리 및 질병 옵션 설정
     useEffect(() => {
         if (isOpen && excelData.length > 0) {
             console.log('Original Excel Data:', excelData);
-    
+
             const filteredExcelData = excelData.filter(
                 (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
             );
-    
+
             const transformedData = filteredExcelData.map(([optional, required]) => ({
                 optional,
                 required,
             }));
-    
+
             console.log('Transformed Data:', transformedData);
-    
+
             // 질병 선택 옵션 설정 (중복 제거)
             const options = [...new Set(
                 transformedData
                     .map((data) => data.required?.DISEASE_CLASS)
                     .filter((item) => item) // 값이 존재하는 항목만
             )];
-    
+
             console.log('Unique Disease Options:', options);
-    
-            if (options.length > 0 && JSON.stringify(diseaseOptions) !== JSON.stringify(options)) {
-                setDiseaseOptions(options); // 중복 제거된 옵션 설정
-                if (!selectedDisease) setSelectedDisease(options[0]); // 초기값 설정
-                setFilteredData(transformedData); // 변환된 데이터 설정
+
+            setDiseaseOptions(options); // 중복 제거된 옵션 설정
+            if (!selectedDisease && options.length > 0) {
+                setSelectedDisease(options[0]); // 초기값 설정
             }
+
+            // 데이터 필터링 (초기화)
+            const initialFiltered = transformedData.filter(
+                (data) => data.required?.DISEASE_CLASS === (selectedDisease || options[0])
+            );
+            setFilteredData(initialFiltered);
         }
     }, [isOpen, excelData]); // 의존성 최소화
-    
+
     // 선택된 질병 변경 시 데이터 필터링
     useEffect(() => {
         if (selectedDisease) {
-            const filtered = filteredData.filter(
-                (data) => data?.required?.DISEASE_CLASS === selectedDisease
-            );
+            const filtered = excelData
+                .filter(
+                    (item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object'
+                )
+                .map(([optional, required]) => ({ optional, required }))
+                .filter((data) => data.required?.DISEASE_CLASS === selectedDisease);
+
             setFilteredData(filtered);
         }
-    }, [selectedDisease]); // `filteredData`를 의존성에서 제거
+    }, [selectedDisease, excelData]); // `excelData`와 `selectedDisease`에 의존
 
     const headers = diseaseHeaderMapping[selectedDisease] || [];
 
