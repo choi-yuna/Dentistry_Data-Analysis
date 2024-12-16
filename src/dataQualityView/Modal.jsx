@@ -124,6 +124,26 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
             </ModalOverlay>
         );
     }
+    const getColumnStats = (header) => {
+        let totalCount = 0;
+        let errorCount = 0;
+
+        filteredData.forEach((data, rowIndex) => {
+            const required = data?.required || {};
+            const optional = data?.optional || {};
+
+            const isRequired = header in required;
+            const value = isRequired ? required[header] : optional[header];
+            const isInvalid = isInvalidCell(rowIndex, header, isRequired);
+
+            totalCount += 1; // 모든 셀 카운트
+            if (value === null || value === '' || isInvalid) {
+                errorCount += 1; // 오류 카운트 (값 누락 또는 유효하지 않은 경우)
+            }
+        });
+
+        return { totalCount, errorCount };
+    };
 
     return (
         <ModalOverlay onClick={onClose}>
@@ -150,29 +170,51 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                         )}
                     </Select>
                 </SelectContainer>
+
                 <Explanation>
-                        <ColorBox color="red" /> 필수 항목 누락 / 이상
-                        <ColorBox color="yellow" style={{ marginLeft: '15px' }} /> 선택 항목 누락 / 이상
+                    <ColorBox color="red" /> 필수 항목 누락 / 이상
+                    <ColorBox color="yellow" style={{ marginLeft: '15px' }} /> 선택 항목 누락 / 이상
                 </Explanation>
+
                 <TableContainer>
                     <ExcelTable>
                         <thead>
                             <ExcelHeaderRow>
-                                {headers.map((header, index) => (
-                                    <ExcelHeaderCell
-                                        key={index}
-                                        isOptional={isOptionalHeader(header)} // 선택 항목 여부 전달
-                                    >
-                                        <span
-                                            style={{
-                                                color: isOptionalHeader(header) ? 'black' : 'blue',
-                                                fontWeight: isOptionalHeader(header) ? 'bold' : 'bold',
-                                            }}
+                                {headers.map((header, index) => {
+                                    const { totalCount, errorCount } = getColumnStats(header);
+
+                                    return (
+                                        <ExcelHeaderCell
+                                            key={index}
+                                            isOptional={isOptionalHeader(header)}
                                         >
-                                            {headerMapping[header] || header}
-                                        </span>
-                                    </ExcelHeaderCell>
-                                ))}
+                                            <div
+                                                style={{
+                                                    color: isOptionalHeader(header) ? 'black' : 'blue',
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                            >
+                                                {headerMapping[header] || header}
+                                            </div>
+
+                                            <div
+                                                style={{
+                                                    fontSize: '11px',
+                                                    marginTop: '5px',
+                                                    display: 'flex', 
+                                                    justifyContent: 'center', 
+                                                    alignItems: 'flex-end', 
+                                                    textAlign: 'center', 
+                                                    height: '100%', 
+                                                    color: 'gray',
+                                                }}
+                                            >
+                                                전체: {totalCount} / 오류: {errorCount}
+                                            </div>
+                                        </ExcelHeaderCell>
+                                    );
+                                })}
                             </ExcelHeaderRow>
                         </thead>
                         <tbody>
@@ -186,11 +228,11 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                                             const isRequired = header in required;
                                             const value = isRequired
                                                 ? required[header]
-                                                : optional[header] || ''; // 기본값 설정
+                                                : optional[header] || '';
                                             return renderCell(
                                                 value,
                                                 isRequired,
-                                                false
+                                                isInvalidCell(rowIndex, header, isRequired)
                                             );
                                         })}
                                     </ExcelRow>
@@ -203,7 +245,6 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
         </ModalOverlay>
     );
 };
-
 export default Modal;
 
 // 스타일 컴포넌트 그대로 유지
@@ -298,16 +339,16 @@ const ExcelCell = styled.td`
         isInvalid
             ? 'red'
             : isNull
-            ? isRequired
-                ? 'red' // 필수값 누락
-                : 'yellow' // 선택값 누락
-            : 'white'};
+                ? isRequired
+                    ? 'red' // 필수값 누락
+                    : 'yellow' // 선택값 누락
+                : 'white'};
     color: ${({ isRequired, isInvalid }) =>
         isInvalid
             ? 'white' // 수정 필요한 값
             : isRequired
-            ? 'blue' // 필수값 텍스트 색
-            : 'black'};
+                ? 'blue' // 필수값 텍스트 색
+                : 'black'};
     font-weight: ${({ isInvalid }) => (isInvalid ? 'bold' : 'normal')};
 `;
 
