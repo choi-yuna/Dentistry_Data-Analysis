@@ -94,7 +94,27 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
             </ModalOverlay>
         );
     }
-
+       const getColumnStats = (header) => {
+            let totalCount = 0;
+                let errorCount = 0;
+        
+                filteredData.forEach((data, rowIndex) => {
+                    const required = data?.required || {};
+                const optional = data?.optional || {};
+        
+                    const isRequired = header in required;
+                    const value = isRequired ? required[header] : optional[header];
+                    const isInvalid = isInvalidCell(rowIndex, header, isRequired);
+        
+                    totalCount += 1; // 모든 셀 카운트
+                    if (value === null || value === '' || isInvalid) {
+                        errorCount += 1; // 오류 카운트 (값 누락 또는 유효하지 않은 경우)
+                }
+                });
+        
+                return { totalCount, errorCount };
+            };
+         
     return (
         <ModalOverlay onClick={onClose}>
             <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -124,21 +144,41 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                     <ExcelTable>
                         <thead>
                             <ExcelHeaderRow>
-                                {headers.map((header, index) => (
-                                    <ExcelHeaderCell
-                                        key={index}
-                                        isOptional={isOptionalHeader(header)} // 선택 항목 여부 전달
-                                    >
-                                        <span
-                                            style={{
-                                                color: isOptionalHeader(header) ? 'black' : 'blue',
-                                                fontWeight: isOptionalHeader(header) ? 'bold' : 'bold',
-                                            }}
-                                        >
-                                            {headerMapping[header] || header}
-                                        </span>
-                                    </ExcelHeaderCell>
-                                ))}
+                            {headers.map((header, index) => {
+                                    const { totalCount, errorCount } = getColumnStats(header);
+
+                                   return (
+                                        <ExcelHeaderCell
+                                            key={index}
+                                            isOptional={isOptionalHeader(header)}
+                                         >
+                                            <div
+                                                style={{
+                                                    color: isOptionalHeader(header) ? 'black' : 'blue',
+                                                    fontWeight: 'bold',
+                                                    textAlign: 'center',
+                                                }}
+                                           >
+                                                {headerMapping[header] || header}
+                                            </div>
+
+                                            <div
+                                                style={{
+                                                    fontSize: '11px',
+                                                    marginTop: '5px',
+                                                    display: 'flex', 
+                                                    justifyContent: 'center', 
+                                                    alignItems: 'flex-end', 
+                                                    textAlign: 'center', 
+                                                    height: '100%', 
+                                                    color: 'gray',
+                                                }}
+                                            >
+                                                전체: {totalCount} / 오류: {errorCount}
+                                            </div>
+                                        </ExcelHeaderCell>
+                                    );
+                                })}
                             </ExcelHeaderRow>
                         </thead>
                         <tbody>

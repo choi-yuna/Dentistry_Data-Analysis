@@ -15,15 +15,46 @@ export const analyzeItems = (data) => {
   // `required` 항목만 추출
   const requiredData = data.map((entry) => entry.required || {});
 
+  const optionalData = data.map((entry) => entry.optional || {});
+
   // 필수 헤더 수 (첫 번째 데이터 항목의 키 수)
   const headerCount = Object.keys(requiredData[0]).length;
 
     // 전체 항목 수 = 헤더의 수 * 행의 갯수
     const totalItems = headerCount * data.length;
     
+    let optionalmissingItemCount = 0;
     let missingItemCount = 0;
     let invalidItemCount = 0;
     const invalidItems = []; // 유효성 검사에서 실패한 항목을 기록할 배열
+
+    optionalData.forEach((entry, rowIndex) => {
+        Object.entries(entry).forEach(([key, value]) => {
+
+            const invalidReason = {};
+            if (value === "" || value === null) {
+                optionalmissingItemCount++;
+            } else{
+                if (key === "P_WEIGHT" && (isNaN(Number(value)) || Number(value) <= 0)) {
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+                if (key === "P_HEIGHT" && (isNaN(Number(value)) || Number(value) <= 0)) {
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+                if (key === "LF_NOTE" && !["1", "2"].includes(value)) {
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+
+                if (key === "TOTAL_SLICE_NO" && (isNaN(Number(value)) || Number(value) <= 0)) {
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+            }
+        });
+    });
 
     // 각 데이터 항목 검사
     requiredData.forEach((entry, rowIndex) => {
@@ -120,7 +151,6 @@ export const analyzeItems = (data) => {
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
-
                 if (key === "ORIGIN_INF" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
                     invalidReason[key] = value;
