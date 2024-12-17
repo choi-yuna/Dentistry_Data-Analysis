@@ -115,6 +115,27 @@ export const analyzeItems = (data) => {
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
+                if (key === "BONE_SUR" && !["1", "2"].includes(value)) {
+                    invalidItemCount++;
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+
+                if (key === "ORIGIN_INF" && !["1", "2"].includes(value)) {
+                    invalidItemCount++;
+                    invalidReason[key] = value;
+                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                }
+                if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
+                    const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            invalidItemCount++;
+                            invalidItems.push({ row: rowIndex + 1, column: key, value });
+                        }
+                    });
+                }
 
                 if (key === "DI_NAME" && !["1", "2", "3"].includes(value)) {
                     invalidItemCount++;
