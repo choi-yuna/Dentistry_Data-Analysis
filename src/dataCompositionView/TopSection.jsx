@@ -4,7 +4,7 @@ import { useDiseaseData } from '../context/DiseaseDataContext';
 import errorList from '../assets/images/errorLIst.svg';
 
 const TopSection = () => {
-  const [activeTab, setActiveTab] = useState('질환별 보기');
+  const [activeTab, setActiveTab] = useState('기관별 보기');
   const { data, loading, error } = useDiseaseData();
   const [expandedRow, setExpandedRow] = useState({});
 
@@ -33,11 +33,11 @@ const TopSection = () => {
     <TopSectionContainer>
       <TopCtn>
         <TabsContainer>
-          <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
-            질환별 보기
-          </TabButton>
           <TabButton active={activeTab === '기관별 보기'} onClick={() => setActiveTab('기관별 보기')}>
             기관별 보기
+          </TabButton>
+          <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
+            질환별 보기
           </TabButton>
         </TabsContainer>
         <HeaderRow>
@@ -77,7 +77,7 @@ const TopSection = () => {
           totalData={section.totalData}
           subData={section.subData}
           controlData={section.controlData}
-          type={activeTab === '질환별 보기' ? '질환별' : '기관별'}
+          type={activeTab === '기관별 보기' ? '기관별' : '질환별'}
           expandedRow={expandedRow}
           toggleRow={toggleRow}
           errorData={errorData}

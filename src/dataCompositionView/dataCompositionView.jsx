@@ -8,7 +8,7 @@ import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('질환별 보기');
+  const [activeTab, setActiveTab] = useState('기관별 보기');
 
   const { data, loading, error, refreshData } = useDiseaseData();
 

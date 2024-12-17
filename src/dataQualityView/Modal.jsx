@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
+import { FixedSizeList as List } from 'react-window';
 import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';
 
 const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
@@ -185,19 +186,19 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
                         </thead>
                         <tbody>
                         {filteredData.map((data, rowIndex) => {
-    const required = data?.required || {};
-    const optional = data?.optional || {};
+                        const required = data?.required || {};
+                        const optional = data?.optional || {};
 
-    return (
-        <ExcelRow key={rowIndex}>
-            {headers.map((header) => {
-                const isRequired = header in required;
-                const value = isRequired ? required[header] : optional[header] || '';
-                return renderCell(value, isRequired, rowIndex, header); // rowIndex와 header 전달
-            })}
-        </ExcelRow>
-    );
-})}
+                        return (
+                            <ExcelRow key={rowIndex}>
+                                {headers.map((header) => {
+                                    const isRequired = header in required;
+                                    const value = isRequired ? required[header] : optional[header] || '';
+                                    return renderCell(value, isRequired, rowIndex, header); // rowIndex와 header 전달
+                                })}
+                            </ExcelRow>
+                        );
+                    })}
 
                         </tbody>
                     </ExcelTable>
@@ -302,8 +303,12 @@ const ExcelCell = styled.td`
                 ? 'red' // 필수값 누락 → 빨간색
                 : 'yellow' // 선택값 누락 → 노란색
             : 'white'}; // 기본값
-    color: ${({ isInvalid, isOptionalInvalid }) =>
-        isInvalid || isOptionalInvalid ? 'white' : 'black'}; // 텍스트 색상
+    color: ${({ isInvalid, isOptionalInvalid, isRequired }) =>
+        isInvalid || isOptionalInvalid
+            ? 'white' // 유효성 실패 시 텍스트 흰색
+            : isRequired
+            ? 'blue' // 필수값인 경우 텍스트 파란색
+            : 'black'}; // 기본값은 검은색
     font-weight: ${({ isInvalid, isOptionalInvalid }) =>
         isInvalid || isOptionalInvalid ? 'bold' : 'normal'};
 `;

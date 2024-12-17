@@ -117,8 +117,8 @@ export const diseaseHeaderMapping = {
 // 질병 이름 매핑
 export const diseaseNameMapping = {
     'A': '치주질환',
-    'B': '골수염',
+    'B': '골수염 (질환군)',
+    'E' : '골수염 (대조군)',
     'C': '구강암',
-    'D': '두개안면',
-    'E' : '대조군'
+    'D': '두개안면'
 };
