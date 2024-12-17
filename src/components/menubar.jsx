@@ -53,7 +53,9 @@ const ToggleButton = styled.button`
 
 const QualityMenuBtn = styled.button`
   width: 100%;
-  background-color: ${(props) => (props.active ? '#E4E4E4' : '#FFFFFF')};
+  background-color: ${(props) =>
+    props.disabled ? '#E0E0E0' : props.active ? '#E4E4E4' : '#FFFFFF'};
+  color: ${(props) => (props.disabled ? '#A0A0A0' : 'inherit')};
   border: none;
   padding: 15px;
   margin: 5px 0;
@@ -61,32 +63,19 @@ const QualityMenuBtn = styled.button`
   font-family: Inter;
   font-weight: 900; 
   text-align: left;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   &:hover {
-    background-color: #E4E4E4;
+    background-color: ${(props) => (props.disabled ? '#E0E0E0' : '#E4E4E4')};
   }
 `;
 
-const VisualizeMenuBtn = styled.button`
-  width: 100%;
-  background-color: ${(props) => (props.active ? '#E4E4E4' : '#FFFFFF')};
-  border: none;
-  padding: 15px;
-  margin: 5px 0;
-  font-size: 18px;
-  font-family: Inter;
-  font-weight: 900; 
-  text-align: left;
-  cursor: pointer;
-  border-radius: 5px;
-  display: flex;
+
+const VisualizeMenuBtn = styled(QualityMenuBtn)`
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   transition: background-color 0.3s ease, padding 0.3s ease, height 0.3s ease;
 `;
 
@@ -141,60 +130,15 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      setActiveComposition(true);
-      setActiveSubMenuItem(null);
-  }   else if (location.pathname === '/dataQuality') {
-      setActiveQuality(true);
-      setActiveSubMenuItem(null);
-    } else if (location.pathname === '/dataVisualization') {
-      setActiveQuality(false);
-      setShowSubMenu(true);
-    } else {
-      setActiveQuality(false);
-      setShowSubMenu(false);
-    }
-  }, [location]);
+  // 상태 정의: 비활성화 여부
+  const isQualityDisabled = true; // 데이터 품질 평가 비활성화
+  const isVisualizationDisabled = true; // 데이터 분석 가시화 비활성화
 
-
-  const handleToggle = () => {
-    setCollapsed(!collapsed);
-  };
-  const handleDataCompositionViewMenuClick = () => {
-    setActiveQuality(true);
-    setShowSubMenu(false);
-    setActiveSubMenuItem(null);
-    navigate('/');
-  };
-
-
-  const handleQualityMenuClick = () => {
-    setActiveQuality(true);
-    setShowSubMenu(false);
-    setActiveSubMenuItem(null);
-    navigate('/dataQuality');
-  };
-
-  const handleVisualizationMenuClick = () => {
-    setActiveQuality(false);
-    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
-    navigate('/dataVisualization');
-  };
-
-  // 질환 선택 시 API 호출 함수
+  // 질환 선택 시 호출되는 함수
   const handleSubMenuItemClick = async (item) => {
     setActiveSubMenuItem(item);
     setShowSubMenu(false);
-    onDiseaseSelect(item); 
-
-    // try {
-    //   const data = await fetchDiseaseData(item);  // API 호출
-    //   console.log('받은 데이터:', data);
-    //   onDiseaseSelect(data);  // 부모 컴포넌트에 데이터 전달
-    // } catch (error) {
-    //   console.error('데이터를 가져오는 중 오류 발생:', error);
-    // }
+    onDiseaseSelect(item); // 부모 컴포넌트로 전달
 
     switch (item) {
       case 'All':
@@ -213,8 +157,51 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
         navigate('/oralCancer');
         break;
       default:
+        console.error('Unknown menu item:', item);
         break;
     }
+  };
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setActiveComposition(true);
+      setActiveSubMenuItem(null);
+    } else if (location.pathname === '/dataQuality') {
+      setActiveQuality(true);
+      setActiveSubMenuItem(null);
+    } else if (location.pathname === '/dataVisualization') {
+      setActiveQuality(false);
+      setShowSubMenu(true);
+    } else {
+      setActiveQuality(false);
+      setShowSubMenu(false);
+    }
+  }, [location]);
+
+  const handleToggle = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const handleDataCompositionViewMenuClick = () => {
+    setActiveQuality(false); // 품질 평가 활성화 해제
+    setShowSubMenu(false); // 서브 메뉴 닫기
+    setActiveSubMenuItem(null); // 선택된 서브 메뉴 초기화
+    navigate('/'); // 데이터 구축 현황 페이지로 이동
+  };
+
+  const handleQualityMenuClick = () => {
+    if (isQualityDisabled) return; // 비활성화된 상태라면 아무 동작도 하지 않음
+    setActiveQuality(true);
+    setShowSubMenu(false);
+    setActiveSubMenuItem(null);
+    navigate('/dataQuality');
+  };
+
+  const handleVisualizationMenuClick = () => {
+    if (isVisualizationDisabled) return; // 비활성화된 상태라면 아무 동작도 하지 않음
+    setActiveQuality(false);
+    setShowSubMenu((prevShowSubMenu) => !prevShowSubMenu);
+    navigate('/dataVisualization');
   };
 
   return (
@@ -223,15 +210,27 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
         <ToggleIcon src={collapsed ? Open : Close} alt="Toggle Icon" />
       </ToggleButton>
       <InnerContainer collapsed={collapsed}>
-      <QualityMenuBtn active={activeCompositon} onClick={handleDataCompositionViewMenuClick}>
+        <QualityMenuBtn
+          active={activeCompositon}
+          disabled={false} // 데이터 구축 현황 버튼 활성화
+          onClick={handleDataCompositionViewMenuClick}
+        >
           데이터 구축 현황
           <Icon src={ClosedIcon} alt="Close Icon" />
         </QualityMenuBtn>
-        <QualityMenuBtn active={activeQuality} onClick={handleQualityMenuClick}>
+        <QualityMenuBtn
+          active={activeQuality}
+          disabled={isQualityDisabled} // 데이터 품질 평가 버튼 비활성화
+          onClick={handleQualityMenuClick}
+        >
           데이터 품질 평가
           <Icon src={ClosedIcon} alt="Close Icon" />
         </QualityMenuBtn>
-        <VisualizeMenuBtn active={showSubMenu} onClick={handleVisualizationMenuClick}>
+        <VisualizeMenuBtn
+          active={showSubMenu}
+          disabled={isVisualizationDisabled} // 데이터 분석 가시화 버튼 비활성화
+          onClick={handleVisualizationMenuClick}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             데이터 분석 가시화
             <Icon
