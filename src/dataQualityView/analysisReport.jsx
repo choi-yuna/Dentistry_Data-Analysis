@@ -80,7 +80,6 @@ const DataReport = ({ collapsed }) => {
   if (!analyzedData || Object.keys(analyzedData).length === 0) {
     return <p>분석할 데이터가 없습니다.</p>; 
   }
-
   // 차트 데이터 그룹별로 생성
   const chartGroups = [
     {
