@@ -108,17 +108,15 @@ export const diseaseHeaderMapping = {
        "DI_NOTE","CI_SURGERY"],
 
     'E': ['DISEASE_CLASS', 'INSTITUTION_ID', 'PATIENT_NO', 'IMAGE_NO', 'IMAGE_SRC', 'CAPTURE_TIME',
-          'IMAGE_ID', 'P_GENDER', 'P_AGE',
-          'DIS_LOC', 'DIS_CLASS', 'EXTRACTION', 'TRAUMA', 'IMPLANT', 'BONE_SUR', 'ORIGIN_INF', 'FIRST_TREAT',
-          'RECUR']
+          'IMAGE_ID', 'P_GENDER', 'P_AGE']
   
 };
 
 // 질병 이름 매핑
 export const diseaseNameMapping = {
     'A': '치주질환',
-    'B': '골수염',
+    'B': '골수염 (질환군)',
+    'E': '골수염 (대조군)',
     'C': '구강암',
     'D': '두개안면',
-    'E' : '대조군'
 };
