@@ -98,7 +98,7 @@ export const analyzeItems = (data) => {
                         invalidItems.push({ row: rowIndex + 1, column: key, value });
                     }
                 }
-
+                
                 if (key === "IMAGE_SRC" && !["1", "2", "3"].includes(value)) {
                     invalidItemCount++;
                     invalidReason[key] = value;
@@ -158,6 +158,17 @@ export const analyzeItems = (data) => {
                 }
                 if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
                     const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            invalidItemCount++;
+                            invalidItems.push({ row: rowIndex + 1, column: key, value });
+                        }
+                    });
+                }
+
+                if (key === "RECUR" && entry.RECUR && entry.RECUR !== "") {
+                    const diLocValues = entry.RECUR.split(",").map(value => value.trim());
                     const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
                     diLocValues.forEach(value => {
                         if (!validDiLocValues.includes(value)) {

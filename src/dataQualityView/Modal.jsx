@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';
 
+
+
 const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
     const [selectedDisease, setSelectedDisease] = useState('');
     const [diseaseOptions, setDiseaseOptions] = useState([]);
@@ -12,9 +14,10 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
         if (!selectedDisease || excelData.length === 0) return [];
         return excelData
             .filter((item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object')
-            .map(([optional, required]) => ({ optional, required }))
+            .map(([optional, required], index) => ({ optional, required, originalIndex: index }))
             .filter((data) => data.required?.DISEASE_CLASS === selectedDisease);
     }, [excelData, selectedDisease]);
+    
 
     // 초기 질병 옵션 설정
     useEffect(() => {
@@ -35,13 +38,13 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
     // 헤더를 메모이제이션하여 불필요한 계산 방지
     const headers = useMemo(() => diseaseHeaderMapping[selectedDisease] || [], [selectedDisease]);
 
-    const isInvalidCell = (rowIndex, columnIndex) => {
+    const isInvalidCell = (rowIndex, columnKey) => {
+        const originalIndex = filteredData[rowIndex]?.originalIndex; // 원본 인덱스 가져오기
         return invalidItems.some(
-            (item) =>
-                item.row - 1 === rowIndex && // rowIndex 비교
-                item.column === columnIndex // columnIndex 비교
+            (item) => item.row - 1 === originalIndex && item.column === columnKey
         );
     };
+    
     
     const renderCell = (value, isRequired, rowIndex, header) => {
         const isNull = value === null || value === '';
