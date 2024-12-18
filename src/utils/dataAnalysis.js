@@ -54,10 +54,10 @@ export const analyzeData = (data) => {
                         if (key === "LS_ALCHOLE" && value.trim() !== "1" && value.trim() !== "2" ) {
                             totalhasInvalidData = true;
                         }
-                        if (key === "DIA_MISSTEETH_A" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0) ) {
+                        if (key === "DIA_MISSTEETH_A" && (isNaN(Number(value.trim())) || Number(value.trim()) < 0) ) {
                             totalhasInvalidData = true;
                         }
-                        if (key === "DIA_MISSTEETH_B" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0) ) {
+                        if (key === "DIA_MISSTEETH_B" && (isNaN(Number(value.trim())) || Number(value.trim()) < 0) ) {
                             totalhasInvalidData = true;
                         }
 

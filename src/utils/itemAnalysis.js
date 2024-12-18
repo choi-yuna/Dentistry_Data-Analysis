@@ -101,12 +101,12 @@ export const analyzeItems = (data) => {
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
-                if (key === "DIA_MISSTEETH_A" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0) ) {
+                if (key === "DIA_MISSTEETH_A" && (isNaN(Number(value.trim())) || Number(value.trim()) < 0) ) {
                     totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
-                if (key === "DIA_MISSTEETH_B" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0) ) {
+                if (key === "DIA_MISSTEETH_B" && (isNaN(Number(value.trim())) || Number(value.trim()) < 0) ) {
                     totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
