@@ -2,6 +2,8 @@ export const analyzeData = (data) => {
     let nullCount = 0;  // 누락된 항목이 있는 행을 카운트
     let invalidCount = 0;  // 유효성 검사를 통과하지 못한 항목이 있는 행을 카운트
     let totalNullCount=0;
+    let totalCount=0;
+    let requiredCount=0;
     let totalInvalidCount=0;
 
     data.forEach((entry) => {
@@ -12,7 +14,7 @@ export const analyzeData = (data) => {
 
         let totalhasMissingData = false;
         let totalhasInvalidData = false;
-    
+
 
         const required = entry.required || {};
         const optional = entry.optional || {};
@@ -22,7 +24,6 @@ export const analyzeData = (data) => {
          Object.entries(optional).forEach(([key, value]) => {
             if (value === "" || value === null) {
                 totalhasMissingData = true;
-                totalhasInvalidData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
                 if (key === "H_RESOLUTION" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0)) {
@@ -37,11 +38,7 @@ export const analyzeData = (data) => {
                 if (key === "P_HEIGHT" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0)) {
                     totalhasInvalidData = true;
                 }
-
-                // 질환별 유효성 검사
-                if (key === "DISEASE_CLASS") {
-                    switch (value) {
-                        case 'A': // 치주질환
+                
                         if (key === "MH_DIABETES" && value.trim() !== "1" && value.trim() !== "2"  && value.trim() !== "3" && value.trim() !== "4" ) {
                             totalhasInvalidData = true;
                         }
@@ -63,9 +60,7 @@ export const analyzeData = (data) => {
                         if (key === "DIA_MISSTEETH_B" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0) ) {
                             totalhasInvalidData = true;
                         }
-                            break;
 
-                        case 'B': // 골수염
                             if (key === "TOTAL_SLICE_NO" && (isNaN(Number(value.trim())))) {
                                 totalhasInvalidData = true;
                             }
@@ -120,9 +115,7 @@ export const analyzeData = (data) => {
                             if (key === "VAS_INSUF" && value !== "1" && value !== "2") {
                                 totalhasInvalidData = true;
                             }
-                            break;
 
-                        case 'C': // 구강암
                             if (key === "TOTAL_SLICE_NO" && (isNaN(Number(value.trim())))) {
                                 totalhasInvalidData = true;
                             }
@@ -144,27 +137,20 @@ export const analyzeData = (data) => {
                             if (key === "DI_CAN" && value !== "1" && value !== "2") {
                                 totalhasInvalidData = true;
                             }
-                            break;
 
-                        case 'D': // 두개안면
                             if (key === "TOTAL_SLICE_NO" && (isNaN(Number(value.trim())))) {
                                 totalhasInvalidData = true;
                             }
                             if (key === "CI_SURGERY" && (isNaN(Number(value.trim())))) {
                                 totalhasInvalidData = true;
                             }
-                            break;
-                    }
-                }
             }
         
         // 누락 데이터 검사
         Object.entries(required).forEach(([key, value]) => {
             if (value === "" || value === null) {
                 hasMissingData = true;
-                hasInvalidData = true;
                 totalhasMissingData = true;
-                totalhasInvalidData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
                 if (key === "P_GENDER" && value !== "1" && value !== "2") {
@@ -265,34 +251,43 @@ export const analyzeData = (data) => {
         });
 
     });
-    
-            // 누락된 항목이 있으면 nullCount 증가
-        if (hasMissingData) {
-            nullCount++;
-        }
-
-        // 유효성 검사 실패 항목이 있으면 invalidCount 증가
-        if (hasInvalidData) {
-            invalidCount++;
-        }
         // 누락된 항목이 있으면 nullCount 증가
-        if (totalhasMissingData) {
-            totalNullCount++;
-        }
+    if (hasMissingData) {
+        nullCount++;
+    }
 
-        // 유효성 검사 실패 항목이 있으면 invalidCount 증가
-        if (totalhasInvalidData) {
-            totalInvalidCount++;
-        }
+    // 유효성 검사 실패 항목이 있으면 invalidCount 증가
+    if (hasInvalidData) {
+        invalidCount++;
+    }
+    // 누락된 항목이 있으면 nullCount 증가
+    if (totalhasMissingData) {
+        totalNullCount++;
+    }
+
+    // 유효성 검사 실패 항목이 있으면 invalidCount 증가
+    if (totalhasInvalidData) {
+        totalInvalidCount++;
+    }
+
+    if (hasInvalidData || hasMissingData) {
+        requiredCount++;
+    }
+
+    if( totalhasMissingData ||totalhasInvalidData){
+        totalCount++;
+    }
+    
     });
 
     // 비율 계산
+    const totalRatio = ((data.length - requiredCount) / data.length) * 100;
     const completenessRatio = ((data.length - nullCount) / data.length) * 100;
-    const validityRatio = ((data.length - invalidCount) / data.length) * 100;
+    const validityRatio = ((data.length - requiredCount) / data.length) * 100;
     const totalCompletenessRatio = ((data.length - totalNullCount) / data.length) * 100;
     const totalValidityRatio = ((data.length - totalInvalidCount) / data.length) * 100;
 
-    return { nullCount, invalidCount, completenessRatio, validityRatio, totalNullCount, totalInvalidCount, totalCompletenessRatio, totalValidityRatio};
+    return { nullCount, invalidCount, requiredCount,totalCount,totalRatio,completenessRatio, validityRatio, totalNullCount, totalInvalidCount, totalCompletenessRatio, totalValidityRatio};
 };
 
 

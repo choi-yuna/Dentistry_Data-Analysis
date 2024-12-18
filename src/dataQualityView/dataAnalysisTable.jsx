@@ -193,11 +193,11 @@ const MyTable = ({ analyzedData }) => {
                     <TableCell rowSpan="2">품질율</TableCell>
                     <TableCell>환자</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>  
-                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.requiredCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.requiredCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell> {/* 필수 + 선택항목 */}
-                    <TableCell>{formatNumber(analyzedData.totalInvalidCount|| 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.totalInvalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalCount|| 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.totalCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
