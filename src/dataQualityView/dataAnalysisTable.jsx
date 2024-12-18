@@ -61,7 +61,7 @@ const Container = styled.div`
 `;
 
 const TableContainer = styled.div`
-  width: 94%;
+  width: 100%;
   margin: 9px 0; /* 설명과 표 사이 간격 추가 */
   padding: 10px;
   background-color: #fff;
@@ -74,14 +74,21 @@ const StyledTable = styled.table`
   width: 100%; /* 테이블 너비를 자동으로 조절 */
   border-collapse: collapse;
   font-size: 12px;
+  table-layout: fixed;
 `;
 
 const TableHeader = styled.th`
   background-color: #f0f0f0;
   padding: 8px;
-  border: 1px solid #999; /* 테두리 색상 진하게 */
+  border: 1px solid #999;
   text-align: center;
+  vertical-align: middle; /* 셀 내용 수직 가운데 정렬 */
+  width: 12.5%; /* 8개 열 기준 균등 분배 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
+
 
 const TableRow = styled.tr`
   border-bottom: 1px solid #999; /* 테두리 색상 진하게 */
@@ -90,8 +97,16 @@ const TableRow = styled.tr`
 const TableCell = styled.td`
   padding: 8px;
   text-align: center;
-  border: 1px solid #999; /* 테두리 색상 진하게 */
+  border: 1px solid #999;
+  width: 12.5%; /* 셀 너비 균등 분배 */
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background-color: ${(props) => (props.isHeader ? '#f0f0f0' : 'transparent')}; /* 회색 배경 추가 */
 `;
+
+
 
 const Header = styled.div`
   width: 100%;
@@ -141,40 +156,103 @@ const MyTable = ({ analyzedData }) => {
             <TableContainer>
               <StyledTable>
                 <thead>
-                <DescriptionText colSpan="4">
-                      <b>품질율</b>: 전체 데이터 중 오류가 없고, 완전성과 유효성을 모두 만족하는 데이터의 비율.
-                      <br />
-                      <b>완전성</b>: 데이터가 누락되지 않고, 모든 필수 항목이 입력된 데이터의 비율.
-                      <br />
-                      <b>유효성</b>: 입력된 데이터가 정의된 형식, 범위, 규칙에 맞게 유효한 값으로 저장된 비율.
-                    </DescriptionText>
-                  <TableRow>
-                    <TableHeader>구분</TableHeader>
+                  <DescriptionText colSpan="4">
+                    <b>품질율</b>: 전체 데이터 중 오류가 없고, 완전성과 유효성을 모두 만족하는 데이터의 비율.
+                    <br />
+                    <b>완전성</b>: 데이터가 누락되지 않고, 모든 필수 항목이 입력된 데이터의 비율.
+                    <br />
+                    <b>유효성</b>: 입력된 데이터가 정의된 형식, 범위, 규칙에 맞게 유효한 값으로 저장된 비율.
+                  </DescriptionText>
+                </thead>
+                <tbody>
+                <TableRow>
+                <TableCell colSpan="2" isHeader>구분</TableCell>
+                    <TableHeader>항목 수</TableHeader>
+                    <TableHeader>비율(%)</TableHeader>
+                    <TableHeader>환자 수(명)</TableHeader>
                     <TableHeader>항목 수</TableHeader>
                     <TableHeader>비율(%)</TableHeader>
                     <TableHeader>환자 수(명)</TableHeader>
                   </TableRow>
-                </thead>
-                <tbody>
                   <TableRow>
-                    <TableCell>품질율</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems - (analyzedData.invalidItemCount + analyzedData.missingItemCount) || 0)}</TableCell>
-                    <TableCell>{analyzedData.qualityRatio?.toFixed(2) || '0.00'}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients - analyzedData.invalidCount || 0)}</TableCell>
+                    <TableHeader colSpan="2" rowSpan="2">구분</TableHeader>
+                    <TableHeader colSpan="3">필수 (환자)</TableHeader>
+                    <TableHeader colSpan="3">필수 + 선택항목 (항목)</TableHeader>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ paddingLeft: '20px' }}>↳ 완전성</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems - analyzedData.missingItemCount || 0)}</TableCell>
-                    <TableCell>{analyzedData.itemCompletenessRatio?.toFixed(2) || '0.00'}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients - analyzedData.nullCount || 0)}</TableCell>
+                    <TableHeader>전체건수</TableHeader>
+                    <TableHeader>오류 건수</TableHeader>
+                    <TableHeader>Pass율</TableHeader>
+                    <TableHeader>전체건수</TableHeader>
+                    <TableHeader>오류 건수</TableHeader>
+                    <TableHeader>Pass율</TableHeader>
+                  </TableRow>
+
+                  {/* 품질율 */}
+                  <TableRow>
+                    <TableCell rowSpan="2">품질율</TableCell>
+                    <TableCell>환자</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidItemCount + analyzedData.missingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - (analyzedData.invalidItemCount + analyzedData.missingItemCount)) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ paddingLeft: '20px' }}>↳ 유효성</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems - analyzedData.invalidItemCount || 0)}</TableCell>
-                    <TableCell>{analyzedData.itemValidityRatio?.toFixed(2) || '0.00'}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients - analyzedData.invalidCount || 0)}</TableCell>
+                    <TableCell>항목</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidItemCount + analyzedData.missingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - (analyzedData.invalidItemCount + analyzedData.missingItemCount)) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                  </TableRow>
+
+                  {/* 완전성 */}
+                  <TableRow>
+                    <TableCell rowSpan="2">완전성</TableCell>
+                    <TableCell>환자</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.nullCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.nullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.missingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - analyzedData.missingItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>항목</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.nullCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.nullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.missingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - analyzedData.missingItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                  </TableRow>
+
+                  {/* 유효성 */}
+                  <TableRow>
+                    <TableCell rowSpan="2">유효성</TableCell>
+                    <TableCell>환자</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - analyzedData.invalidItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>항목</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.invalidItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalItems - analyzedData.invalidItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                 </tbody>
+
+
               </StyledTable>
             </TableContainer>
           </TableWrapper>
