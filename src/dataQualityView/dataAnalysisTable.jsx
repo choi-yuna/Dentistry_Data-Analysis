@@ -43,12 +43,6 @@ const MyTable = ({ analyzedData }) => {
                 <tbody>
                   <TableRow>
                     <TableCell colSpan="2" rowSpan="3" isHeader bold>구분</TableCell>
-                    <TableHeader highlight>항목 수</TableHeader>
-                    <TableHeader highlight>비율(%)</TableHeader>
-                    <TableHeader highlight>환자 수(명)</TableHeader>
-                    <TableHeader>항목 수</TableHeader>
-                    <TableHeader>비율(%)</TableHeader>
-                    <TableHeader>환자 수(명)</TableHeader>
                   </TableRow>
                   <TableRow>
                     <TableHeader highlight colSpan="3">필수</TableHeader>
