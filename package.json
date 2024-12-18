@@ -25,6 +25,7 @@
     "react-simple-south-korea-map-chart": "^1.1.1",
     "react-spinners": "^0.14.1",
     "react-svg-map": "^2.2.0",
+    "react-window": "^1.8.11",
     "styled-components": "^6.1.12",
     "web-vitals": "^2.1.0"
   },

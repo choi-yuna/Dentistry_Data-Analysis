@@ -36,9 +36,6 @@ const DataCompositionView = () => {
         <ContentCtn collapsed={collapsed}>
           <TitleCtn>
             <Title>데이터 구축 현황</Title>
-            {!loading && (
-              <Refresh onClick={handleRefreshClick}>전체 새로고침</Refresh>
-            )}
           </TitleCtn>
           <TopSectionCtn>
             {loading ? (
