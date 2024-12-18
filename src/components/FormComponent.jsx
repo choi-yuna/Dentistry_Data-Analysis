@@ -260,7 +260,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
     // 공통 데이터 분석 함수
     const performDataAnalysis = (data) => {
         const { nullCount, invalidCount, completenessRatio, validityRatio, totalNullCount, totalInvalidCount, totalCompletenessRatio, totalValidityRatio  } = analyzeData(data);
-        const { totalItems, missingItemCount, invalidItemCount, completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio, qualityRatio, invalidItems } = analyzeItems(data);
+        const { totalItems, items, missingItemCount, totalMissingItemCount, totalInvalidItemCount,invalidItemCount, totalItemCompletenessRatio,totalItemValidityRatio,completenessRatio: itemCompletenessRatio, validityRatio: itemValidityRatio, qualityRatio, invalidItems } = analyzeItems(data);
         const { totalPatients, validPatientCount, patientQualityRate, validItemCount, itemQualityRate } = calculateQualityRate(data);
         const { overallPatients, overallItems, overallValidPatients, overallPatientQualityRate, overallValidItems, overallItemQualityRate } = calculateOverallQuality(data);
 
@@ -274,11 +274,16 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
             totalCompletenessRatio, 
             totalValidityRatio, 
             totalItems,
+            items,
+            totalMissingItemCount,
+            totalInvalidItemCount,
             invalidItems,
             missingItemCount,
             invalidItemCount,
             itemCompletenessRatio,
             itemValidityRatio,
+            totalItemCompletenessRatio,
+            totalItemValidityRatio,
             qualityRatio,
             totalPatients,
             validPatientCount,
