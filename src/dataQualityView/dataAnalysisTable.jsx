@@ -68,21 +68,21 @@ const MyTable = ({ analyzedData }) => {
                   <TableRow>
                     <TableCell rowSpan="2">품질율</TableCell>
                     <TableCell>환자</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
-                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell> {/* 필수 + 선택항목 */}
-                    <TableCell>{formatNumber(analyzedData.invalidItemCount + analyzedData.missingItemCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalItems - (analyzedData.invalidItemCount + analyzedData.missingItemCount)) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>  
+                    <TableCell>{formatNumber(analyzedData.requiredCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.requiredCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell> {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalCount|| 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.totalCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
-                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell> {/* 필수 + 선택항목 */}
-                    <TableCell>{formatNumber(analyzedData.invalidItemCount + analyzedData.missingItemCount || 0)}</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
+                    <TableCell>{formatNumber((analyzedData.invalidItemCount + analyzedData.missingItemCount) || 0)}</TableCell>
                     <TableCell>{((analyzedData.totalItems - (analyzedData.invalidItemCount + analyzedData.missingItemCount)) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell> {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalInvalidItemCount + analyzedData.totalMissingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.items - (analyzedData.totalInvalidItemCount + analyzedData.totalMissingItemCount)) / analyzedData.items * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
 
                   {/* 완전성 */}
@@ -92,18 +92,18 @@ const MyTable = ({ analyzedData }) => {
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.nullCount || 0)}</TableCell>
                     <TableCell>{((analyzedData.totalPatients - analyzedData.nullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>  {/* 필수 + 선택항목 */}
-                    <TableCell>{formatNumber(analyzedData.missingItemCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalItems - analyzedData.missingItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalNullCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.totalNullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
-                    <TableCell>{formatNumber(analyzedData.nullCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.nullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.missingItemCount || 0)}</TableCell>
                     <TableCell>{((analyzedData.totalItems - analyzedData.missingItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalMissingItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.items - analyzedData.totalMissingItemCount) / analyzedData.items * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
 
                   {/* 유효성 */}
@@ -113,18 +113,18 @@ const MyTable = ({ analyzedData }) => {
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
                     <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>  {/* 필수 + 선택항목 */}
-                    <TableCell>{formatNumber(analyzedData.invalidItemCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalItems - analyzedData.invalidItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalInvalidCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.totalInvalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
-                    <TableCell>{formatNumber(analyzedData.invalidCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
-                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalItems || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.invalidItemCount || 0)}</TableCell>
-                    <TableCell>{((analyzedData.totalItems - analyzedData.invalidItemCount) / analyzedData.totalItems * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{((analyzedData.totalPatients - analyzedData.invalidItemCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%</TableCell>
+                    <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell>  {/* 필수 + 선택항목 */}
+                    <TableCell>{formatNumber(analyzedData.totalInvalidItemCount || 0)}</TableCell>
+                    <TableCell>{((analyzedData.items - analyzedData.totalInvalidItemCount) / analyzedData.items * 100 || 0).toFixed(2)}%</TableCell>
                   </TableRow>
                 </tbody>
 
