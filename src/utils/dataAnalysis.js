@@ -22,7 +22,7 @@ export const analyzeData = (data) => {
 
          // 누락 데이터 검사
          Object.entries(optional).forEach(([key, value]) => {
-            if (value === "" || value === null) {
+            if (value.trim() === "" || value === null) {
                 totalhasMissingData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
@@ -150,41 +150,34 @@ export const analyzeData = (data) => {
         Object.entries(required).forEach(([key, value]) => {
             if (value === "" || value === null) {
                 hasMissingData = true;
-                totalhasMissingData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
                 if (key === "P_GENDER" && value !== "1" && value !== "2") {
                     hasInvalidData = true;
-                    totalhasInvalidData = true;
                 }
                 if (key === "P_AGE" && (isNaN(Number(value)) || Number(value) <= 0)) {
                     hasInvalidData = true;
-                    totalhasInvalidData = true;
                 }
                 if (key === "INSTITUTION_ID" && value !== "1" && value !== "2" && value !== "3" && value !== "4" && value !== "5" && value !== "6" && value !== "7") {
                     hasInvalidData = true;
-                    totalhasInvalidData = true;
                 }
                 if (key === "PATIENT_NO") {
                     const patientNo = Number(value.trim());
                     if (isNaN(patientNo) || patientNo < 1 || patientNo > Number.MAX_SAFE_INTEGER) {
                         hasInvalidData = true; 
-                        totalhasInvalidData = true;                   }
+                       }
                 }
                 if (key === "IMAGE_NO") {
                     const imageNo = Number(value.trim());
                     if (isNaN(imageNo) || imageNo < 1 || imageNo > Number.MAX_SAFE_INTEGER) {
                         hasInvalidData = true;
-                        totalhasInvalidData = true;
                     }
                 }
                 if (key === "IMAGE_SRC" && value !== "1" && value !== "2" && value !== "3") {
                     hasInvalidData = true;
-                    totalhasInvalidData = true;
                 }
                 if (key === "CAPTURE_TIME" && (value.length !== 4 || isNaN(Number(value)))) {
                     hasInvalidData = true;
-                    totalhasInvalidData = true;
                 }
 
 
@@ -198,30 +191,48 @@ export const analyzeData = (data) => {
                         case 'B': // 골수염
                             if (key === "EXTRACTION" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             if (key === "TRAUMA" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             if (key === "IMPLANT" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             if (key === "BONE_SUR" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             if (key === "ORIGIN_INF" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
-                            break;
+                            if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
+                                const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                    }
+                                });
+                            }
+                            if (key === "RECUR" && entry.RECUR && entry.RECUR !== "") {
+                                const diLocValues = entry.RECUR.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                    }
+                                });
+                                break;
+                            }
 
                         case 'C': // 구강암
-                            if (key === "DI_NAME" && value !== "1" && value !== "2" && value !== "3") {
-                                hasInvalidData = true;
-                                totalhasInvalidData = true;
+                            if (key === "DI_NAME" && entry.DI_NAME && entry.DI_NAME !== "") {
+                                const diLocValues = entry.DI_NAME.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                    }
+                                });
                             }
                             if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
                                 const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());
@@ -229,7 +240,6 @@ export const analyzeData = (data) => {
                                 diLocValues.forEach(value => {
                                     if (!validDiLocValues.includes(value)) {
                                         hasInvalidData = true;
-                                        totalhasInvalidData = true;
                                     }
                                 });
                             }
@@ -238,11 +248,9 @@ export const analyzeData = (data) => {
                         case 'D': // 두개안면
                             if (key === "DI_DISEASE" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             if (key === "DI_TIME" && value !== "1" && value !== "2") {
                                 hasInvalidData = true;
-                                totalhasInvalidData = true;
                             }
                             break;
                     }
@@ -283,7 +291,7 @@ export const analyzeData = (data) => {
     // 비율 계산
     const totalRatio = ((data.length - requiredCount) / data.length) * 100;
     const completenessRatio = ((data.length - nullCount) / data.length) * 100;
-    const validityRatio = ((data.length - requiredCount) / data.length) * 100;
+    const validityRatio = ((data.length - invalidCount) / data.length) * 100;
     const totalCompletenessRatio = ((data.length - totalNullCount) / data.length) * 100;
     const totalValidityRatio = ((data.length - totalInvalidCount) / data.length) * 100;
 

@@ -30,7 +30,7 @@ export const analyzeItems = (data) => {
     // 전체 항목 수 = 헤더의 수 * 행의 갯수
     const totalItems = requirdHeaderCount * data.length;
 
-    const items = (requirdHeaderCount +  optionalHeaderCount) * data.length;
+    const items =  optionalHeaderCount * data.length;
     
     let totalMissingItemCount = 0;
     let totalInvalidItemCount = 0;
@@ -42,7 +42,7 @@ export const analyzeItems = (data) => {
         Object.entries(entry).forEach(([key, value]) => {
 
             const invalidReason = {};
-            if (value === "" || value === null) {
+            if (value.trim() === "" || value === null) {
                 totalMissingItemCount++;
             } else{
                 if (key === "P_WEIGHT" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0)) {
@@ -243,19 +243,16 @@ export const analyzeItems = (data) => {
 
                 if (key === "P_GENDER" && value !== "1" && value !== "2") {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "P_AGE" && (isNaN(Number(value)) || Number(value) <= 0)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "INSTITUTION_ID" && !["1", "2", "3", "4", "5", "6", "7"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
@@ -263,7 +260,6 @@ export const analyzeItems = (data) => {
                     const patientNo = Number(value.trim());
                     if (isNaN(patientNo) || patientNo < 1 || patientNo > Number.MAX_SAFE_INTEGER) {
                         invalidItemCount++;
-                        totalInvalidItemCount++;
                         invalidReason[key] = value;
                         invalidItems.push({ row: rowIndex + 1, column: key, value });
                     }
@@ -272,7 +268,6 @@ export const analyzeItems = (data) => {
                     const imageNo = Number(value.trim());
                     if (isNaN(imageNo) || imageNo < 1 || imageNo > Number.MAX_SAFE_INTEGER) {
                         invalidItemCount++;
-                        totalInvalidItemCount++;
                         invalidReason[key] = value;
                         invalidItems.push({ row: rowIndex + 1, column: key, value });
                     }
@@ -280,61 +275,51 @@ export const analyzeItems = (data) => {
                 
                 if (key === "IMAGE_SRC" && !["1", "2", "3"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "CAPTURE_TIME" && (value.length !== 4 || isNaN(Number(value)))) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "DIA_PERIO" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "DIS_LOC" && !["1", "2", "3"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "DIS_CLASS" && !["1", "2", "3", "4", "5"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "EXTRACTION" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "TRAUMA" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "IMPLANT" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "BONE_SUR" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "ORIGIN_INF" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
@@ -344,7 +329,6 @@ export const analyzeItems = (data) => {
                     diLocValues.forEach(value => {
                         if (!validDiLocValues.includes(value)) {
                             invalidItemCount++;
-                            totalInvalidItemCount++;
                             invalidItems.push({ row: rowIndex + 1, column: key, value });
                         }
                     });
@@ -356,51 +340,50 @@ export const analyzeItems = (data) => {
                     diLocValues.forEach(value => {
                         if (!validDiLocValues.includes(value)) {
                             invalidItemCount++;
-                            totalInvalidItemCount++;
+                            invalidItems.push({ row: rowIndex + 1, column: key, value });
+                        }
+                    });
+                }
+                
+                if (key === "DI_NAME" && entry.DI_NAME && entry.DI_NAME !== "") {
+                    const diLocValues = entry.DI_NAME.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            invalidItemCount++;
                             invalidItems.push({ row: rowIndex + 1, column: key, value });
                         }
                     });
                 }
 
-                if (key === "DI_NAME" && !["1", "2", "3"].includes(value)) {
-                    invalidItemCount++;
-                    totalInvalidItemCount++;
-                    invalidReason[key] = value;
-                    invalidItems.push({ row: rowIndex + 1, column: key, value });
-                }
                 if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
                     const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());
                     const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
                     diLocValues.forEach(value => {
                         if (!validDiLocValues.includes(value)) {
                             invalidItemCount++;
-                            totalInvalidItemCount++;
                             invalidItems.push({ row: rowIndex + 1, column: key, value });
                         }
                     });
                 }
                 if (key === "CAN_NUM" && (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 3)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "LYM_NUM" && (isNaN(Number(value)) || Number(value) < 0 || Number(value) > 3)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
 
                 if (key === "DI_DISEASE" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
                 if (key === "DI_TIME" && !["1", "2"].includes(value)) {
                     invalidItemCount++;
-                    totalInvalidItemCount++;
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
@@ -411,7 +394,6 @@ export const analyzeItems = (data) => {
                     diDetailValues.forEach(value => {
                         if (!validDiDetailValues.includes(value)) {
                             invalidItemCount++;
-                            totalInvalidItemCount++;
                             invalidItems.push({ row: rowIndex + 1, column: key, value });
                         }
                     });

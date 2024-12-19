@@ -47,7 +47,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
     
     
     const renderCell = (value, isRequired, rowIndex, header) => {
-        const isNull = value === null || value === '';
+        const isNull = value === null || value.trim() === '';
         const isInvalid = isInvalidCell(rowIndex, header); // 유효성 검사 실패
         const isOptionalInvalid = !isRequired && isInvalid; // 선택 항목에서만 유효성 검사 실패
     
