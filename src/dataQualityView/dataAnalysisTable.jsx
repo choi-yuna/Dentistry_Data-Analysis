@@ -22,7 +22,7 @@ const MyTable = ({ analyzedData }) => {
                 • 전체 환자 수(명): {formatNumber(analyzedData.totalPatients || 0)}
               </HeaderItem>
               <HeaderItem>
-                • 전체 데이터 항목 수: {formatNumber(analyzedData.totalItems || 0)}
+                • 전체 데이터 항목 수: {formatNumber(analyzedData.totalItems + analyzedData.items|| 0)}
               </HeaderItem>
             </div>
           </Header>
@@ -45,8 +45,8 @@ const MyTable = ({ analyzedData }) => {
                     <TableCell colSpan="2" rowSpan="3" isHeader bold>구분</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableHeader highlight colSpan="3">필수</TableHeader>
-                    <TableHeader colSpan="3">필수 + 선택항목</TableHeader>
+                    <TableHeader highlight colSpan="3">필수항목</TableHeader>
+                    <TableHeader colSpan="3">선택항목</TableHeader>
                   </TableRow>
                   <TableRow>
                     <TableHeader highlight>전체 건수</TableHeader>
@@ -178,8 +178,8 @@ const MyTable = ({ analyzedData }) => {
                     datasets: [
                       {
                         data: [
-                          Number(analyzedData.totalPatients) - Number(analyzedData.invalidCount) || 0,
-                          Number(analyzedData.invalidCount) || 0,
+                          Number(analyzedData.totalPatients) - Number(analyzedData.requiredCount) || 0,
+                          Number(analyzedData.requiredCount) || 0,
                         ],
                         backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
                       },
