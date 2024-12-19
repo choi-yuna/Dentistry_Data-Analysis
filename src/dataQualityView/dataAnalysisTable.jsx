@@ -54,7 +54,7 @@ const MyTable = ({ analyzedData }) => {
                     <TableHeader highlight>Pass율</TableHeader>
                     <TableHeader>전체 건수</TableHeader>
                     <TableHeader>미기입 건수</TableHeader>
-                    <TableHeader>Pass율</TableHeader>
+                    <TableHeader>기입율</TableHeader>
                   </TableRow>
 
                   {/* 품질율 */}
@@ -68,9 +68,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell> {/* 필수 + 선택항목 */}
                     <TableCell>{formatNumber(analyzedData.totalCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.totalPatients - analyzedData.totalCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.totalPatients - analyzedData.totalCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
@@ -81,9 +81,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell> {/* 필수 + 선택항목 */}
                     <TableCell>{formatNumber(analyzedData.totalInvalidItemCount + analyzedData.totalMissingItemCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.items - (analyzedData.totalInvalidItemCount + analyzedData.totalMissingItemCount)) / analyzedData.items * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.items - (analyzedData.totalInvalidItemCount + analyzedData.totalMissingItemCount)) / analyzedData.items * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
 
                   {/* 완전성 */}
@@ -97,9 +97,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalNullCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.totalPatients - analyzedData.totalNullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.totalPatients - analyzedData.totalNullCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
@@ -110,9 +110,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalMissingItemCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.items - analyzedData.totalMissingItemCount) / analyzedData.items * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.items - analyzedData.totalMissingItemCount) / analyzedData.items * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
 
                   {/* 유효성 */}
@@ -126,9 +126,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.totalPatients || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalInvalidCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.totalPatients - analyzedData.totalInvalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.totalPatients - analyzedData.totalInvalidCount) / analyzedData.totalPatients * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>항목</TableCell>
@@ -139,9 +139,9 @@ const MyTable = ({ analyzedData }) => {
                     </PassRateCell>
                     <TableCell>{formatNumber(analyzedData.items || 0)}</TableCell>
                     <TableCell>{formatNumber(analyzedData.totalInvalidItemCount || 0)}</TableCell>
-                    <PassRateCell passRate={((analyzedData.items - analyzedData.totalInvalidItemCount) / analyzedData.items * 100 || 0).toFixed(2)}>
+                    <TableCell>
                       {((analyzedData.items - analyzedData.totalInvalidItemCount) / analyzedData.items * 100 || 0).toFixed(2)}%
-                    </PassRateCell>
+                    </TableCell>
                   </TableRow>
 
                 </tbody>
@@ -289,6 +289,10 @@ const Section = styled.div`
   text-align: center;
   margin: 0 10px; /* 각 섹션 간 간격 */
 `;
+
+
+
+
 
 const SectionTitle = styled.div`
   font-size: 13px; /* 크기 축소 */
