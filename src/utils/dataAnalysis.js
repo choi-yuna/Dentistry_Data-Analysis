@@ -22,7 +22,7 @@ export const analyzeData = (data) => {
 
          // 누락 데이터 검사
          Object.entries(optional).forEach(([key, value]) => {
-            if (value === "" || value === null) {
+            if (value.trim() === "" || value === null) {
                 totalhasMissingData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
@@ -216,12 +216,38 @@ export const analyzeData = (data) => {
                                 hasInvalidData = true;
                                 totalhasInvalidData = true;
                             }
-                            break;
+                            if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
+                                const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                        totalhasInvalidData = true;
+                                    }
+                                });
+                            }
+                            if (key === "RECUR" && entry.RECUR && entry.RECUR !== "") {
+                                const diLocValues = entry.RECUR.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
+                                        totalhasInvalidData = true;
+                                    }
+                                });
+                                break;
+                            }
 
                         case 'C': // 구강암
-                            if (key === "DI_NAME" && value !== "1" && value !== "2" && value !== "3") {
-                                hasInvalidData = true;
+                            if (key === "DI_NAME" && entry.DI_NAME && entry.DI_NAME !== "") {
+                                const diLocValues = entry.DI_NAME.split(",").map(value => value.trim());
+                                const validDiLocValues = ["1", "2", "3"];
+                                diLocValues.forEach(value => {
+                                    if (!validDiLocValues.includes(value)) {
+                                        hasInvalidData = true;
                                 totalhasInvalidData = true;
+                                    }
+                                });
                             }
                             if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
                                 const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());

@@ -42,7 +42,7 @@ export const analyzeItems = (data) => {
         Object.entries(entry).forEach(([key, value]) => {
 
             const invalidReason = {};
-            if (value === "" || value === null) {
+            if (value.trim() === "" || value === null) {
                 totalMissingItemCount++;
             } else{
                 if (key === "P_WEIGHT" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0)) {
@@ -361,13 +361,19 @@ export const analyzeItems = (data) => {
                         }
                     });
                 }
-
-                if (key === "DI_NAME" && !["1", "2", "3"].includes(value)) {
-                    invalidItemCount++;
-                    totalInvalidItemCount++;
-                    invalidReason[key] = value;
-                    invalidItems.push({ row: rowIndex + 1, column: key, value });
+                
+                if (key === "DI_NAME" && entry.DI_NAME && entry.DI_NAME !== "") {
+                    const diLocValues = entry.DI_NAME.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            invalidItemCount++;
+                            totalInvalidItemCount++;
+                            invalidItems.push({ row: rowIndex + 1, column: key, value });
+                        }
+                    });
                 }
+
                 if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
                     const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());
                     const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
