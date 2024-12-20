@@ -52,7 +52,6 @@ const DataQualityView = () => {
 
     // 분석된 데이터를 설정하는 함수
     const handleAnalyze = (data) => {
-      console.log('분석된 데이터:', data);
       setAnalyzedData(data);  // 분석된 데이터를 상태에 저장
       setDataQualityResults(true);  // 분석 결과 표시
     };
