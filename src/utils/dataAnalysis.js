@@ -181,81 +181,76 @@ export const analyzeData = (data) => {
                 }
 
 
-                // 질환별 유효성 검사
-                if (key === "DISEASE_CLASS") {
-                    switch (value) {
-                        case 'A': // 치주질환
-                            
-                            break;
+                if (key === "DIA_PERIO" && !["1", "2"].includes(value)) {
+                            hasInvalidData = true;
+                        }
 
-                        case 'B': // 골수염
-                            if (key === "EXTRACTION" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "TRAUMA" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "IMPLANT" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "BONE_SUR" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "ORIGIN_INF" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
-                                const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
-                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-                                diLocValues.forEach(value => {
-                                    if (!validDiLocValues.includes(value)) {
-                                        hasInvalidData = true;
-                                    }
-                                });
-                            }
-                            if (key === "RECUR" && entry.RECUR && entry.RECUR !== "") {
-                                const diLocValues = entry.RECUR.split(",").map(value => value.trim());
-                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-                                diLocValues.forEach(value => {
-                                    if (!validDiLocValues.includes(value)) {
-                                        hasInvalidData = true;
-                                    }
-                                });
-                                break;
-                            }
 
-                        case 'C': // 구강암
-                            if (key === "DI_NAME" && entry.DI_NAME && entry.DI_NAME !== "") {
-                                const diLocValues = entry.DI_NAME.split(",").map(value => value.trim());
-                                const validDiLocValues = ["1", "2", "3"];
-                                diLocValues.forEach(value => {
-                                    if (!validDiLocValues.includes(value)) {
-                                        hasInvalidData = true;
-                                    }
-                                });
-                            }
-                            if (key === "DI_LOC" && entry.DI_LOC && entry.DI_LOC !== "") {
-                                const diLocValues = entry.DI_LOC.split(",").map(value => value.trim());
-                                const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-                                diLocValues.forEach(value => {
-                                    if (!validDiLocValues.includes(value)) {
-                                        hasInvalidData = true;
-                                    }
-                                });
-                            }
-                            break;
-
-                        case 'D': // 두개안면
-                            if (key === "DI_DISEASE" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            if (key === "DI_TIME" && value !== "1" && value !== "2") {
-                                hasInvalidData = true;
-                            }
-                            break;
-                    }
-                }
+                if (key === "DIS_LOC" && !["1", "2", "3"].includes(value)) {
+                hasInvalidData = true;
             }
+                 if (key === "DIS_CLASS" && !["1", "2", "3", "4", "5"].includes(value)) {
+                hasInvalidData = true;
+            }
+                if (key === "EXTRACTION" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "TRAUMA" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "IMPLANT" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "BONE_SUR" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "ORIGIN_INF" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "FIRST_TREAT" && entry.required.FIRST_TREAT && entry.required.FIRST_TREAT !== "") {
+                    const diLocValues = entry.required.FIRST_TREAT.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            hasInvalidData = true;
+                        }
+                    });
+                }
+                if (key === "RECUR" && entry.required.RECUR && entry.required.RECUR !== "") {
+                    const diLocValues = entry.required.RECUR.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            hasInvalidData = true;
+                        }
+                    });
+                }
+                if (key === "DI_NAME" && entry.required.DI_NAME && entry.required.DI_NAME !== "") {
+                    const diLocValues = entry.required.DI_NAME.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            hasInvalidData = true;
+                        }
+                    });
+                }
+                if (key === "DI_LOC" && entry.required.DI_LOC && entry.required.DI_LOC !== "") {
+                    const diLocValues = entry.required.DI_LOC.split(",").map(value => value.trim());
+                    const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                    diLocValues.forEach(value => {
+                        if (!validDiLocValues.includes(value)) {
+                            hasInvalidData = true;
+                        }
+                    });
+                }
+
+                if (key === "DI_DISEASE" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                if (key === "DI_TIME" && value !== "1" && value !== "2") {
+                    hasInvalidData = true;
+                }
+                }
         });
 
     });
@@ -268,6 +263,7 @@ export const analyzeData = (data) => {
     if (hasInvalidData) {
         invalidCount++;
     }
+    
     // 누락된 항목이 있으면 nullCount 증가
     if (totalhasMissingData) {
         totalNullCount++;

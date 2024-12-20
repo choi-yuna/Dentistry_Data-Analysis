@@ -38,8 +38,6 @@ export const fetchPatientData = async (fileIds, institutionId, diseaseClass) => 
             diseaseClass: diseaseClass,
         });
 
-        
-        console.log('Response from analyze:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error analyzing data:', error.response ? error.response.data : error.message);
