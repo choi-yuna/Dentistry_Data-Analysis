@@ -323,16 +323,30 @@ export const analyzeItems = (data) => {
                     invalidReason[key] = value;
                     invalidItems.push({ row: rowIndex + 1, column: key, value });
                 }
+
+
+
                 if (key === "FIRST_TREAT" && entry.FIRST_TREAT && entry.FIRST_TREAT !== "") {
                     const diLocValues = entry.FIRST_TREAT.split(",").map(value => value.trim());
                     const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
                     diLocValues.forEach(value => {
-                        if (!validDiLocValues.includes(value)) {
+                        // 괄호 앞의 숫자만 추출
+                        const numericValue = value.match(/^\d+/)?.[0]; // 정규식으로 숫자 추출
+                        if (numericValue) {
+                            // 숫자가 유효하지 않으면 오류로 처리
+                            if (!validDiLocValues.includes(numericValue)) {
+                                invalidItemCount++;
+                                invalidItems.push({ row: rowIndex + 1, column: key, value });
+                            }
+                        } else {
+                            // 숫자가 없으면 오류로 처리
                             invalidItemCount++;
                             invalidItems.push({ row: rowIndex + 1, column: key, value });
                         }
                     });
                 }
+                
+
 
                 if (key === "RECUR" && entry.RECUR && entry.RECUR !== "") {
                     const diLocValues = entry.RECUR.split(",").map(value => value.trim());
