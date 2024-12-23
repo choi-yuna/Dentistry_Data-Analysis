@@ -4,7 +4,7 @@ import { useDiseaseData } from '../context/DiseaseDataContext';
 import errorList from '../assets/images/errorLIst.svg';
 
 const TopSection = () => {
-  const [activeTab, setActiveTab] = useState('질환별 보기');
+  const [activeTab, setActiveTab] = useState('기관별 보기');
   const { data, loading, error } = useDiseaseData();
   const [expandedRow, setExpandedRow] = useState({});
 
@@ -23,7 +23,7 @@ const TopSection = () => {
   const nestedData = data?.data || {};
   const errorData = data?.data.errorData || [];
   console.log('TopSection에서 받은 errorData 데이터:', { errorData });
-  const sections = activeTab === '질환별 보기' ? nestedData['질환별'] || [] : nestedData['기관별'] || [];
+  const sections = activeTab === '기관별 보기' ? nestedData['기관별'] || [] : nestedData['질환별'] || [];
 
   if (sections.length === 0) {
     return <ErrorContainer>데이터가 없습니다.</ErrorContainer>;
@@ -33,11 +33,11 @@ const TopSection = () => {
     <TopSectionContainer>
       <TopCtn>
         <TabsContainer>
+          <TabButton active={activeTab === '기관별 보기'} onClick={() => setActiveTab('기관별 보기')}>
+           기관별 보기
+          </TabButton>
           <TabButton active={activeTab === '질환별 보기'} onClick={() => setActiveTab('질환별 보기')}>
             질환별 보기
-          </TabButton>
-          <TabButton active={activeTab === '기관별 보기'} onClick={() => setActiveTab('기관별 보기')}>
-            기관별 보기
           </TabButton>
         </TabsContainer>
         <HeaderRow>

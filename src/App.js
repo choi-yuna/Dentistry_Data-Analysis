@@ -17,7 +17,7 @@ function App() {
         <DataSelectionProvider>
           <AnalysisProvider>
             <DiseaseDataProvider> 
-              <Router basename="/data-analysis">
+              <Router basename="/data-status">
                 <div className="App">
                   <Routes>
                     <Route path="/" element={<DataCompositionView />} />
