@@ -211,7 +211,15 @@ export const analyzeData = (data) => {
                     const diLocValues = entry.required.FIRST_TREAT.split(",").map(value => value.trim());
                     const validDiLocValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
                     diLocValues.forEach(value => {
-                        if (!validDiLocValues.includes(value)) {
+                        // 괄호 앞의 숫자만 추출
+                        const numericValue = value.match(/^\d+/)?.[0]; // 정규식으로 숫자 추출
+                        if (numericValue) {
+                            // 숫자가 유효하지 않으면 오류로 처리
+                            if (!validDiLocValues.includes(numericValue)) {
+                                hasInvalidData = true;
+                            }
+                        } else {
+                            // 숫자가 없으면 오류로 처리
                             hasInvalidData = true;
                         }
                     });

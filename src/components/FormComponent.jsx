@@ -268,7 +268,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
 
             console.warn("JSON 분석 요청을 보냅니다.");
 
-            const { data: patientData = [] } = await fetchPatientData('json', institution, disease);
+            const { data: patientData = [] } = await fetchPatientData(["json"], institution, disease);
 
             if (!patientData || patientData.length === 0) {
                 console.warn("서버에서 데이터를 받지 못했습니다.");
