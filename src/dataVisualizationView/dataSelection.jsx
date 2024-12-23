@@ -8,8 +8,8 @@ import { DataSelectionContext } from '../context/DataSelectionContext';
 import { useFileContext } from '../FileContext';
 import { fetchFilteredPatientData } from '../api/analzeDataApi';
 import { AnalysisContext } from '../context/AnalysisContext';
-import { processServerData } from '../utils/processServerData'; 
-import { processChartData } from '../utils/processChartData'; 
+import { processServerData } from '../utils/processServerData';
+import { processChartData } from '../utils/processChartData';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -302,178 +302,178 @@ const ButtonStyled = styled.button`
 
 
 const DataSelection = ({ collapsed, onAnalyze, disease }) => {
-    const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
-    const { setChartData, setTableData } = useContext(AnalysisContext);
-    const {
-      tabValue,
-      setTabValue,
-      selectedItemsTab1,
-      setSelectedItemsTab1,
-      selectedItemsTab2,
-      setSelectedItemsTab2,
-      selectedCategory,
-      setSelectedCategory,
-    } = useContext(DataSelectionContext);
+  const diseaseData = diseaseSpecificData[disease] || diseaseSpecificData.default;
+  const { setChartData, setTableData } = useContext(AnalysisContext);
+  const {
+    tabValue,
+    setTabValue,
+    selectedItemsTab1,
+    setSelectedItemsTab1,
+    selectedItemsTab2,
+    setSelectedItemsTab2,
+    selectedCategory,
+    setSelectedCategory,
+  } = useContext(DataSelectionContext);
 
-    const [loading, setLoading] = useState(false);  
-    const [open, setOpen] = useState(true);
-    const { fileId } = useFileContext();
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(true);
+  const { fileId } = useFileContext();
 
-    useEffect(() => {
-      const savedTab1 = sessionStorage.getItem(`${disease}_selectedItemsTab1`);
-      const savedTab2 = sessionStorage.getItem(`${disease}_selectedItemsTab2`);
+  useEffect(() => {
+    const savedTab1 = sessionStorage.getItem(`${disease}_selectedItemsTab1`);
+    const savedTab2 = sessionStorage.getItem(`${disease}_selectedItemsTab2`);
 
-      if (savedTab1) {
-        const parsedTab1 = JSON.parse(savedTab1);
-        setSelectedItemsTab1(parsedTab1);
-      } else {
-        setSelectedItemsTab1(diseaseData.selectedItemsTab1 || {});
-      }
+    if (savedTab1) {
+      const parsedTab1 = JSON.parse(savedTab1);
+      setSelectedItemsTab1(parsedTab1);
+    } else {
+      setSelectedItemsTab1(diseaseData.selectedItemsTab1 || {});
+    }
 
-      if (savedTab2) {
-        const parsedTab2 = JSON.parse(savedTab2);
-        setSelectedItemsTab2(parsedTab2);
-      } else {
-        setSelectedItemsTab2(diseaseData.selectedItemsTab2 || {});
-      }
-    }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
+    if (savedTab2) {
+      const parsedTab2 = JSON.parse(savedTab2);
+      setSelectedItemsTab2(parsedTab2);
+    } else {
+      setSelectedItemsTab2(diseaseData.selectedItemsTab2 || {});
+    }
+  }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
 
-    useEffect(() => {
-        sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
-        sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
-    }, [selectedItemsTab1, selectedItemsTab2, disease]);
+  useEffect(() => {
+    sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
+    sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
+  }, [selectedItemsTab1, selectedItemsTab2, disease]);
 
-    const handleTabChange = (event, newValue) => {
-        setTabValue(newValue);
-        setSelectedCategory('');
-    };
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+    setSelectedCategory('');
+  };
 
-    const handleToggle = () => {
-        setOpen((open) => !open);
-    };
+  const handleToggle = () => {
+    setOpen((open) => !open);
+  };
 
-    const handleCategorySelect = (category) => {
-        setSelectedCategory(category);
-    };
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
 
-    const handleItemClick = (selected, category) => {
-        if (!category) {
-          console.warn("카테고리가 없습니다. 선택된 항목:", selected);
-          return;
-        }
+  const handleItemClick = (selected, category) => {
+    if (!category) {
+      console.warn("카테고리가 없습니다. 선택된 항목:", selected);
+      return;
+    }
 
-        const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
-        const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
+    const selectedItems = tabValue === 0 ? selectedItemsTab1 : selectedItemsTab2;
+    const setSelectedItems = tabValue === 0 ? setSelectedItemsTab1 : setSelectedItemsTab2;
 
-        const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
-        const existingItemIndex = categoryItems.findIndex(item =>
-          typeof item === 'object' ? item.label === selected.label : item === selected
-        );
+    const categoryItems = Array.isArray(selectedItems[category]) ? selectedItems[category] : [];
+    const existingItemIndex = categoryItems.findIndex(item =>
+      typeof item === 'object' ? item.label === selected.label : item === selected
+    );
 
-        if (existingItemIndex !== -1) {
-          const updatedItems = [...categoryItems];
-          updatedItems.splice(existingItemIndex, 1);
-          setSelectedItems({
-            ...selectedItems,
-            [category]: updatedItems,
-          });
-        } else {
-          setSelectedItems({
-            ...selectedItems,
-            [category]: [...categoryItems, selected],
-          });
-        }
-    };
-
-    const handleDelete = (itemToDelete, category) => {
-        if (tabValue === 0) {
-          setSelectedItemsTab1({
-            ...selectedItemsTab1,
-            [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
-          });
-        } else {
-          setSelectedItemsTab2({
-            ...selectedItemsTab2,
-            [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
-          });
-        }
-    };
-
-    const getSelectableItems = () => {
-        return tabValue === 0
-          ? {
-              categories: diseaseData.categoriesTab1 || {},
-              selectedItems: selectedItemsTab1 || {},
-            }
-          : {
-              categories: diseaseData.categoriesTab2 || {},
-              selectedItems: selectedItemsTab2 || {},
-            };
-    };
-
-    const { categories={}, selectedItems } = getSelectableItems();
-    const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
-    
-    const handleReset = () => {
-      setSelectedItemsTab1({});
-      setSelectedItemsTab2({});
-      sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify({}));
-      sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify({}));
-    };
-    
-
-    const handleAnalyze = async (analysisType) => {
-
-      setLoading(true); // 로딩 상태 활성화
-  
-      const resultToSendTab1 = {};
-      const headersToSendTab2 = [];
-  
-      // selectedItemsTab1에서 데이터 추출
-      Object.keys(selectedItemsTab1).forEach((category) => {
-          const tab1Categories = diseaseSpecificData[disease]?.categoriesTab1 || {};
-          if (tab1Categories[category]) {
-              selectedItemsTab1[category].forEach((item) => {
-                  const foundOption = tab1Categories[category].find(opt => opt.label === item.label);
-                  if (foundOption && foundOption.options) {
-                      const selectedOption = foundOption.options.find(opt => opt.display === item.value);
-                      if (selectedOption) {
-                          resultToSendTab1[foundOption.value] = selectedOption.send !== undefined ? selectedOption.send : "";
-                      }
-                  } else {
-                      resultToSendTab1[item.label] = item.value !== undefined ? item.value : "";
-                  }
-              });
-          }
+    if (existingItemIndex !== -1) {
+      const updatedItems = [...categoryItems];
+      updatedItems.splice(existingItemIndex, 1);
+      setSelectedItems({
+        ...selectedItems,
+        [category]: updatedItems,
       });
-  
-      // selectedItemsTab2에서 데이터 추출
-      Object.keys(selectedItemsTab2).forEach((category) => {
-          const tab2Categories = diseaseSpecificData[disease]?.categoriesTab2 || {};
-          const items = selectedItemsTab2[category] || [];
-  
-          if (tab2Categories[category]) {
-              items.forEach((item) => {
-                  const foundOption = tab2Categories[category].find(opt => opt.label === item.label);
-                  if (foundOption && foundOption.options) {
-                      const selectedOption = foundOption.options.find(opt => opt.display === item.value);
-                      if (selectedOption) {
-                          headersToSendTab2.push(selectedOption.send !== undefined ? selectedOption.send : "");
-                      }
-                  } else if (foundOption) {
-                      headersToSendTab2.push(foundOption.value !== undefined ? foundOption.value : "");
-                  }
-              });
-          }
+    } else {
+      setSelectedItems({
+        ...selectedItems,
+        [category]: [...categoryItems, selected],
       });
-  
-      const finalData = {
-          ...resultToSendTab1,
-          DISEASE_CLASS: disease,
-          fileIds: analysisType === 'json' ? 'json' : analysisType === 'file' ? fileId : null,
-          header: headersToSendTab2,
+    }
+  };
+
+  const handleDelete = (itemToDelete, category) => {
+    if (tabValue === 0) {
+      setSelectedItemsTab1({
+        ...selectedItemsTab1,
+        [category]: selectedItemsTab1[category].filter((item) => item !== itemToDelete),
+      });
+    } else {
+      setSelectedItemsTab2({
+        ...selectedItemsTab2,
+        [category]: selectedItemsTab2[category].filter((item) => item !== itemToDelete),
+      });
+    }
+  };
+
+  const getSelectableItems = () => {
+    return tabValue === 0
+      ? {
+        categories: diseaseData.categoriesTab1 || {},
+        selectedItems: selectedItemsTab1 || {},
+      }
+      : {
+        categories: diseaseData.categoriesTab2 || {},
+        selectedItems: selectedItemsTab2 || {},
       };
-  
+  };
+
+  const { categories = {}, selectedItems } = getSelectableItems();
+  const subItems = selectedCategory && categories[selectedCategory] ? categories[selectedCategory] : [];
+
+  const handleReset = () => {
+    setSelectedItemsTab1({});
+    setSelectedItemsTab2({});
+    sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify({}));
+    sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify({}));
+  };
+
+
+  const handleAnalyze = async (analysisType) => {
+
+    setLoading(true); // 로딩 상태 활성화
+
+    const resultToSendTab1 = {};
+    const headersToSendTab2 = [];
+
+    // selectedItemsTab1에서 데이터 추출
+    Object.keys(selectedItemsTab1).forEach((category) => {
+      const tab1Categories = diseaseSpecificData[disease]?.categoriesTab1 || {};
+      if (tab1Categories[category]) {
+        selectedItemsTab1[category].forEach((item) => {
+          const foundOption = tab1Categories[category].find(opt => opt.label === item.label);
+          if (foundOption && foundOption.options) {
+            const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+            if (selectedOption) {
+              resultToSendTab1[foundOption.value] = selectedOption.send !== undefined ? selectedOption.send : "";
+            }
+          } else {
+            resultToSendTab1[item.label] = item.value !== undefined ? item.value : "";
+          }
+        });
+      }
+    });
+
+    // selectedItemsTab2에서 데이터 추출
+    Object.keys(selectedItemsTab2).forEach((category) => {
+      const tab2Categories = diseaseSpecificData[disease]?.categoriesTab2 || {};
+      const items = selectedItemsTab2[category] || [];
+
+      if (tab2Categories[category]) {
+        items.forEach((item) => {
+          const foundOption = tab2Categories[category].find(opt => opt.label === item.label);
+          if (foundOption && foundOption.options) {
+            const selectedOption = foundOption.options.find(opt => opt.display === item.value);
+            if (selectedOption) {
+              headersToSendTab2.push(selectedOption.send !== undefined ? selectedOption.send : "");
+            }
+          } else if (foundOption) {
+            headersToSendTab2.push(foundOption.value !== undefined ? foundOption.value : "");
+          }
+        });
+      }
+    });
+
+    const finalData = {
+      ...resultToSendTab1,
+      DISEASE_CLASS: disease,
+      fileIds: analysisType === 'json' ? 'json' : analysisType === 'file' ? fileId : null,
+      header: headersToSendTab2,
+    };
+
 
     try {
       const response = await fetchFilteredPatientData(finalData);
@@ -489,19 +489,19 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       // 서버에서 받은 데이터 처리
       const processedTableData = processServerData(response);  // 테이블 데이터 처리
       const processedChartData = processChartData(response);   // 차트 데이터 처리
-  
+
       // 전역 상태에 테이블 데이터 설정 (기존 기능)
       if (typeof setTableData === 'function') {
-          setTableData(processedTableData);
+        setTableData(processedTableData);
       } else {
-          console.error('setTableData is not a function');
+        console.error('setTableData is not a function');
       }
-  
+
       // 전역 상태에 차트 데이터 설정 (차트 데이터를 추가로 처리)
       if (typeof setChartData === 'function') {
-          setChartData(processedChartData);
+        setChartData(processedChartData);
       } else {
-          console.error('setChartData is not a function');
+        console.error('setChartData is not a function');
       }
 
       onAnalyze();  // 원래 기능 호출
@@ -512,182 +512,182 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     }
   };
 
-    return (
-        <Container collapsed={collapsed}>
-<FlexBox>
-  <StyledTabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
-    <StyledTab label="데이터 구성 항목" />
-    <StyledTab label="리포트 항목" />
-  </StyledTabs>
-  <ButtonGroup>
-    <ButtonStyled
-      type="button"
-      onClick={() => handleAnalyze(true)} // 업로드 데이터 분석
-      disabled={!fileId}
-    >
-      업로드 데이터 분석
-      <img src={chartIcon} alt="아이콘" />
-    </ButtonStyled>
-    <ButtonStyled
-      type="button"
-      onClick={() => handleAnalyze(false)} // 서버 데이터 분석
-    >
-      서버 데이터 분석
-      <img src={chartIcon} alt="아이콘" />
-    </ButtonStyled>
+  return (
+    <Container collapsed={collapsed}>
+      <FlexBox>
+        <StyledTabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
+          <StyledTab label="데이터 구성 항목" />
+          <StyledTab label="리포트 항목" />
+        </StyledTabs>
+        <ButtonGroup>
+          <ButtonStyled
+            type="button"
+            onClick={() => handleAnalyze(true)} // 업로드 데이터 분석
+            disabled={!fileId}
+          >
+            업로드 데이터 분석
+            <img src={chartIcon} alt="아이콘" />
+          </ButtonStyled>
+          <ButtonStyled
+            type="button"
+            onClick={() => handleAnalyze(false)} // 서버 데이터 분석
+          >
+            CRF 데이터 분석
+            <img src={chartIcon} alt="아이콘" />
+          </ButtonStyled>
 
-    <ButtonStyled
-  type="button"
-  onClick={() => handleAnalyze('json')} // JSON 분석
->
-  JSON 분석
-  <img src={chartIcon} alt="아이콘" />
-</ButtonStyled>
+          <ButtonStyled
+            type="button"
+            onClick={() => handleAnalyze('json')} // JSON 분석
+          >
+            라벨링 데이터 분석
+            <img src={chartIcon} alt="아이콘" />
+          </ButtonStyled>
 
-  </ButtonGroup>
-</FlexBox>
+        </ButtonGroup>
+      </FlexBox>
 
 
 
-          <Collapse in={open}>
-            <ListContainer>
-              <Section>
-                <LabelContainer>
-                  <Label>대분류</Label>
-                  <VerticalDivider />
-                </LabelContainer>
-                <StyledList>
-                  {Object.keys(categories).map((category) => (
-                    <StyledButtonItem
-                      key={category}
-                      selected={category === selectedCategory}
-                      onClick={() => handleCategorySelect(category)}
+      <Collapse in={open}>
+        <ListContainer>
+          <Section>
+            <LabelContainer>
+              <Label>대분류</Label>
+              <VerticalDivider />
+            </LabelContainer>
+            <StyledList>
+              {Object.keys(categories).map((category) => (
+                <StyledButtonItem
+                  key={category}
+                  selected={category === selectedCategory}
+                  onClick={() => handleCategorySelect(category)}
+                >
+                  {category}
+                </StyledButtonItem>
+              ))}
+            </StyledList>
+          </Section>
+
+          <Section>
+            <LabelContainer>
+              <Label>중분류</Label>
+              <VerticalDivider />
+            </LabelContainer>
+
+            {tabValue === 0 && selectedCategory ? (
+              <SelectWrapper>
+                {subItems.map((subItem) => (
+                  <div key={subItem.label || subItem}>
+                    <Label>{subItem.label || subItem}</Label>
+                    {subItem.options ? (
+                      <SelectField
+                        value={selectedItems[selectedCategory]?.find(item => item.label === subItem.label)?.value || ''}
+                        onChange={(event) => handleItemClick({ label: subItem.label, value: event.target.value }, selectedCategory)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>ALL</em>
+                        </MenuItem>
+                        {subItem.options.map((option) => (
+                          <MenuItem key={option.display} value={option.display}>
+                            {option.display}
+                          </MenuItem>
+                        ))}
+                      </SelectField>
+                    ) : (
+                      <TextFieldStyled
+                        type="text"
+                        value={subItem.value || ''}
+                        disabled
+                      />
+                    )}
+                  </div>
+                ))}
+              </SelectWrapper>
+            ) : (
+              <SubList>
+                {subItems.map((subItem) => {
+                  const isSelected =
+                    Array.isArray(selectedItems[selectedCategory]) &&
+                    selectedItems[selectedCategory].some(
+                      (item) => (typeof item === 'object' ? item.label === subItem.label : item === subItem)
+                    );
+
+                  return (
+                    <SubListItem
+                      key={subItem.label || subItem}
+                      selected={isSelected}
+                      onClick={() => handleItemClick(subItem, selectedCategory)}
                     >
-                      {category}
-                    </StyledButtonItem>
-                  ))}
-                </StyledList>
-              </Section>
-
-              <Section>
-                <LabelContainer>
-                  <Label>중분류</Label>
-                  <VerticalDivider />
-                </LabelContainer>
-
-                {tabValue === 0 && selectedCategory ? (
-                  <SelectWrapper>
-                    {subItems.map((subItem) => (
-                      <div key={subItem.label || subItem}>
-                        <Label>{subItem.label || subItem}</Label>
-                        {subItem.options ? (
-                          <SelectField
-                            value={selectedItems[selectedCategory]?.find(item => item.label === subItem.label)?.value || ''}
-                            onChange={(event) => handleItemClick({ label: subItem.label, value: event.target.value }, selectedCategory)}
-                            displayEmpty
-                          >
-                            <MenuItem value="">
-                              <em>ALL</em>
-                            </MenuItem>
-                            {subItem.options.map((option) => (
-                              <MenuItem key={option.display} value={option.display}>
-                                {option.display}
-                              </MenuItem>
-                            ))}
-                          </SelectField>
-                        ) : (
-                          <TextFieldStyled
-                            type="text"
-                            value={subItem.value || ''}
-                            disabled
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </SelectWrapper>
-                ) : (
-                  <SubList>
-                    {subItems.map((subItem) => {
-                      const isSelected =
-                        Array.isArray(selectedItems[selectedCategory]) &&
-                        selectedItems[selectedCategory].some(
-                          (item) => (typeof item === 'object' ? item.label === subItem.label : item === subItem)
-                        );
-
-                      return (
-                        <SubListItem
-                          key={subItem.label || subItem}
-                          selected={isSelected}
-                          onClick={() => handleItemClick(subItem, selectedCategory)}
-                        >
-                          <span
-                            style={{
-                              color: isSelected ? '#DD7610' : 'black',
-                              fontSize: '10px',
-                            }}
-                          >
-                            {subItem.label || subItem}
-                          </span>
-                        </SubListItem>
-                      );
-                    })}
-                  </SubList>
-                )}
-              </Section>
-            </ListContainer>
-          </Collapse>
-
-          <SelectedItemsBox>
-            <ChipsContainer>
-              {Object.entries(selectedItems)
-                .filter(([category, items]) => category && items.length > 0)
-                .flatMap(([category, items]) => {
-                  if (tabValue === 0) {
-                    return Array.isArray(items) ? items.map((item, index) => (
-                      <SmallChip
-                        key={`${category}-${item.label || item}-${index}`}
-                        label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
-                        onDelete={() => handleDelete(item, category)}
-                      />
-                    )) : [];
-                  } else if (tabValue === 1) {
-                    return Array.isArray(items) ? items.map((item, index) => (
-                      <SmallChip
-                        key={`${category}-${item.label}-${index}`}
-                        label={item.label ? `${item.label}` : item}
-                        onDelete={() => handleDelete(item, category)}
-                      />
-                    )) : [];
-                  }
-                  return [];
+                      <span
+                        style={{
+                          color: isSelected ? '#DD7610' : 'black',
+                          fontSize: '10px',
+                        }}
+                      >
+                        {subItem.label || subItem}
+                      </span>
+                    </SubListItem>
+                  );
                 })}
-            </ChipsContainer>
+              </SubList>
+            )}
+          </Section>
+        </ListContainer>
+      </Collapse>
 
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<RefreshIcon />}
-              onClick={handleReset}
-              sx={{
-                padding: '2px 6px',  // 상하, 좌우 패딩 조절
-                fontSize: '0.7rem',   // 글자 크기 조절
-                minWidth: 'auto',     // 버튼의 최소 너비 설정
-              }}
-            >
-              초기화
-            </Button>
-          </SelectedItemsBox>
+      <SelectedItemsBox>
+        <ChipsContainer>
+          {Object.entries(selectedItems)
+            .filter(([category, items]) => category && items.length > 0)
+            .flatMap(([category, items]) => {
+              if (tabValue === 0) {
+                return Array.isArray(items) ? items.map((item, index) => (
+                  <SmallChip
+                    key={`${category}-${item.label || item}-${index}`}
+                    label={`${item.label ? `${item.label}: ${item.value || ''}` : item}`}
+                    onDelete={() => handleDelete(item, category)}
+                  />
+                )) : [];
+              } else if (tabValue === 1) {
+                return Array.isArray(items) ? items.map((item, index) => (
+                  <SmallChip
+                    key={`${category}-${item.label}-${index}`}
+                    label={item.label ? `${item.label}` : item}
+                    onDelete={() => handleDelete(item, category)}
+                  />
+                )) : [];
+              }
+              return [];
+            })}
+        </ChipsContainer>
 
-          {loading && ( 
-            <LoadingOverlay>
-              <LoadingMessage>
-                <Spinner />
-                <p>로딩 중...</p>
-              </LoadingMessage>
-            </LoadingOverlay>
-          )}
-        </Container>
-    );
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<RefreshIcon />}
+          onClick={handleReset}
+          sx={{
+            padding: '2px 6px',  // 상하, 좌우 패딩 조절
+            fontSize: '0.7rem',   // 글자 크기 조절
+            minWidth: 'auto',     // 버튼의 최소 너비 설정
+          }}
+        >
+          초기화
+        </Button>
+      </SelectedItemsBox>
+
+      {loading && (
+        <LoadingOverlay>
+          <LoadingMessage>
+            <Spinner />
+            <p>로딩 중...</p>
+          </LoadingMessage>
+        </LoadingOverlay>
+      )}
+    </Container>
+  );
 };
 
 export default DataSelection;
