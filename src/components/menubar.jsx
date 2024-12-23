@@ -190,8 +190,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
   };
 
   const handleQualityMenuClick = () => {
-    if (isQualityDisabled) return; // 비활성화된 상태라면 아무 동작도 하지 않음
-    setActiveQuality(true);
+    setActiveQuality(false);
     setShowSubMenu(false);
     setActiveSubMenuItem(null);
     navigate('/dataQuality');
@@ -220,7 +219,7 @@ const MenuBar = ({ collapsed, setCollapsed, onDiseaseSelect }) => {
         </QualityMenuBtn>
         <QualityMenuBtn
           active={activeQuality}
-          disabled={isQualityDisabled} // 데이터 품질 평가 버튼 비활성화
+          disabled={false} // 데이터 품질 평가 버튼 비활성화
           onClick={handleQualityMenuClick}
         >
           데이터 품질 평가
