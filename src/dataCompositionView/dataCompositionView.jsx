@@ -8,8 +8,7 @@ import { useDiseaseData } from '../context/DiseaseDataContext';
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('질환별 보기');
-
+  const [activeTab, setActiveTab] = useState('기관별 보기');
   const { data, loading, error, refreshData } = useDiseaseData();
 
   // 디버깅 로그 추가
@@ -36,9 +35,6 @@ const DataCompositionView = () => {
         <ContentCtn collapsed={collapsed}>
           <TitleCtn>
             <Title>데이터 구축 현황</Title>
-            {!loading && (
-              <Refresh onClick={handleRefreshClick}>전체 새로고침</Refresh>
-            )}
           </TitleCtn>
           <TopSectionCtn>
             {loading ? (
