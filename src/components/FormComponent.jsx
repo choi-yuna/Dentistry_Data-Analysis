@@ -253,7 +253,39 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
             setLoading(false);
         }
     };
-
+    const handleAnalyzeWithJson = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setAnalyzedData(null);
+    
+        try {
+          if (!institution || !disease) {
+            alert('기관과 질환을 모두 선택해야 합니다.');
+            setLoading(false);
+            return;
+          }
+    
+          console.warn("JSON 분석 요청을 보냅니다.");
+    
+          const { data: patientData = [] } = await fetchPatientData('json', institution, disease);
+    
+          if (!patientData || patientData.length === 0) {
+            console.warn("서버에서 데이터를 받지 못했습니다.");
+            setLoading(false);
+            return;
+          }
+    
+          setOriginalPatientData(patientData);
+    
+          const analyzedData = performDataAnalysis(patientData);
+          onAnalyze(analyzedData);
+          setAnalyzedData(analyzedData);
+        } catch (error) {
+          console.error('JSON 분석 요청 중 오류가 발생했습니다:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
     // 공통 데이터 분석 함수
     const performDataAnalysis = (data) => {
@@ -344,6 +376,10 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                             {loading ? '로딩 중...' : '서버 데이터 분석'}
                             {!loading && <img src={chartIcon} alt="아이콘" />}
                         </Button>
+                        <Button type="button" onClick={handleAnalyzeWithJson} disabled={loading} style={{ marginLeft: '10px' }}>
+              {loading ? '로딩 중...' : 'JSON 분석'}
+              {!loading && <img src={chartIcon} alt="아이콘" />}
+            </Button>
                     </AnalyzeButtonContainer>
                 </FormInline>
             </FormContainer>

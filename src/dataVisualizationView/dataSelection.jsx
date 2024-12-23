@@ -2,8 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { IconButton, Chip, Tabs, Tab, Collapse, MenuItem, Select, TextField, Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import chartIcon from '../assets/images/chart-button-black.svg';
 import { diseaseSpecificData } from '../utils/diseaseData';
 import { DataSelectionContext } from '../context/DataSelectionContext';
@@ -424,7 +422,8 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     };
     
 
-    const handleAnalyze = async (isFileAnalysis) => {
+    const handleAnalyze = async (analysisType) => {
+
       setLoading(true); // 로딩 상태 활성화
   
       const resultToSendTab1 = {};
@@ -471,7 +470,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       const finalData = {
           ...resultToSendTab1,
           DISEASE_CLASS: disease,
-          fileIds: isFileAnalysis ? fileId : null, // fileId 여부로 분석 유형 결정
+          fileIds: analysisType === 'json' ? 'json' : analysisType === 'file' ? fileId : null,
           header: headersToSendTab2,
       };
   
@@ -536,6 +535,15 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
       서버 데이터 분석
       <img src={chartIcon} alt="아이콘" />
     </ButtonStyled>
+
+    <ButtonStyled
+  type="button"
+  onClick={() => handleAnalyze('json')} // JSON 분석
+>
+  JSON 분석
+  <img src={chartIcon} alt="아이콘" />
+</ButtonStyled>
+
   </ButtonGroup>
 </FlexBox>
 
