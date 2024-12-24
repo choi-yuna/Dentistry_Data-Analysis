@@ -53,7 +53,7 @@ const DetailButton = styled.button`
 
 const DataAnalysisResults = ({ collapsed }) => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const { analyzedData } = useContext(DataContext); 
+    const { analyzedData,isJsonData } = useContext(DataContext); 
     const { originalPatientData } = useContext(DataContext);
     const [excelData, setExcelData] = useState([]);
 
@@ -93,7 +93,7 @@ const DataAnalysisResults = ({ collapsed }) => {
                 )}
             </FormCtn>
             {isDataAvailable && (
-                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems} />
+                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems}  isJsonData={isJsonData} />
             )}
         </ResultCtn>
     );

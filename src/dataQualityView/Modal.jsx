@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { headerMapping, diseaseHeaderMapping, diseaseNameMapping } from '../utils/headerMapping';
+import { headerMapping, diseaseHeaderMapping, diseaseNameMapping,jsonHeaderMapping  } from '../utils/headerMapping';
 
 
 
-const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
+const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData = false }) => {
     const [selectedDisease, setSelectedDisease] = useState('');
     const [diseaseOptions, setDiseaseOptions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    
+    // 헤더를 JSON 여부에 따라 설정
+    const headers = useMemo(() => {
+        return isJsonData
+            ? jsonHeaderMapping[selectedDisease] || [] // JSON 데이터의 헤더
+            : diseaseHeaderMapping[selectedDisease] || []; // 일반 데이터의 헤더
+    }, [selectedDisease, isJsonData]);
 
+
+    
     // 필터링된 데이터 메모이제이션
     const filteredData = useMemo(() => {
         if (!selectedDisease || excelData.length === 0) return [];
@@ -35,8 +44,6 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [] }) => {
         }
     }, [isOpen, excelData]);
 
-    // 헤더를 메모이제이션하여 불필요한 계산 방지
-    const headers = useMemo(() => diseaseHeaderMapping[selectedDisease] || [], [selectedDisease]);
 
     const isInvalidCell = (rowIndex, columnKey) => {
         const originalIndex = filteredData[rowIndex]?.originalIndex; // 원본 인덱스 가져오기

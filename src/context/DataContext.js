@@ -8,9 +8,10 @@ const DataProvider = ({ children }) => {
     const [disease, setDisease] = useState('');
     const [analyzedData, setAnalyzedData] = useState(null);
     const [originalPatientData, setOriginalPatientData] = useState(null);
+    const [isJsonData, setIsJsonData] = useState(false);
 
     return (
-        <DataContext.Provider value={{ institution, setInstitution, disease, setDisease, analyzedData, setAnalyzedData,originalPatientData, setOriginalPatientData }}>
+        <DataContext.Provider value={{ institution, setInstitution, disease, setDisease, analyzedData, setAnalyzedData,originalPatientData, setOriginalPatientData,isJsonData, setIsJsonData}}>
             {children}
         </DataContext.Provider>
     );

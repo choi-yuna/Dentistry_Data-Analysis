@@ -167,8 +167,7 @@ const ErrorMessage = styled.div`
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
     const [loading, setLoading] = useState(false);
-
-    const { institution, setInstitution, disease, setDisease, setAnalyzedData, setOriginalPatientData } = useContext(DataContext);
+    const { institution, setInstitution, disease, setDisease, setAnalyzedData, setOriginalPatientData,setIsJsonData  } = useContext(DataContext);
     const { fileId } = useFileContext();
 
     const handleInstitutionChange = (e) => {
@@ -184,6 +183,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         e.preventDefault();
         setLoading(true);
         setAnalyzedData(null);
+        setIsJsonData(false);
 
         try {
             if (!fileId) {
@@ -223,6 +223,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
         e.preventDefault();
         setLoading(true);
         setAnalyzedData(null);
+        setIsJsonData(false);
 
         try {
             if (!institution || !disease) {
@@ -279,6 +280,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
             setOriginalPatientData(patientData);
 
             const analyzedData = performDataAnalysis(patientData);
+            setIsJsonData(true); // JSON 분석 수행 후 상태 업데이트
             onAnalyze(analyzedData);
             setAnalyzedData(analyzedData);
         } catch (error) {
