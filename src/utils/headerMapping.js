@@ -3,9 +3,10 @@ export const headerMapping = {
     "INSTITUTION_ID": "기관 ID",
     "PATIENT_NO": "환자 번호",
     "IMAGE_NO": "이미지 번호",
-    "IMAGE_SRC": "이미지 경로",
+    "IMAGE_SRC": "촬영 종류",
     "CAPTURE_TIME": "촬영 일자",
     "IMAGE_ID": "이미지 ID",
+    "Identifier" : "이미지 ID",
     "P_AGE": "환자 나이",
     "P_WEIGHT": "환자 체중",
     "P_HEIGHT": "환자 키",
@@ -115,11 +116,11 @@ export const diseaseHeaderMapping = {
 export const jsonHeaderMapping = {
     'A': [ 
         //필수
-        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "Identifier", "IMAGE_SRC", "CAPTURE_TIME",
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
         //선택
         "MAKER_IF","H_RESOLUTION","V_RESOLUTION",
         //필수
-        "IMAGE_ID", "P_GENDER", "P_AGE",
+        "Identifier", "P_GENDER", "P_AGE",
         //선택
         "P_WEIGHT", "P_HEIGHT", "P_RES_AREA", "MH_DIABETES","MH_HIGHBLOOD", "MH_OSTEOPROSIS", "MH_NOTE", "LS_SMOKE", "LS_ALCHOLE",
         //필수
@@ -135,7 +136,7 @@ export const jsonHeaderMapping = {
         //필수
         "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
         //선택
-        "MAKER_INFO", "H_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
+        "MAKER_IF", "H_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
         //필수
         "IMAGE_ID", "P_GENDER", "P_AGE",
         //선택
