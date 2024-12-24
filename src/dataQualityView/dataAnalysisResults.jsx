@@ -2,13 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
+import FileErrorModal from './FileErrorModal';
 import { DataContext } from '../context/DataContext'; 
 
 const ResultCtn = styled.div`
-    width: ${(props) => (props.collapsed ? '100%' : '75%')};  /* collapsed에 따라 너비 조정 */
-    max-width: 85%; /* 필요에 따라 최대 너비 설정 */
+    width: ${(props) => (props.collapsed ? '100%' : '75%')};
+    max-width: 85%;
     height: auto; 
-    margin-left: ${(props) => (props.collapsed ? '10%' : '20%')}; /* collapsed 상태에 따라 왼쪽 여백 조정 */
+    margin-left: ${(props) => (props.collapsed ? '10%' : '20%')};
     transition: width 0.3s ease, margin-left 0.3s ease, height 0.3s ease;
 `;
 
@@ -37,11 +38,15 @@ const Title = styled.h2`
     font-weight: 900; 
 `;
 
-const DetailButton = styled.button`
+const ButtonGroup = styled.div`
+    display: flex;
+    gap: 10px;
+`;
+
+const ActionButton = styled.button`
     padding: 10px 10px;
     border: none;
     border-radius: 10px;
-    margin-right: 35px;
     background-color: ${(props) => (props.disabled ? '#cccccc' : '#2176A8')};
     color: white;
     font-weight: 600;
@@ -53,9 +58,36 @@ const DetailButton = styled.button`
 
 const DataAnalysisResults = ({ collapsed }) => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const { analyzedData,isJsonData } = useContext(DataContext); 
+    const [isFileErrorModalOpen, setFileErrorModalOpen] = useState(false);
+    const { analyzedData, isJsonData } = useContext(DataContext); 
     const { originalPatientData } = useContext(DataContext);
     const [excelData, setExcelData] = useState([]);
+
+    const fileErrorDummyData = {
+        CRF: ['file1.crf', 'file2.crf'],
+        Json: ['file1.json', 'file2.json', 'file3.json'],
+        "json 오류 파일": ['file1.jsonFile', 'file2.jsonFile']
+    };
+
+    const handleDetailButtonClick = () => {
+        if (analyzedData && Object.keys(analyzedData).length > 0) {
+            setModalOpen(true);
+        }
+    };
+
+    const handleFileErrorButtonClick = () => {
+        setFileErrorModalOpen(true); // 모달 열기
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+    const handleCloseFileErrorModal = () => {
+        setFileErrorModalOpen(false);
+    };
+
+    const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
 
     useEffect(() => {
         if (originalPatientData && originalPatientData.length > 0) {
@@ -65,26 +97,19 @@ const DataAnalysisResults = ({ collapsed }) => {
         }
     }, [originalPatientData]);
 
-    const handleDetailButtonClick = () => {
-        if (analyzedData && Object.keys(analyzedData).length > 0) {
-            setModalOpen(true);
-        }
-    };
-
-    const handleCloseModal = () => {
-        setModalOpen(false);
-    };
-
-    const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
-
     return (
-        <ResultCtn collapsed={collapsed}> {/* collapsed 값을 전달 */}
+        <ResultCtn collapsed={collapsed}>
             <FormCtn>
                 <TitleBar>
                     <Title>데이터 분석결과</Title>
-                    <DetailButton onClick={handleDetailButtonClick} disabled={!isDataAvailable}>
-                        데이터 상세 보기
-                    </DetailButton>
+                    <ButtonGroup>
+                        <ActionButton onClick={handleDetailButtonClick} disabled={!isDataAvailable}>
+                            데이터 상세 보기
+                        </ActionButton>
+                        <ActionButton onClick={handleFileErrorButtonClick}>
+                            오류 파일 탐색
+                        </ActionButton>
+                    </ButtonGroup>
                 </TitleBar>
                 {isDataAvailable ? (
                     <DataAnalysisTable analyzedData={analyzedData} />
@@ -93,8 +118,13 @@ const DataAnalysisResults = ({ collapsed }) => {
                 )}
             </FormCtn>
             {isDataAvailable && (
-                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems}  isJsonData={isJsonData} />
+                <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems} isJsonData={isJsonData} />
             )}
+            <FileErrorModal
+                isOpen={isFileErrorModalOpen}
+                onClose={handleCloseFileErrorModal}
+                fileErrorData={fileErrorDummyData} // 더미 데이터 전달
+            />
         </ResultCtn>
     );
 };
