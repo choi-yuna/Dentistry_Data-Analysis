@@ -115,9 +115,9 @@ export const diseaseHeaderMapping = {
 export const jsonHeaderMapping = {
     'A': [ 
         //필수
-        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "Identifier", "IMAGE_SRC", "CAPTURE_TIME",
         //선택
-        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION",
+        "MAKER_IF","H_RESOLUTION","V_RESOLUTION",
         //필수
         "IMAGE_ID", "P_GENDER", "P_AGE",
         //선택
