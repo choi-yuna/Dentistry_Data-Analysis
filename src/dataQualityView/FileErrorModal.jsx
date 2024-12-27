@@ -6,8 +6,8 @@ import { fetchFileErrorData } from '../api/fileErrorApi';
 
 const FloatingWindow = styled.div`
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 30%;
+    left: 35%;
     transform: translate(-50%, -50%);
     background: white;
     border: 1px solid #ccc;
@@ -130,7 +130,7 @@ const FileErrorModal = ({ isOpen, onClose }) => {
                                     <Draggable>
                                         <FloatingWindow>
                                             <CloseButton onClick={handleCloseDetailsWindow}>&times;</CloseButton>
-                                            <h2>{selectedFileType} 파일 상세 목록</h2>
+                                            <h2>{selectedFileType} 상세 목록</h2>
                                             <Table>
                                                 <thead>
                                                     <tr>
