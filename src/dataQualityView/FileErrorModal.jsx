@@ -15,8 +15,10 @@ const FloatingWindow = styled.div`
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 50%;
     max-width: 600px;
+    max-height: 70vh;
     z-index: 1000;
     padding: 20px;
+    overflow-y: auto;
 `;
 
 const CloseButton = styled.button`
@@ -25,7 +27,7 @@ const CloseButton = styled.button`
     right: 10px;
     background: none;
     border: none;
-    font-size: 18px; 
+    font-size: 18px;
     cursor: pointer;
 `;
 
@@ -93,69 +95,73 @@ const FileErrorModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <Draggable>
-            <FloatingWindow>
-                <CloseButton onClick={onClose}>&times;</CloseButton>
-                <h2>오류 파일 탐색 결과</h2>
-                {error ? (
-                    <ErrorMessage>{error}</ErrorMessage>
-                ) : (
-                    <>
-                        {fileErrorData ? (
-                            <>
-                                <Table>
-                                    <thead>
-                                        <tr>
-                                            <th>파일 유형</th>
-                                            <th>중복 파일 개수</th>
-                                            <th>상세보기</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {Object.keys(fileErrorData).map((fileType) => (
-                                            <tr key={fileType}>
-                                                <td>{fileType}</td>
-                                                <td>{fileErrorData[fileType].length}</td>
-                                                <td>
-                                                    <DetailsButton onClick={() => handleDetailsClick(fileType)}>
-                                                        상세보기
-                                                    </DetailsButton>
-                                                </td>
+        <>
+            {/* 메인 모달 */}
+            <Draggable>
+                <FloatingWindow>
+                    <CloseButton onClick={onClose}>&times;</CloseButton>
+                    <h2>오류 파일 탐색 결과</h2>
+                    {error ? (
+                        <ErrorMessage>{error}</ErrorMessage>
+                    ) : (
+                        <>
+                            {fileErrorData ? (
+                                <>
+                                    <Table>
+                                        <thead>
+                                            <tr>
+                                                <th>파일 유형</th>
+                                                <th>중복 파일 개수</th>
+                                                <th>상세보기</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
+                                        </thead>
+                                        <tbody>
+                                            {Object.keys(fileErrorData).map((fileType) => (
+                                                <tr key={fileType}>
+                                                    <td>{fileType}</td>
+                                                    <td>{fileErrorData[fileType].length}</td>
+                                                    <td>
+                                                        <DetailsButton onClick={() => handleDetailsClick(fileType)}>
+                                                            상세보기
+                                                        </DetailsButton>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                </>
+                            ) : (
+                                <p>데이터를 불러오는 중입니다...</p>
+                            )}
+                        </>
+                    )}
+                </FloatingWindow>
+            </Draggable>
 
-                                {selectedFileType && (
-                                    <Draggable>
-                                        <FloatingWindow>
-                                            <CloseButton onClick={handleCloseDetailsWindow}>&times;</CloseButton>
-                                            <h2>{selectedFileType} 상세 목록</h2>
-                                            <Table>
-                                                <thead>
-                                                    <tr>
-                                                        <th>파일 이름</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {fileErrorData[selectedFileType].map((fileName, index) => (
-                                                        <tr key={index}>
-                                                            <td>{fileName}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </Table>
-                                        </FloatingWindow>
-                                    </Draggable>
-                                )}
-                            </>
-                        ) : (
-                            <p>데이터를 불러오는 중입니다...</p>
-                        )}
-                    </>
-                )}
-            </FloatingWindow>
-        </Draggable>
+            {/* 상세보기 모달 */}
+            {selectedFileType && (
+                <Draggable>
+                    <FloatingWindow>
+                        <CloseButton onClick={handleCloseDetailsWindow}>&times;</CloseButton>
+                        <h2>{selectedFileType} 상세 목록</h2>
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <th>파일 이름</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {fileErrorData[selectedFileType].map((fileName, index) => (
+                                    <tr key={index}>
+                                        <td>{fileName}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </FloatingWindow>
+                </Draggable>
+            )}
+        </>
     );
 };
 
