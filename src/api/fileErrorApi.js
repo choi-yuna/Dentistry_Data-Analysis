@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const fetchFileErrorData = async (institution, disease) => {
+export const fetchFileErrorData = async (institutionId, diseaseClass) => {
     try {
-        const requestData = { institution, disease }; // 요청 데이터 객체로 묶기
+        const requestData = { institutionId, diseaseClass }; // 요청 데이터 객체로 묶기
         console.log('전송할 데이터:', requestData);
 
         const response = await axios.post(
