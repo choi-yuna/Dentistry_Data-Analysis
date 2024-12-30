@@ -75,9 +75,6 @@ const DataAnalysisResults = ({ collapsed }) => {
         }
     };
 
-    const handleFileErrorButtonClick = () => {
-        setFileErrorModalOpen(true); // 모달 열기
-    };
 
     const handleCloseModal = () => {
         setModalOpen(false);
@@ -106,9 +103,6 @@ const DataAnalysisResults = ({ collapsed }) => {
                         <ActionButton onClick={handleDetailButtonClick} disabled={!isDataAvailable}>
                             데이터 상세 보기
                         </ActionButton>
-                        <ActionButton onClick={handleFileErrorButtonClick}>
-                            오류 파일 탐색
-                        </ActionButton>
                     </ButtonGroup>
                 </TitleBar>
                 {isDataAvailable ? (
@@ -120,11 +114,6 @@ const DataAnalysisResults = ({ collapsed }) => {
             {isDataAvailable && (
                 <Modal isOpen={isModalOpen} onClose={handleCloseModal} excelData={excelData} invalidItems={analyzedData.invalidItems} isJsonData={isJsonData} />
             )}
-            <FileErrorModal
-                isOpen={isFileErrorModalOpen}
-                onClose={handleCloseFileErrorModal}
-                fileErrorData={fileErrorDummyData} // 더미 데이터 전달
-            />
         </ResultCtn>
     );
 };

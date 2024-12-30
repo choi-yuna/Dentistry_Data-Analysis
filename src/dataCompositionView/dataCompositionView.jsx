@@ -5,27 +5,26 @@ import MenuBar from '../components/menubar';
 import TopSection from './TopSection';
 import errorList from '../assets/images/errorLIst.svg';
 import { useDiseaseData } from '../context/DiseaseDataContext';
+import FileErrorModal from '../dataQualityView/FileErrorModal'; 
 
 const DataCompositionView = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('질환별 보기');
+  const [isFileErrorModalOpen, setFileErrorModalOpen] = useState(false); // 추가
 
   const { data, loading, error, refreshData } = useDiseaseData();
 
-  // 디버깅 로그 추가
-  console.log('[DEBUG] DataCompositionView: DiseaseDataContext Data:', data);
-  console.log('[DEBUG] DataCompositionView: Loading State:', loading);
-  console.log('[DEBUG] DataCompositionView: Error State:', error);
-
-  // Context에서 받은 데이터를 활용하여 렌더링
-  const fileStatuses = data && data.data ? data.data.대시보드?.statuses : [];
-
-  console.log('[DEBUG] DataCompositionView: Parsed FileStatuses:', fileStatuses);
-
-  // 새로고침 버튼 클릭 핸들러
   const handleRefreshClick = () => {
     console.log('[DEBUG] 전체 새로고침 버튼 클릭');
-    refreshData(); // refreshData 호출
+    refreshData();
+  };
+
+  const handleErrorModalOpen = () => {
+    setFileErrorModalOpen(true);
+  };
+
+  const handleErrorModalClose = () => {
+    setFileErrorModalOpen(false);
   };
 
   return (
@@ -36,9 +35,14 @@ const DataCompositionView = () => {
         <ContentCtn collapsed={collapsed}>
           <TitleCtn>
             <Title>데이터 구축 현황</Title>
-            {!loading && (
-              <Refresh onClick={handleRefreshClick}>전체 새로고침</Refresh>
-            )}
+            <ButtonGroup>
+              <ErrorModalButton onClick={handleErrorModalOpen}>
+                오류 파일 탐색
+              </ErrorModalButton>
+              {!loading && (
+                <Refresh onClick={handleRefreshClick}>전체 새로고침</Refresh>
+              )}
+            </ButtonGroup>
           </TitleCtn>
           <TopSectionCtn>
             {loading ? (
@@ -59,6 +63,10 @@ const DataCompositionView = () => {
           </TopSectionCtn>
         </ContentCtn>
       </MainContent>
+      <FileErrorModal
+        isOpen={isFileErrorModalOpen}
+        onClose={handleErrorModalClose}
+      />
     </AppContainer>
   );
 };
@@ -72,7 +80,7 @@ const AppContainer = styled.div`
   overflow: hidden;
   background-color: #f7f7f7;
   transition: width 0.3s ease, height 0.3s ease;
-  position: relative; 
+  position: relative;
 `;
 
 const MainContent = styled.div`
@@ -95,7 +103,72 @@ const TitleCtn = styled.div`
   height: 60px;
   margin-top: 3%;
   align-items: center;
-  gap: 63%;
+  justify-content: space-between;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 버튼 간 간격 */
+  margin-top: 2%;
+`;
+
+const ErrorModalButton = styled.button`
+  display: flex;
+  height: 25px;
+  width: 120px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: #f76d6d;
+  border: none;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(255, 105, 105, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #d55b5b;
+    box-shadow: 0 6px 8px rgba(255, 105, 105, 0.5);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background-color: #b74a4a;
+    box-shadow: 0 3px 5px rgba(255, 105, 105, 0.3);
+    transform: translateY(0);
+  }
+`;
+
+const Refresh = styled.button`
+  display: flex;
+  height: 25px;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background-color: #407bba;
+  border: none;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 123, 255, 0.5);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    background-color: #064486;
+    box-shadow: 0 3px 5px rgba(0, 123, 255, 0.3);
+    transform: translateY(0);
+  }
 `;
 
 const TopSectionCtn = styled.div`
@@ -105,7 +178,6 @@ const TopSectionCtn = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
-
 `;
 
 const Title = styled.div`
@@ -116,37 +188,6 @@ const Title = styled.div`
   width: 200px;
   margin-top: 2%;
 `;
-
-const Refresh = styled.button`
-  display: flex;
-  height: 25px;
-  width: 100px;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff; 
-  background-color: #407bba; 
-  margin-left: 14%;
-  margin-top: 2%;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  border: none; 
-  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
-  transition: all 0.3s ease; 
-
-  &:hover {
-    background-color: #0056b3; 
-    box-shadow: 0 6px 8px rgba(0, 123, 255, 0.5); 
-    transform: translateY(-2px); 
-  }
-
-  &:active {
-    background-color: #064486; 
-    box-shadow: 0 3px 5px rgba(0, 123, 255, 0.3); 
-    transform: translateY(0); 
-  }
-`;
-
 
 const spinOuter = keyframes`
   0% { transform: rotate(0deg); }
@@ -196,8 +237,8 @@ const LoadingContainer = styled.div`
   font-weight: bold;
   color: #333;
   border-radius: 10px;
-  height: 100%; 
-  width: 100%; 
+  height: 100%;
+  width: 100%;
 `;
 
 const LoadingText = styled.div`
@@ -205,23 +246,24 @@ const LoadingText = styled.div`
   font-size: 16px;
   color: #000000;
 `;
+
 const ErrorInfoCtn = styled.div`
-  position: absolute; /* 화면에서 강제로 위치 지정 */
-  bottom: 60px; /* 하단에서 20px 위 */
-  right: 2%; /* 오른쪽에서 2% */
-  background-color: #f7f7f7; 
+  position: absolute;
+  bottom: 60px;
+  right: 2%;
+  background-color: #f7f7f7;
   padding: 10px;
   font-size: 11px;
   font-weight: bold;
   color: #575757;
   display: flex;
   align-items: center;
-  gap: 8px; /* 아이콘과 텍스트 간격 */
-  z-index: 10; /* 다른 요소 위에 표시 */
+  gap: 8px;
+  z-index: 10;
 `;
 
 const ErrorIcon = styled.img`
-  width: 16px; /* 아이콘 크기 */
+  width: 16px;
   height: 14px;
-  object-fit: contain; /* 원본 비율 유지 */
+  object-fit: contain;
 `;
