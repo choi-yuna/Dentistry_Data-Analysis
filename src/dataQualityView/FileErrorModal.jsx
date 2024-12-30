@@ -31,6 +31,32 @@ const CloseButton = styled.button`
     cursor: pointer;
 `;
 
+const InlineContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+`;
+
+const Select = styled.select`
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+`;
+
+const AnalyzeButton = styled.button`
+    padding: 10px 15px;
+    background-color: #2176A8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        background-color: #0056b3;
+    }
+`;
+
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
@@ -70,19 +96,50 @@ const FileErrorModal = ({ isOpen, onClose }) => {
     const [selectedFileType, setSelectedFileType] = useState(null);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (isOpen && institution && disease) {
-            fetchFileErrorData(institution, disease)
-                .then((data) => {
-                    setFileErrorData(data);
-                    setError(null); // 오류 초기화
-                })
-                .catch((error) => {
-                    console.error('Failed to fetch file error data:', error);
-                    setError('파일 오류 데이터를 불러오지 못했습니다.');
-                });
+    const [institutions, setInstitutions] = useState([
+        { id: "1", name: "원광대" },
+        { id: "2", name: "고려대" },
+        { id: "3", name: "서울대" },
+        { id: "4", name: "국립암센터" },
+        { id: "5", name: "단국대" },
+        { id: "6", name: "조선대" },
+        { id: "7", name: "보라매병원" },
+    ]);
+
+    const [diseases, setDiseases] = useState([
+        { id: "A", name: "치주질환" },
+        { id: "B", name: "골수염 (질환군)" },
+        { id: "E", name: "골수염 (대조군)" },
+        { id: "C", name: "구강암" },
+        { id: "D", name: "두개안면" },
+    ]);
+
+    const [selectedInstitution, setSelectedInstitution] = useState('');
+    const [selectedDisease, setSelectedDisease] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleAnalyze = () => {
+        if (!selectedInstitution || !selectedDisease) {
+            setError('기관과 질환을 선택해주세요.');
+            return;
         }
-    }, [isOpen, institution, disease]);
+
+        setLoading(true);
+        fetchFileErrorData(selectedInstitution, selectedDisease)
+            .then((data) => {
+                if (data && Object.keys(data).length > 0) {
+                    setFileErrorData(data);
+                    setError(null);
+                } else {
+                    setError('서버에서 유효한 데이터를 반환하지 않았습니다.');
+                }
+            })
+            .catch((error) => {
+                console.error('Failed to fetch file error data:', error);
+                setError(`파일 오류 데이터를 불러오는 중 문제가 발생했습니다: ${error.message}`);
+            })
+            .finally(() => setLoading(false));
+    };
 
     const handleDetailsClick = (fileType) => {
         setSelectedFileType(fileType);
@@ -101,39 +158,62 @@ const FileErrorModal = ({ isOpen, onClose }) => {
                 <FloatingWindow>
                     <CloseButton onClick={onClose}>&times;</CloseButton>
                     <h2>오류 파일 탐색 결과</h2>
-                    {error ? (
-                        <ErrorMessage>{error}</ErrorMessage>
-                    ) : (
-                        <>
-                            {fileErrorData ? (
-                                <>
-                                    <Table>
-                                        <thead>
-                                            <tr>
-                                                <th>파일 유형</th>
-                                                <th>중복 파일 개수</th>
-                                                <th>상세보기</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {Object.keys(fileErrorData).map((fileType) => (
-                                                <tr key={fileType}>
-                                                    <td>{fileType}</td>
-                                                    <td>{fileErrorData[fileType].length}</td>
-                                                    <td>
-                                                        <DetailsButton onClick={() => handleDetailsClick(fileType)}>
-                                                            상세보기
-                                                        </DetailsButton>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </Table>
-                                </>
-                            ) : (
-                                <p>데이터를 불러오는 중입니다...</p>
-                            )}
-                        </>
+
+                    <InlineContainer>
+                        <Select
+                            value={selectedInstitution}
+                            onChange={(e) => setSelectedInstitution(e.target.value)}
+                        >
+                            <option value="">기관 선택</option>
+                            {institutions.map((institution) => (
+                                <option key={institution.id} value={institution.id}>
+                                    {institution.name}
+                                </option>
+                            ))}
+                        </Select>
+
+                        <Select
+                            value={selectedDisease}
+                            onChange={(e) => setSelectedDisease(e.target.value)}
+                        >
+                            <option value="">질환 선택</option>
+                            {diseases.map((disease) => (
+                                <option key={disease.id} value={disease.id}>
+                                    {disease.name}
+                                </option>
+                            ))}
+                        </Select>
+
+                        <AnalyzeButton onClick={handleAnalyze} disabled={loading}>
+                            {loading ? '데이터를 불러오는 중...' : '분석'}
+                        </AnalyzeButton>
+                    </InlineContainer>
+
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+
+                    {fileErrorData && (
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <th>파일 유형</th>
+                                    <th>중복 파일 개수</th>
+                                    <th>상세보기</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Object.keys(fileErrorData).map((fileType) => (
+                                    <tr key={fileType}>
+                                        <td>{fileType}</td>
+                                        <td>{fileErrorData[fileType].length}</td>
+                                        <td>
+                                            <DetailsButton onClick={() => handleDetailsClick(fileType)}>
+                                                상세보기
+                                            </DetailsButton>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
                     )}
                 </FloatingWindow>
             </Draggable>
