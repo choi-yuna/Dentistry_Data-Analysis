@@ -98,13 +98,13 @@ export const diseaseHeaderMapping = {
         //필수
         "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
         //선택
-        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
+        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
         //필수
         "IMAGE_ID", "P_GENDER", "P_AGE",
         //선택
         "P_WEIGHT","P_HEIGHT","P_RES_AREA",
         //필수
-        "DI_DISEASE","DI_TIME","MAKER_INFO",
+        "DI_DISEASE","DI_TIME","DI_DETAIL",
         //선택항목
        "DI_NOTE","CI_SURGERY"],
 
@@ -170,19 +170,20 @@ export const jsonHeaderMapping = {
         //선택항목
         "PT_DOI","PT_SIZE", "PT_NODE",	"PT_EI","PT_VI", "PT_BI","PT_LI","CHEMO", "IMM_D"],
 
-    'D': [ 
-        //필수
-        "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
-        //선택
-        "MAKER_INFO","H_RESOLUTION","V_RESOLUTION","V_RESOLUTION","TOTAL_SLICE_NO",
-        //필수
-        "IMAGE_ID", "P_GENDER", "P_AGE",
-        //선택
-        "P_WEIGHT","P_HEIGHT","P_RES_AREA",
-        //필수
-        "DI_DISEASE","DI_TIME","MAKER_INFO",
-        //선택항목
-       "DI_NOTE","CI_SURGERY"],
+   
+        'D': [ 
+            //필수
+            "DISEASE_CLASS", "INSTITUTION_ID", "PATIENT_NO", "IMAGE_NO", "IMAGE_SRC", "CAPTURE_TIME",
+            //선택
+            "MAKER_IF","RESOLUTION_H","RESOLUTION_V","SLICETHICKNESS","TOTAL_SLICE_NO",
+            //필수
+            "IMAGE_ID", "P_GENDER", "P_AGE",
+            //선택
+            "P_WEIGHT","P_HEIGHT","P_RES_AREA",
+            //필수
+            "DI_DISEASE","DI_TIME","DI_DETAIL",
+            //선택항목
+           "DI_NOTE","CI_SURGERY"],
 
     'E': ['DISEASE_CLASS', 'INSTITUTION_ID', 'PATIENT_NO', 'IMAGE_NO', 'IMAGE_SRC', 'CAPTURE_TIME',
           'IMAGE_ID', 'P_GENDER', 'P_AGE']

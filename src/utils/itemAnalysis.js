@@ -42,7 +42,7 @@ export const analyzeItems = (data) => {
         Object.entries(entry).forEach(([key, value]) => {
 
             const invalidReason = {};
-            if (value.trim() === "" || value === null) {
+            if (value.trim() === "" || value === null || value === 'none') {
                 totalMissingItemCount++;
             } else{
                 if (key === "P_WEIGHT" && (isNaN(Number(value.trim())) || Number(value.trim()) <= 0)) {
@@ -235,7 +235,7 @@ export const analyzeItems = (data) => {
         // 각 항목에 대해 누락 데이터 및 유효성 검사
         Object.entries(entry).forEach(([key, value]) => {
             // 누락된 항목 검사
-            if (value === "" || value === null) {
+            if (value === "" || value === null || value === 'none') {
                 missingItemCount++;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)

@@ -22,7 +22,7 @@ export const analyzeData = (data) => {
 
          // 누락 데이터 검사
          Object.entries(optional).forEach(([key, value]) => {
-            if (value.trim() === "" || value === null) {
+            if (value.trim() === "" || value === null || value === 'none') {
                 totalhasMissingData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)
@@ -148,7 +148,7 @@ export const analyzeData = (data) => {
         
         // 누락 데이터 검사
         Object.entries(required).forEach(([key, value]) => {
-            if (value === "" || value === null) {
+            if (value === "" || value === null || value.trim() === "none") {
                 hasMissingData = true;
             } else {
                 // 유효성 검사 (누락된 값은 제외하고 진행)

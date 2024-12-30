@@ -24,7 +24,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData =
         return excelData
             .filter((item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object')
             .map(([optional, required], index) => ({ optional, required, originalIndex: index }))
-            .filter((data) => data.required?.DISEASE_CLASS === selectedDisease);
+            .filter((data) => data.required?.disease === selectedDisease);
     }, [excelData, selectedDisease]);
     
 
@@ -35,7 +35,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData =
             const options = [...new Set(
                 excelData
                     .filter((item) => Array.isArray(item) && typeof item[0] === 'object' && typeof item[1] === 'object')
-                    .map(([, required]) => required?.DISEASE_CLASS)
+                    .map(([, required]) => required?.disease)
                     .filter(Boolean)
             )];
             setDiseaseOptions(options);
@@ -54,7 +54,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData =
     
     
     const renderCell = (value, isRequired, rowIndex, header) => {
-        const isNull = value === null || value.trim() === '';
+        const isNull = value === null || value.trim() === ''|| value === 'none';
         const isInvalid = isInvalidCell(rowIndex, header); // 유효성 검사 실패
         const isOptionalInvalid = !isRequired && isInvalid; // 선택 항목에서만 유효성 검사 실패
     
@@ -119,7 +119,7 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData =
                     const isInvalid = isInvalidCell(rowIndex, header, isRequired);
         
                     totalCount += 1; // 모든 셀 카운트
-                    if (value === null || value === '' || isInvalid) {
+                    if (value === null || value === '' || value === 'none' || isInvalid) {
                         errorCount += 1; // 오류 카운트 (값 누락 또는 유효하지 않은 경우)
                 }
                 });

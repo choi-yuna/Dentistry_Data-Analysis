@@ -37,7 +37,7 @@ export const fetchPatientData = async (fileIds, institutionId, diseaseClass) => 
             institutionId: institutionId,
             diseaseClass: diseaseClass,
         });
-
+        console.log('서버 응답 데이터:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error analyzing data:', error.response ? error.response.data : error.message);
