@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import DataAnalysisTable from './dataAnalysisTable';
 import Modal from './Modal';
-import FileErrorModal from './FileErrorModal';
 import { DataContext } from '../context/DataContext'; 
 
 const ResultCtn = styled.div`
@@ -58,16 +57,10 @@ const ActionButton = styled.button`
 
 const DataAnalysisResults = ({ collapsed }) => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const [isFileErrorModalOpen, setFileErrorModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     const { analyzedData, isJsonData } = useContext(DataContext); 
     const { originalPatientData } = useContext(DataContext);
     const [excelData, setExcelData] = useState([]);
-
-    const fileErrorDummyData = {
-        CRF: ['file1.crf', 'file2.crf'],
-        Json: ['file1.json', 'file2.json', 'file3.json'],
-        "json 오류 파일": ['file1.jsonFile', 'file2.jsonFile']
-    };
 
     const handleDetailButtonClick = () => {
         if (analyzedData && Object.keys(analyzedData).length > 0) {
@@ -75,13 +68,8 @@ const DataAnalysisResults = ({ collapsed }) => {
         }
     };
 
-
     const handleCloseModal = () => {
         setModalOpen(false);
-    };
-
-    const handleCloseFileErrorModal = () => {
-        setFileErrorModalOpen(false);
     };
 
     const isDataAvailable = analyzedData && Object.keys(analyzedData).length > 0;
@@ -92,6 +80,7 @@ const DataAnalysisResults = ({ collapsed }) => {
             const rows = originalPatientData.map(item => Object.values(item));
             setExcelData([headers, ...rows]);
         }
+        setIsLoading(false); // 데이터 로딩 후 로딩 상태 종료
     }, [originalPatientData]);
 
     return (
@@ -105,7 +94,9 @@ const DataAnalysisResults = ({ collapsed }) => {
                         </ActionButton>
                     </ButtonGroup>
                 </TitleBar>
-                {isDataAvailable ? (
+                {isLoading ? (
+                    <p>로딩 중...</p> // 로딩 중 메시지
+                ) : isDataAvailable ? (
                     <DataAnalysisTable analyzedData={analyzedData} />
                 ) : (
                     <p>분석할 데이터가 없습니다.</p>
