@@ -101,7 +101,6 @@ const Modal = ({ isOpen, onClose, excelData = [], invalidItems = [],isJsonData =
                         <ModalTitle>품질 이상 항목 세부내용</ModalTitle>
                         <CloseButton onClick={onClose}>&times;</CloseButton>
                     </ModalHeader>
-                    <div>데이터가 없습니다.</div>
                 </ModalContent>
             </ModalOverlay>
         );
@@ -313,7 +312,7 @@ const ExcelCell = styled.td`
                 : 'yellow' // 선택값 누락 → 노란색
             : 'white'}; // 기본값
     color: ${({ isInvalid, isOptionalInvalid }) =>
-        isInvalid || isOptionalInvalid ? 'white' : 'black'}; // 텍스트 색상
+        isInvalid || isOptionalInvalid ? 'black' : 'black'}; // 텍스트 색상
     font-weight: ${({ isInvalid, isOptionalInvalid }) =>
         isInvalid || isOptionalInvalid ? 'bold' : 'normal'};
 `;
