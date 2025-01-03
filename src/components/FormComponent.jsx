@@ -126,14 +126,15 @@ const AnalyzeButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
-    padding: 8px 16px;
+    padding: 5px 8px;
     background-color: #0d4a68;
     color: white;
     border: none;
+    font-size: 11px;
     border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
-    height: 36px;
+    height: 30px;
     box-sizing: border-box;
     min-width: 100px;
     flex-shrink: 0;
@@ -152,18 +153,6 @@ const Button = styled.button`
     }
 `;
 
-const ErrorMessage = styled.div`
-    position: fixed;
-    bottom: 20px;
-    margin-bottom: 34%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: black;
-    border-radius: 4px;
-    font-size: 20px;
-    font-weight: bold;
-    z-index: 1000;
-`;
 
 const FormComponent = ({ collapsed, onAnalyze }) => {
     const [loading, setLoading] = useState(false);
