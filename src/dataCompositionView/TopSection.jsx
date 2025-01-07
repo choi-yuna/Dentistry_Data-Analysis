@@ -186,6 +186,19 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     return null;
   };
 
+  const fontSizeByCell = (cellIndex, type) => {
+    console.log(`fontSizeByCell: cellIndex=${cellIndex}, type=${type}`);
+    if (type === 'header') {
+      return [0, 5].includes(cellIndex) ? '15px' : '12px';
+    }
+    if (type === 'sub') {
+      return [1, 6].includes(cellIndex) ? '14px' : '11px';
+    }
+    return '11px'; // 기본 크기
+  };
+
+
+
 
   return (
     <SectionContainer>
@@ -203,7 +216,8 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
               (title === "두개안면" && adjustedIndex === 5) ? '' : item;
             const styles = {
               ...getStylesByRate(cellValue, index, [6], includeBackground),
-              ...getHighlightStyle(isHighlightedCell(index, 'header')),
+              ...(isHighlightedCell(index, 'header') ? getHighlightStyle(true) : {}),
+              fontSize: fontSizeByCell(index, 'header') || '12px', // 기본값 추가
             };
 
             return (
@@ -241,10 +255,24 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                   const styles = {
                     ...getStylesByRate(Number(cellValue), cellIndex, [7, 9], includeBackground),
                     ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
+                    fontSize: fontSizeByCell(cellIndex, 'header') || '12px',
                   };
 
+
+
+
                   return (
-                    <SubCell key={cellIndex} isAll={isAll} style={{ ...styles, alignItems: 'center', gap: '5px' }}>
+                    <SubCell
+                      key={cellIndex}
+                      isAll={isAll}
+                      fontSize={fontSizeByCell(cellIndex, 'sub')}
+                      style={{
+                        ...(getStylesByRate(Number(cellValue), cellIndex, [7, 9]) || {}),
+                        ...(getHighlightStyle(isHighlightedCell(cellIndex, 'sub')) || {}),
+                      }}
+                    >
+
+
                       {cellIndex === 0 ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '30px' }}>
                           <span>
@@ -291,9 +319,9 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
-                <SubRowContainer expanded isAll={isAll} isAdditional={true}>
+                <SubRowContainer expanded isAll={isAll} isAdditional={true} >
                   {controlData.map((controlRow, controlIndex) => (
-                    <SubRow key={`control-${controlIndex}`}>
+                    <SubRow key={`control-${controlIndex}`} >
                       {controlRow.map((controlCell, controlCellIndex) => {
                         const includeBackground = controlCellIndex !== 3;
 
@@ -306,7 +334,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                           : {};
 
                         return (
-                          <SubCell key={`control-cell-${controlCellIndex}`} style={styles}>
+                          <SubCell key={`control-cell-${controlCellIndex}`} style={styles} fontSize={fontSizeByCell(controlCellIndex, 'sub')}>
                             {controlCell !== null ? formatNumber(controlCell) : ''}
                           </SubCell>
                         );
@@ -372,6 +400,9 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
 export default TopSection;
+
+
+
 
 const Modal = styled.div`
   position: fixed;
@@ -597,7 +628,7 @@ const HeaderCell = styled.div`
   flex: 1; /* 각 항목의 동일한 비율 */
   text-align: center;
   font-weight: bold;
-  font-size: 12px;
+  font-size: ${(props) => props.fontSize || (props.isAll ? '12px' : '11px')};
   color: #000;
   position: relative;
   &:not(:last-child)::after {
@@ -702,20 +733,32 @@ const ContentContainer = styled.div`
 const ContentCell = styled.div`
   flex: 0.7;
   text-align: center;
-  font-size: ${(props) => (props.isAll ? '12px' : '11px')};
+  font-size: ${(props) => props.fontSize || (props.isAll ? '12px' : '11px')};
   color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
   font-weight: ${(props) => (props.isAll ? '700' : '600')};
   border-right: 1px solid #D9D8D8;
   &:last-child {
     border-right: none;
   }
-  /* 배경색 적용 */
   background-color: ${(props) => props.bgColor || 'transparent'};
-  padding: 2px 8px ; 
+  padding: 2px 8px; 
   border-radius: 8px; 
   margin: 0px; 
 `;
 
+const SubCell = styled.div`
+  flex: 0.7;
+  text-align: center;
+  font-size: ${(props) => props.fontSize || (props.isAll ? '12px' : '11px')};
+  color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
+  font-weight: ${(props) => (props.isAll ? '700' : '600')};
+  border-right: 1px solid #D9D8D8;
+  &:last-child {
+    border-right: none;
+  }
+  align-items: center;
+  justify-content: center;
+`;
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: ${(props) =>
@@ -732,19 +775,6 @@ const SubRow = styled.div`
   margin-left: 11%;
 `;
 
-const SubCell = styled.div`
-  flex: 0.7;
-  text-align: center;
-  font-size: ${(props) => (props.isAll ? '12px' : '11px')};
-  color: ${(props) => (props.isAll ? '#0f0b1f' : '#000')};
-  font-weight: ${(props) => (props.isAll ? '700' : '600')};
-  border-right: 1px solid #D9D8D8;
-  &:last-child {
-    border-right: none;
-  }
-  align-items: center;
-  justify-content: center;
-`;
 
 const LoadingContainer = styled.div`
   text-align: center;
