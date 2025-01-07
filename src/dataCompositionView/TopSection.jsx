@@ -110,13 +110,11 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     setNoDataError(false); // 초기화
 
     let filteredData;
-    if (type === '질환별') {
-      console.log('질환별 조건으로 필터링');
+    if (type === '질환별') {  //질환별 조건으로 필터링
       filteredData = errorData.find(
         (item) => item.disease === currentTitle && item.hospital === currentRow
       );
-    } else if (type === '기관별') {
-      console.log('기관별 조건으로 필터링');
+    } else if (type === '기관별') {  // 기관별 조건으로 필터링
       filteredData = errorData.find(
         (item) => item.hospital === currentTitle && item.disease === currentRow
       );
@@ -144,7 +142,6 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
-    console.log('getStylesByRate 호출됨:', { rate, cellIndex, indicesToStyle });
     const isTargetIndex = indicesToStyle.includes(cellIndex);
     if (!isTargetIndex) {
       return {};
@@ -188,7 +185,6 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
   };
 
   const fontSizeByCell = (cellIndex, type) => {
-    console.log(`fontSizeByCell: cellIndex=${cellIndex}, type=${type}`);
     if (type === 'header') {
       return [0, 5].includes(cellIndex) ? '15px' : '12px';
     }
@@ -205,9 +201,9 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     if (type === 'sub') {
       return [1, 6].includes(cellIndex) ? '#2196f3' : '#000000'; // 서브 데이터 색상
     }
-    return '#000'; 
+    return '#000';
   };
-  
+
 
 
   return (
