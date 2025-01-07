@@ -144,6 +144,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
   const getStylesByRate = (rate, cellIndex, indicesToStyle, includeBackground = true) => {
+    console.log('getStylesByRate 호출됨:', { rate, cellIndex, indicesToStyle });
     const isTargetIndex = indicesToStyle.includes(cellIndex);
     if (!isTargetIndex) {
       return {};
@@ -197,7 +198,16 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
     return '11px'; // 기본 크기
   };
 
-
+  const fontColorByCell = (cellIndex, type) => {
+    if (type === 'header') {
+      return [0, 5].includes(cellIndex) ? '#2496f3' : '#000000'; // 헤더 색상
+    }
+    if (type === 'sub') {
+      return [1, 6].includes(cellIndex) ? '#2196f3' : '#000000'; // 서브 데이터 색상
+    }
+    return '#000'; 
+  };
+  
 
 
   return (
@@ -215,9 +225,10 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
             const cellValue =
               (title === "두개안면" && adjustedIndex === 5) ? '' : item;
             const styles = {
-              ...getStylesByRate(cellValue, index, [6], includeBackground),
               ...(isHighlightedCell(index, 'header') ? getHighlightStyle(true) : {}),
               fontSize: fontSizeByCell(index, 'header') || '12px', // 기본값 추가
+              color: fontColorByCell(index, 'header') || '#000',
+              ...getStylesByRate(cellValue, index, [6], includeBackground),
             };
 
             return (
@@ -251,24 +262,16 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                       : cell;
 
 
-                  const includeBackground = cellIndex !== 3;
-                  const styles = {
-                    ...getStylesByRate(Number(cellValue), cellIndex, [7, 9], includeBackground),
-                    ...getHighlightStyle(isHighlightedCell(cellIndex, 'sub')),
-                    fontSize: fontSizeByCell(cellIndex, 'header') || '12px',
-                  };
-
-
-
-
                   return (
                     <SubCell
                       key={cellIndex}
                       isAll={isAll}
                       fontSize={fontSizeByCell(cellIndex, 'sub')}
                       style={{
-                        ...(getStylesByRate(Number(cellValue), cellIndex, [7, 9]) || {}),
                         ...(getHighlightStyle(isHighlightedCell(cellIndex, 'sub')) || {}),
+                        fontSize: fontSizeByCell(cellIndex, 'sub') || '12px',
+                        color: fontColorByCell(cellIndex, 'sub') || '#000',
+                        ...(getStylesByRate(Number(cellValue), cellIndex, [7, 9]) || {}),
                       }}
                     >
 
