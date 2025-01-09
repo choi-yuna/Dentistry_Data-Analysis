@@ -157,7 +157,7 @@ const FileErrorModal = ({ isOpen, onClose }) => {
             <Draggable>
                 <FloatingWindow>
                     <CloseButton onClick={onClose}>&times;</CloseButton>
-                    <h2>오류 파일 탐색 결과</h2>
+                    <h2>중복 파일 탐색 결과</h2>
 
                     <InlineContainer>
                         <Select
