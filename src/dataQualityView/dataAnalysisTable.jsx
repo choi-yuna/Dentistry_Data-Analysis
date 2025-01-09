@@ -18,9 +18,13 @@ const MyTable = ({ analyzedData }) => {
           {/* Header 영역 */}
           <Header>
             <div>
-              <HeaderItem>
-                • 전체 환자 수(명): {formatNumber(analyzedData.totalPatients || 0)} (대조군 제외 (환자수 : {formatNumber(analyzedData.metaCount || 0)} ))
+            <HeaderItem>
+                • 전체 환자 수(명): {formatNumber(analyzedData.totalPatients || 0)} 
+                {analyzedData.metaCount > 0 && (
+                  <> (대조군 제외 (환자수 : {formatNumber(analyzedData.metaCount || 0)}))</>
+                )}
               </HeaderItem>
+
               <HeaderItem>
                 • 전체 데이터 항목 수: {formatNumber(analyzedData.totalItems + analyzedData.items|| 0)}
               </HeaderItem>
