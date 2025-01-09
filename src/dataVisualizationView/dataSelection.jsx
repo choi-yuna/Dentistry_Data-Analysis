@@ -336,21 +336,27 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     } else {
       setSelectedItemsTab2(diseaseData.selectedItemsTab2 || {});
     }
+
+
   }, [disease, diseaseData, setSelectedItemsTab1, setSelectedItemsTab2]);
 
   useEffect(() => {
-    sessionStorage.setItem(`${disease}_selectedItemsTab1`, JSON.stringify(selectedItemsTab1));
-    sessionStorage.setItem(`${disease}_selectedItemsTab2`, JSON.stringify(selectedItemsTab2));
-  }, [selectedItemsTab1, selectedItemsTab2, disease]);
+    if (tabValue === 0 && !selectedCategory) {
+      setSelectedCategory('기본 정보(info)');
+    }
+  }, [tabValue, selectedCategory, setSelectedCategory]);
+  
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-    setSelectedCategory('');
+  
+    if (newValue === 0 && selectedCategory !== '기본 정보(info)') {
+      setSelectedCategory('기본 정보(info)');
+    } else if (newValue === 1 && selectedCategory !== '기본 정보') {
+      setSelectedCategory('기본 정보');
+    }
   };
-
-  const handleToggle = () => {
-    setOpen((open) => !open);
-  };
+  
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -515,7 +521,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
   return (
     <Container collapsed={collapsed}>
       <FlexBox>
-        <StyledTabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
+        <StyledTabs value={tabValue} onChange={handleTabChange}>
           <StyledTab label="데이터 구성 항목" />
           <StyledTab label="리포트 항목" />
         </StyledTabs>
