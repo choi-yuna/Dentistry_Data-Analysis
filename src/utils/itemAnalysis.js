@@ -1,6 +1,7 @@
-export const analyzeItems = (data) => {
+export const analyzeItems = (data,meta) => {
     if (data.length === 0) {
         return {
+            metaCount :0,
             items: 0,
             totalMissingItemCount: 0,
             totalInvalidItemCount: 0,
@@ -26,10 +27,10 @@ export const analyzeItems = (data) => {
   // 필수 헤더 수 (첫 번째 데이터 항목의 키 수)
   const requirdHeaderCount = Object.keys(requiredData[0]).length;
   const optionalHeaderCount = Object.keys(optionalData[0]).length;
-
+    
     // 전체 항목 수 = 헤더의 수 * 행의 갯수
     const totalItems = requirdHeaderCount * data.length;
-
+    const metaCount = meta;
     const items =  optionalHeaderCount * data.length;
     
     let totalMissingItemCount = 0;
@@ -411,6 +412,7 @@ export const analyzeItems = (data) => {
     const totalQualityRatio = ((totalItems - (totalMissingItemCount + totalInvalidItemCount)) / items) * 100;
 
     return {
+        metaCount,
         totalItems,
         items,
         totalInvalidItemCount,
