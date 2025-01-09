@@ -11,7 +11,7 @@ const DataProvider = ({ children }) => {
     const [isJsonData, setIsJsonData] = useState(false);
 
     return (
-        <DataContext.Provider value={{ institution, setInstitution, disease, setDisease, analyzedData, setAnalyzedData,originalPatientData, setOriginalPatientData,isJsonData, setIsJsonData}}>
+        <DataContext.Provider value={{ institution, setInstitution, disease, setDisease, analyzedData, setAnalyzedData,originalPatientData, setOriginalPatientData,isJsonData, setIsJsonData, analyzedData}}>
             {children}
         </DataContext.Provider>
     );

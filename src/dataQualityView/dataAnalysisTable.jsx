@@ -19,7 +19,7 @@ const MyTable = ({ analyzedData }) => {
           <Header>
             <div>
               <HeaderItem>
-                • 전체 환자 수(명): {formatNumber(analyzedData.totalPatients || 0)}
+                • 전체 환자 수(명): {formatNumber(analyzedData.totalPatients || 0)} (대조군 제외 (환자수 : ))
               </HeaderItem>
               <HeaderItem>
                 • 전체 데이터 항목 수: {formatNumber(analyzedData.totalItems + analyzedData.items|| 0)}
@@ -45,7 +45,7 @@ const MyTable = ({ analyzedData }) => {
                     <TableCell colSpan="2" rowSpan="3" isHeader bold>구분</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableHeader highlight colSpan="3">필수항목</TableHeader>
+                    <TableHeader highlight colSpan="3">필수항목</TableHeader> 
                     <TableHeader colSpan="3">선택항목</TableHeader>
                   </TableRow>
                   <TableRow>

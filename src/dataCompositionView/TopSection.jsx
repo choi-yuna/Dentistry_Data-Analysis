@@ -244,7 +244,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
 
       {/* SubRow */}
-      <SubRowContainer expanded={expanded} isAll={isAll} isAdditional={false}>
+      <SubRowContainer expanded={expanded} isAll={isAll} isadditional={false}>
         {subData.map((row, rowIndex) => {
           const rowKey = `${title}-${rowIndex}`;
           return (
@@ -318,7 +318,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
               {/* 추가 행 */}
               {expandedRow[rowKey] && Array.isArray(controlData) && controlData.length > 0 && (
-                <SubRowContainer expanded isAll={isAll} isAdditional={true} >
+                <SubRowContainer expanded isAll={isAll} isadditional={true} >
                   {controlData.map((controlRow, controlIndex) => (
                     <SubRow key={`control-${controlIndex}`} >
                       {controlRow.map((controlCell, controlCellIndex) => {
@@ -761,7 +761,7 @@ const SubCell = styled.div`
 const SubRowContainer = styled.div`
   display: ${(props) => (props.expanded ? 'block' : 'none')};
   background-color: ${(props) =>
-    props.isAdditional ? '#e4f0f15a' : props.isAll ? '#dee7f053' : '#ffffff'};
+    props.isadditional ? '#e4f0f15a' : props.isAll ? '#dee7f053' : '#ffffff'};
      flex-grow: 1; /* 남은 공간을 채우도록 설정 */
   overflow-y: auto; /* 콘텐츠 스크롤 허용 */
   height: 100;

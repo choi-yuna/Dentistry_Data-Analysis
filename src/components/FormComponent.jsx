@@ -83,19 +83,17 @@ const FormInline = styled.form`
 const FormGroup = styled.div`
     display: flex;
     align-items: center;
-    margin-right: 20px;
-    flex-shrink: 0;
+    flex-shrink: 0;   
     color: #000;
 `;
 
 const LabelSelectGroup = styled.div`
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 `;
 
 const Label = styled.label`
-    margin-right: 10px;
     font-weight: bold;
     font-size: 14px;
     white-space: nowrap;
@@ -109,7 +107,7 @@ const Select = styled.select`
     width: 150px;
     box-sizing: border-box; 
     flex-shrink: 0;
-    margin-right: 20px;
+    margin-right: 10px;
 `;
 
 const AnalyzeButtonContainer = styled.div`
@@ -360,7 +358,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                         </LabelSelectGroup>
                     </FormGroup>
                     <AnalyzeButtonContainer>
-                        <Button type="button" onClick={handleAnalyzeWithFile} disabled={loading}>
+                        <Button type="button" onClick={handleAnalyzeWithFile} disabled={loading} style={{ marginRight: '70px' }}>
                             {loading ? '로딩 중...' : '업로드 데이터 분석'}
                             {!loading && <img src={chartIcon} alt="아이콘" />}
                         </Button>
@@ -369,7 +367,7 @@ const FormComponent = ({ collapsed, onAnalyze }) => {
                             {!loading && <img src={chartIcon} alt="아이콘" />}
                         </Button>
                         <Button type="button" onClick={handleAnalyzeWithJson} disabled={loading} style={{ marginLeft: '10px' }}>
-                            {loading ? '로딩 중...' : '라벨링 데이터 분석'}
+                            {loading ? '로딩 중...' : 'Json 데이터 분석'}
                             {!loading && <img src={chartIcon} alt="아이콘" />}
                         </Button>
                     </AnalyzeButtonContainer>

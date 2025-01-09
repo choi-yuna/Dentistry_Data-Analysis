@@ -62,6 +62,8 @@ const DataAnalysisResults = ({ collapsed }) => {
     const { originalPatientData } = useContext(DataContext);
     const [excelData, setExcelData] = useState([]);
 
+    console.log('Toddddddd에서 받은 DataContext 데이터:', {analyzedData });
+
     const handleDetailButtonClick = () => {
         if (analyzedData && Object.keys(analyzedData).length > 0) {
             setModalOpen(true);

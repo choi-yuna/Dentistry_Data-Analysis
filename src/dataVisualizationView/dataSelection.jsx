@@ -524,6 +524,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             type="button"
             onClick={() => handleAnalyze(true)} // 업로드 데이터 분석
             disabled={!fileId}
+            style={{ marginRight: '80px' }}
           >
             업로드 데이터 분석
             <img src={chartIcon} alt="아이콘" />
@@ -540,7 +541,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
             type="button"
             onClick={() => handleAnalyze('json')} // JSON 분석
           >
-            라벨링 데이터 분석
+            Json 데이터 분석
             <img src={chartIcon} alt="아이콘" />
           </ButtonStyled>
 
