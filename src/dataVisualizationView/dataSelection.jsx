@@ -69,21 +69,36 @@ const StyledTabs = styled(Tabs)`
 const StyledTab = styled(Tab)`
   flex-grow: 1;
   min-width: 0;
-  padding: 8px 10px !important; /* 상하 패딩(8px), 좌우 패딩(12px) */
-  font-size: 11px !important; /* 글자 크기 */
-  min-height: 35px !important; /* 탭의 최소 높이 */
+  padding: 8px 10px !important;
+  font-size: 11px !important;
+  min-height: 35px !important;
   font-weight: bold !important;
+
+  // 탭이 선택되었을 때 배경색 변경
   &.Mui-selected {
-    color: #000000;
-    font-weight: bold ;
-    border: 1px solid #ccc; 
+    color: #f0f0f0 !important; /* 선택된 탭의 글자 색 */
+    font-weight: bold;
+    background-color: #DD7610; /* 선택된 탭의 배경색 */
+    border: 1px solid #ccc;
     border-bottom: none;
-    border-radius: 8px 8px 0 0; 
+    border-radius: 8px 8px 0 0;
     z-index: 1;
     font-weight: 700 !important;
   }
-     & .MuiTabs-indicator {
-    background-color: #000;
+
+  // 탭 인디케이터 스타일 (하단의 강조선)
+  & .MuiTabs-indicator {
+    background-color: transparent; /* 인디케이터 숨김 */
+  }
+
+  // 기본 상태
+  &:not(.Mui-selected) {
+    background-color: #f0f0f0; /* 선택되지 않은 탭의 배경색 */
+    color: #505050; /* 선택되지 않은 탭의 글자 색 */
+  }
+
+  &:hover {
+    background-color: #f58413; /* 마우스 오버 시 배경색 */
   }
 `;
 
