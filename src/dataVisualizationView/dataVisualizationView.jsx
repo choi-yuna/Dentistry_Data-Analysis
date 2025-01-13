@@ -12,7 +12,6 @@ const AppContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  transition: width 0.3s ease, height 0.3s ease;
 `;
 
 const MainContent = styled.div`
@@ -64,6 +63,24 @@ const ReportSection = styled.div`
   height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 25px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    background-color: #c0392b;
+  }
 `;
 
 const DataVisualizationView = () => {
@@ -79,6 +96,10 @@ const DataVisualizationView = () => {
     setSelectedDisease(disease); // 질환을 선택할 때 상태 업데이트
   };
 
+  const handleCloseVisualization = () => {
+    setVisualizationResults(false); // 시각화 결과를 삭제
+  };
+
   return (
     <AppContainer>
       <TopBar />
@@ -90,6 +111,7 @@ const DataVisualizationView = () => {
           </StickyDataSelection>
           {visualizationResults && (
             <ReportSection>
+              <CloseButton onClick={handleCloseVisualization}>X</CloseButton>
               <GridContainer>
                 <SameHeightContainer>
                   <TableResult />
