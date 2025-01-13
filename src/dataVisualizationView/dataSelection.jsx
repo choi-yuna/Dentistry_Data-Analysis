@@ -476,7 +476,7 @@ const DataSelection = ({ collapsed, onAnalyze, disease }) => {
     const finalData = {
       ...resultToSendTab1,
       DISEASE_CLASS: disease,
-      fileIds: analysisType === 'json' ? 'json' : analysisType === 'file' ? fileId : null,
+      fileIds: analysisType === 'json' ? ['json'] : analysisType === 'file' ? fileId : null,
       header: headersToSendTab2,
     };
 
