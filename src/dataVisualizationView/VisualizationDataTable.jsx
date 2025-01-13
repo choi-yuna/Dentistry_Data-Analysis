@@ -42,11 +42,9 @@ const ColSpanTd = styled.td`
   border: 1px solid #8a8686;
   font-size: 0.7rem;
 `;
-
-const VisualizationDataTable = ({ tableId }) => {
+const VisualizationDataTable = ({ tableId, sortedData }) => {
   const { tableData } = useContext(AnalysisContext);
-
-  const table = tableData.find((table) => table.id === tableId);
+  const table = sortedData || tableData.find((table) => table.id === tableId);
   console.log("테이블 데이터:", table);
 
   if (!table) {
@@ -58,12 +56,24 @@ const VisualizationDataTable = ({ tableId }) => {
   const data = table.data || [];
   const percentages = table.percentages || [];
 
-  const rows = labels.map((label, index) => [
+  // 데이터 정렬
+  const combinedData = labels.map((label, index) => ({
     label,
-    `${data[index]} (${percentages[index] ? `${percentages[index]}%` : 'N/A'})`,
+    value: data[index],
+    percentage: percentages[index],
+  }));
+  const sortedCombinedData = combinedData.sort((a, b) => a.label.localeCompare(b.label));
+
+  const sortedLabels = sortedCombinedData.map((item) => item.label);
+  const sortedValues = sortedCombinedData.map((item) => item.value);
+  const sortedPercentages = sortedCombinedData.map((item) => item.percentage);
+
+  const rows = sortedLabels.map((label, index) => [
+    label,
+    `${sortedValues[index]} (${sortedPercentages[index] ? `${sortedPercentages[index]}%` : 'N/A'})`,
   ]);
 
-  const total = data.length ? data.reduce((sum, current) => sum + current, 0) : 0;
+  const total = sortedValues.reduce((sum, current) => sum + current, 0);
 
   return (
     <TableContainer>
@@ -92,5 +102,6 @@ const VisualizationDataTable = ({ tableId }) => {
     </TableContainer>
   );
 };
+
 
 export default VisualizationDataTable;
