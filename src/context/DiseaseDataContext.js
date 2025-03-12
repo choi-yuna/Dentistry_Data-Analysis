@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
+const apiClient = axios.create({
+  baseURL: window.location.hostname === '202.86.11.19'
+    ? process.env.REACT_APP_API_URL_EXTERNAL // 외부망
+    : process.env.REACT_APP_API_URL_INTERNAL // 내부망
+});
 
 
 // Context 생성
@@ -22,7 +27,7 @@ export const DiseaseDataProvider = ({ children }) => {
         console.log('[DEBUG] 서버 데이터 요청 시작', { refresh });
         setLoading(true);
 
-        const response = await axios.post('http://localhost:8080/api/dashboard', null, {
+        const response = await apiClient.post('/api/dashboard', null, {
             params: { refresh } // 쿼리 파라미터로 refresh 값을 전송
         });
 

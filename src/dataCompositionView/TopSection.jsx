@@ -229,7 +229,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
             return (
               <ContentCell key={index} isAll={isAll} style={styles}>
-                {index === 7 && Number(cellValue) >= 100
+                {index === 7 && Number(cellValue) >= 500
                   ? null // 100 이상일 때 버튼 숨김
                   : formatNumber(Number(cellValue), [6, 8].includes(index))} {/* 명확히 숫자로 변환 */}
               </ContentCell>
@@ -295,7 +295,7 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
                           )}
                         </div>
                       ) : cellIndex === 7 && title !== '질환 ALL' && title !== '기관 ALL' ? (
-                        Number(cell) < 100 ? (
+                        Number(cell) < 500 ? (
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginLeft: '33%' }}>
                             {formatNumber(cell, true)}
                             <ErrorButtonCtn>
