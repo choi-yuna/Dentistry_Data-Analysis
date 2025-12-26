@@ -97,7 +97,9 @@ const Section = ({ title, totalData, subData, controlData, type, expandedRow, to
 
   const shouldShowButton = (row) =>
     (type === '질환별' && title === '골수염' && row[0] === '단국대학교') ||
-    (type === '기관별' && title === '단국대학교' && row[0] === '골수염');
+    (type === '기관별' && title === '단국대학교' && row[0] === '골수염') ||
+     (type === '질환별' && title === '구강암' && row[0] === '서울대학교') ||
+    (type === '기관별' && title === '서울대학교' && row[0] === '구강암');
 
   const isAll = title === '질환 ALL' || title === '기관 ALL';
 
